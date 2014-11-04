@@ -33,16 +33,26 @@ We will have the following plotters:
 \end{itemize}
 
 \subsection{Modes}
-We intend to implement three different modes; Beam control, Ball control and finally the entire sequence control scheme (catch, weigh, throw).
+We intend to implement three different modes; Beam control, Ball balancing and finally the entire sequence control scheme described in section \ref{regstruc} (beam control, ball balancing, ball delivery).
 \subsubsection{Beam control mode}
 In this mode only the beam will be controlled by a PID controller. The user should be able to tune the PID parameters as well as altering the reference value online.
 
-\subsubsection{Ball control mode}
-As discussed in section \ref{step2}, either LQG or cascaded PID will be used when weighing the ball, and the ball control mode will use the same controller as when weighing the ball.
+\subsubsection{Ball balancing mode}
+As discussed in section \ref{step2}, either LQG or cascaded PID will be used when balancing the ball for measuring its weight, and the ball balancing mode will use the same controller.
 
-
+If cascaded PID controllers will be used, the user will be able to tune PID parameters as well as altering the reference value for the ball. If LQG will be used however, controller parameters (weighting matrices and noise intensities) will not be as straight-forward to change online (the Riccati equations need to be resolved by some Java package or Java-\textsc{Matlab} communication). Also a reference value change would affect the linearization point, and a relinearization would be appropriate although for the same reason not very straight-forward. Therefore, with an LQG setup the controller parameters as well as reference value will only be able to change online if time permits.
 
 \subsubsection{Sequence control mode}
+In the sequence control mode, we want to test the performance of the full sequence when adjusting parameters. Therefore, a change of parameters in this mode should only affect the following iteration, and not the current one.
+
+As for the previous mode, online Riccati resolving and relinearization could be difficult to achieve. Nevertheless the user should be able to tune PID parameters as well as change the position interval for the beam when searching for the correct position to pickup a ball. If time permits, also some of the following could be allowed for an online change:
+\begin{itemize}
+\item LQG weighting matrices for ball balancing
+\item Desired ball position when estimating its weight
+\item LQG weighting matrices for ball delivery
+\item Desired final state for ball delivery
+\item LQG noise intensities (same for balancing and delivery)
+\end{itemize}
 
 \section{Timetable}
 
