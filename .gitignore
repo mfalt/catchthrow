@@ -1,6 +1,6 @@
 *.aux
 *.log
 *.pdf
-..gitignore.sage-chat
+*.class
 *.sage-*
 *.synctex.gz
