@@ -6,7 +6,16 @@
 \maketitle
 
 \section{Regulator structure}
-
+We are planning to use different regulator structures for the different parts of the execution. The idea is that we will use a simple PID controller to move the beam to the pick-up position and then a LQG regulator for the other parts.
+\subsection{Step 1, Beam control}
+We will use a simple PID controller for the position of the beam in this part. A gradually increasing reference will be given for the beam until indication is given that the beam is in the pick-up position. The reference will then stay constant until the next controller is started. The controller for this part is governed by the BeamRegul class.
+\subsection{Step 2, Ball balancing}\label{step2}
+This part will be regulated by a time-invariant LQG regulator. The model will thus be linearized around the desired position for the weighing. If this proves to be not robust enough (for all weights of the balls), we might introduce the ball weight as a parameter in the model, which can be estimated by the Kalman-filter. We might switch to a cascaded PID controller if this method is too hard to implement or is taking too much time.
+\subsection{Step 3, Ball delivery}
+We will have the same structure for all controllers in this part but they will have different reference values. The idea for all of them is to first find a nominal solution to the nonlinear equations and then control the system using time-varying LQG regulators.
+\subsubsection{Finding a solution}
+\subsubsection{Calculating regulator}
+\subsubsection{Executing regulator}
 
 \section{UML}
 
