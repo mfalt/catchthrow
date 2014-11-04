@@ -24,8 +24,11 @@ The method above would generate a trajectory that satisfies the specific goal fo
 \subsubsection{Executing regulator}
 Each regulator can read its respective feedback and estimation values for each time-step at initiation and will then simply apply them in real time.
 
-\section{Transication between controllers}
 
+\section{Transition between controllers}
+When going from one controller to another, the control signal may very well make a jump from one value to another. The bumps introduced may be problematic if they are considerable and not dealt with. As compared to the newer \emph{ball and beam} process used in Lab 1 however, our older process has an extra integrator (torque instead of angular velocity as input signal) which gives an even stronger lowpass behavior. This will indeed smooth the bumps but we will have to investigate whether, and to what extent, we have to deal with them.
+
+One idea we have for dealing with bumps, is to initially run the control signal through a lowpass filter after a switch of controller. In the initial time frame when lowpass filtering is active however, the controller will be slow, so the filter has to be deactivated before we allow the reference signal to change.
 
 \section{UML}
 \begin{figure}[htbp]
