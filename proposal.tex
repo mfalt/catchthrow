@@ -1,6 +1,7 @@
 \documentclass{article}
 
 \usepackage[parfill]{parskip}
+\usepackage{graphicx}
 
 \title{Suggested solution}
 \author{Name of Author}
@@ -14,7 +15,7 @@ We are planning to use different regulator structures for the different parts of
 We will use a simple PID controller for the position of the beam in this part. A gradually increasing reference will be given for the beam until indication is given that the beam is in the pick-up position. The reference will then stay constant until the next controller is started. The controller for this part is governed by the BeamRegul class.
 \subsection{Step 2, Ball balancing}\label{step2}
 This part will be regulated by a time-invariant LQG regulator. The model will thus be linearized around the desired position for the weighing. If this proves to be not robust enough (for all weights of the balls), we might introduce the ball weight as a parameter in the model, which can be estimated by the Kalman-filter. We might switch to a cascaded PID controller if this method is too hard to implement or is taking too much time.
-\subsection{Step 3, Ball delivery}
+\subsection{Step 3, Ball cation.delivery}
 We will have the same structure for all controllers in this part but they will have different reference values. The idea for all of them is to first find a nominal solution to the nonlinear equations and then control the system using time-varying LQG regulators. It might be beneficial to have an intermediate regulator that move the system to a state different from the weighing state, before we exectute these controllers, to get a better initial state for the optimization method described below.
 \subsubsection{Finding a solution}
 We have several ideas on how to solve this part. We can either use JModelical to find an optimal trajectory similar to what is done in Nonlinear Control Lab 3. If this requires too much time, we might also use a numerical optimization approach in MATLAB, as outlined in for example \cite{NR} chapter 21.1.1. Lastly, if these methods fail or provide unsatisfactory solution, we could make a simple ansatz and find an analytical solution.
@@ -29,7 +30,11 @@ When going from one controller to another, the control signal may very well make
 One idea we have for dealing with bumps, is to initially run the control signal through a lowpass filter after a switch of controller. In the initial time frame when lowpass filtering is active however, the controller will be slow, so the filter has to be deactivated before we allow the reference signal to change.
 
 \section{UML}
-
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{UML}
+  \caption{UML diagram}\label{fig:UML}
+\end{figure}
 
 \section{Operator communication}
 \subsection{Plotters}
@@ -63,6 +68,39 @@ As for the previous mode, online Riccati resolving and relinearization could be 
 \end{itemize}
 
 \section{Timetable}
+\subsection{Workflow}
+The following tasks are equivalent to those described in section \ref{regstruc}:
+\begin{enumerate}
+	\item Get beam into position to receive ball
+	\item Weigh ball
+	\item Throw ball
+\end{enumerate}
+\subsection{Schedule}
+\begin{tabular}[h]{|l|p{10cm}|}
+\hline
+Week & Things to do \\ \hline
+45 (3-9 Nov) & *Sketch a preliminary solution of the problem and create timetable \\
+ & *Code for regulation of beam (part 1) and ball \& beam (part 2) will be ready for testing individually on the real process  \\
+ & *Have a precise list with all steps required for creating an LQG regulator, ie theoretical model, Riccati equation, estimation of other parameters that are needed (all the theory, basically). Write all these in the LaTeX document to make report writing easier later \\
+ & *Structure for the whole program will hopefully be ready (with potential suggestions from Karl-Erik), ie which classes and threads we will have and how they interact \\
+\hline
+46 (10-16 Nov) & *Hopefully we can now start testing on the real process, test with the regulator for beam only (part 1) and the one for beam \& ball (part 2), as well as estimation of parameters in the model (needed for stage 2) \\
+ & *Parallel work: Two people can work on part 1 and two on part 2 \\
+ & *GUI for the program \\
+\hline
+47 (17-23 Nov) & *Continued work on part 1 and 2 \\
+ & *Start testing part 3 \\
+\hline
+48 (24-30 Nov) & *Refine part 3, Kalman filter, improvements of stuff \\
+\hline
+49 (1-7 Dec) & *Refine part 3 \\
+\hline
+50 (8-14 Dec) & *12 Dec hand in report, prepare presentation \\
+\hline
+51 (15-16 Dec) & *Demonstration and presentation 16:th of Decemeber at 15:15 and 17:15 \\
+\hline
+
+\end{tabular}
 
 \newpage
 \begin{thebibliography}{9}
