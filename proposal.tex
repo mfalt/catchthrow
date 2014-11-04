@@ -1,6 +1,7 @@
 \documentclass{article}
 
 \usepackage[parfill]{parskip}
+\usepackage{graphicx}
 
 \title{Suggested solution}
 \author{Name of Author}
@@ -24,7 +25,11 @@ The method above would generate a trajectory that satisfies the specific goal fo
 Each regulator can read its respective feedback and estimation values for each time-step at initiation and will then simply apply them in real time.
 
 \section{UML}
-
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{UML}
+  \caption{UML diagram}\label{fig:UML}
+\end{figure}
 
 \section{Operator communication}
 \subsection{Plotters}
