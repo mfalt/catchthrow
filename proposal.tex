@@ -1,18 +1,64 @@
 \documentclass{article}
+
+\usepackage[parfill]{parskip}
+
 \title{Suggested solution}
 \author{Name of Author}
 
 \begin{document}
 \maketitle
 
-\section{Regulator structure}
+\section{Regulator structure}\label{regstruc}
+We are planning to use different regulator structures for the different parts of the execution. The idea is that we will use a simple PID controller to move the beam to the pick-up position and then a LQG regulator for the other parts.
+\subsection{Step 1, Beam control}
+We will use a simple PID controller for the position of the beam in this part. A gradually increasing reference will be given for the beam until indication is given that the beam is in the pick-up position. The reference will then stay constant until the next controller is started. The controller for this part is governed by the BeamRegul class.
+\subsection{Step 2, Ball balancing}\label{step2}
+This part will be regulated by a time-invariant LQG regulator. The model will thus be linearized around the desired position for the weighing. If this proves to be not robust enough (for all weights of the balls), we might introduce the ball weight as a parameter in the model, which can be estimated by the Kalman-filter. We might switch to a cascaded PID controller if this method is too hard to implement or is taking too much time.
+\subsection{Step 3, Ball delivery}
+We will have the same structure for all controllers in this part but they will have different reference values. The idea for all of them is to first find a nominal solution to the nonlinear equations and then control the system using time-varying LQG regulators. It might be beneficial to have an intermediate regulator that move the system to a state different from the weighing state, before we exectute these controllers, to get a better initial state for the optimization method described below.
+\subsubsection{Finding a solution}
+We have several ideas on how to solve this part. We can either use JModelical to find an optimal trajectory similar to what is done in Nonlinear Control Lab 3. If this requires too much time, we might also use a numerical optimization approach in MATLAB, as outlined in for example \cite{NR} chapter 21.1.1. Lastly, if these methods fail or provide unsatisfactory solution, we could make a simple ansatz and find an analytical solution.
+\subsubsection{Calculating regulator}
+The method above would generate a trajectory that satisfies the specific goal for the current ball. We can then, using MATLAB, solve the differential Riccatti equation for the linearized time-varying system using some simple numerical solver. This would generate a feedback and estimation matrix for each timestep which can be saved to disk.
+\subsubsection{Executing regulator}
+Each regulator can read its respective feedback and estimation values for each time-step at initiation and will then simply apply them in real time.
+
+\section{Transition between controllers}
 
 
 \section{UML}
 
 
-\section{Operator communication
-}
+\section{Operator communication}
+\subsection{Plotters}
+We will have the following plotters:
+\begin{itemize}
+\item Beam position (reference, measurement and Kalman filter estimate)
+\item Ball position (reference, measurement and Kalman filter estimate)
+\item Control signal
+\end{itemize}
+
+\subsection{Modes}
+We intend to implement three different modes; Beam control, Ball balancing and finally the entire sequence control scheme described in section \ref{regstruc} (beam control, ball balancing, ball delivery).
+\subsubsection{Beam control mode}
+In this mode only the beam will be controlled by a PID controller. The user should be able to tune the PID parameters as well as altering the reference value online.
+
+\subsubsection{Ball balancing mode}
+As discussed in section \ref{step2}, either LQG or cascaded PID will be used when balancing the ball for measuring its weight, and the ball balancing mode will use the same controller.
+
+If cascaded PID controllers will be used, the user will be able to tune PID parameters as well as altering the reference value for the ball. If LQG will be used however, controller parameters (weighting matrices and noise intensities) will not be as straight-forward to change online (the Riccati equations need to be resolved by some Java package or Java-\textsc{Matlab} communication). Also a reference value change would affect the linearization point, and a relinearization would be appropriate although for the same reason not very straight-forward. Therefore, with an LQG setup the controller parameters as well as reference value will only be able to change online if time permits.
+
+\subsubsection{Sequence control mode}
+In the sequence control mode, we want to test the performance of the full sequence when adjusting parameters. Therefore, a change of parameters in this mode should only affect the following iteration, and not the current one.
+
+As for the previous mode, online Riccati resolving and relinearization could be difficult to achieve. Nevertheless the user should be able to tune PID parameters as well as change the position interval for the beam when searching for the correct position to pickup a ball. If time permits, also some of the following could be allowed for an online change:
+\begin{itemize}
+\item LQG weighting matrices for ball balancing
+\item Desired ball position when estimating its weight
+\item LQG weighting matrices for ball delivery
+\item Desired final state for ball delivery
+\item LQG noise intensities (same for balancing and delivery)
+\end{itemize}
 
 \section{Timetable}
 \subsection{Workflow}
@@ -48,5 +94,14 @@ Week & Things to do \\ \hline
 
 \end{tabular}
 
+\newpage
+\begin{thebibliography}{9}
+\bibitem{NR}
+  Thomas Bewley,
+  \emph{Numerical Renaissance: simulation, optimization, \& control}.
+  Renaissance Press,
+  http://numerical-renaissance.com/NR.pdf
+
+\end{thebibliography}
 
 \end{document}
