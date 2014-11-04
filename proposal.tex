@@ -1,4 +1,7 @@
 \documentclass{article}
+
+\usepackage[parfill]{parskip}
+
 \title{Suggested solution}
 \author{Name of Author}
 
@@ -26,6 +29,8 @@ We intend to implement three different modes; Beam control, Ball control and fin
 In this mode only the beam will be controlled by a PID controller. The user should be able to tune the PID parameters as well as altering the reference value online.
 
 \subsubsection{Ball control mode}
+As discussed in section \ref{step2}, either LQG or cascaded PID will be used when weighing the ball, and the ball control mode will use the same controller as when weighing the ball.
+
 
 
 \subsubsection{Sequence control mode}
