@@ -28,6 +28,13 @@ Each regulator can read its respective feedback and estimation values for each t
 
 \section{UML}
 
+An overview of the classes is showb in figure fig fig. 
+The responsabilities of each class are as follows:
+\begin{itemize}
+\item Main: the constructor creates an instance of the first controller to be run and it also creates and starts an instance of its internal thread called MainThread. This thread is the one performing the calculations of the control signal with the help of methods of the current controller.
+\item Regul: is an abstract class which all the controllers inherit from. It contains a thread whose task is to check if the work of the currently running controller is finished and it also checks if the program should switch to a different controller. It has an internal monitor called ParamMonitor which communicates with the Gui thread. The RefBeamMonitor is valid only for the controller of the beam only.
+\item Measurement and OutSignal are help classes, the first containing measurement signals and the latter containing the outputs
+\end{itemize}
 
 \section{Operator communication}
 \subsection{Plotters}
