@@ -20,8 +20,24 @@ We will have the same structure for all controllers in this part but they will h
 \section{UML}
 
 
-\section{Operator communication
-}
+\section{Operator communication}
+\subsection{Plotters}
+We will have the following plotters:
+\begin{itemize}
+\item Beam position (reference, measurement and Kalman filter estimate)
+\item Ball position (reference, measurement and Kalman filter estimate)
+\item Control signal
+\end{itemize}
+
+\subsection{Modes}
+We intend to implement three different modes; Beam control, Ball control and finally the entire sequence control scheme (catch, weigh, throw).
+\subsubsection{Beam control mode}
+In this mode only the beam will be controlled by a PID controller. The user should be able to tune the PID parameters as well as altering the reference value online.
+
+\subsubsection{Ball control mode}
+
+
+\subsubsection{Sequence control mode}
 
 \section{Timetable}
 

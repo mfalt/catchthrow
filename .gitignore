@@ -1,3 +1,6 @@
 *.aux
 *.log
 *.pdf
+*.class
+*.sage-*
+*.synctex.gz
