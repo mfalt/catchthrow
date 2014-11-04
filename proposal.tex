@@ -16,7 +16,7 @@ We are planning to use different regulator structures for the different parts of
 We will use a simple PID controller for the position of the beam in this part. A gradually increasing reference will be given for the beam until indication is given that the beam is in the pick-up position. The reference will then stay constant until the next controller is started. The controller for this part is governed by the BeamRegul class.
 \subsection{Step 2, Ball balancing}\label{step2}
 This part will be regulated by a time-invariant LQG regulator. The model will thus be linearized around the desired position for the weighing. If this proves to be not robust enough (for all weights of the balls), we might introduce the ball weight as a parameter in the model, which can be estimated by the Kalman-filter. We might switch to a cascaded PID controller if this method is too hard to implement or is taking too much time.
-\subsection{Step 3, Ball cation.delivery}
+\subsection{Step 3, Ball delivery}
 We will have the same structure for all controllers in this part but they will have different reference values. The idea for all of them is to first find a nominal solution to the nonlinear equations and then control the system using time-varying LQG regulators. It might be beneficial to have an intermediate regulator that move the system to a state different from the weighing state, before we exectute these controllers, to get a better initial state for the optimization method described below.
 \subsubsection{Finding a solution}
 We have several ideas on how to solve this part. We can either use JModelical to find an optimal trajectory similar to what is done in Nonlinear Control Lab 3. If this requires too much time, we might also use a numerical optimization approach in MATLAB, as outlined in for example \cite{NR} chapter 21.1.1. Lastly, if these methods fail or provide unsatisfactory solution, we could make a simple ansatz and find an analytical solution.
@@ -24,6 +24,7 @@ We have several ideas on how to solve this part. We can either use JModelical to
 The method above would generate a trajectory that satisfies the specific goal for the current ball. We can then, using MATLAB, solve the differential Riccatti equation for the linearized time-varying system using some simple numerical solver. This would generate a feedback and estimation matrix for each timestep which can be saved to disk.
 \subsubsection{Executing regulator}
 Each regulator can read its respective feedback and estimation values for each time-step at initiation and will then simply apply them in real time.
+
 
 \section{Transition between controllers}
 When going from one controller to another, the control signal may very well make a jump from one value to another. The bumps introduced may be problematic if they are considerable and not dealt with. As compared to the newer \emph{ball and beam} process used in Lab 1 however, our older process has an extra integrator (torque instead of angular velocity as input signal) which gives an even stronger lowpass behavior. This will indeed smooth the bumps but we will have to investigate whether, and to what extent, we have to deal with them.
