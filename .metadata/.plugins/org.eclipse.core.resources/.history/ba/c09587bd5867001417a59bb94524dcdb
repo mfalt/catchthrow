@@ -1,0 +1,21 @@
+
+public class Opcom {
+	
+	private int priority; // priority of the plotters
+	
+	/** Constructor */
+	public Opcom(int plotterPriority) {
+		priority = plotterPriority;
+	}
+	
+	/** Starts the plotter threads. Called from Main */
+	public void start() {
+		//to be written
+	}
+
+	/** Creates the GUI. Called from Main. */
+	public void initializeGUI() {
+		//to be written
+	}
+	
+}

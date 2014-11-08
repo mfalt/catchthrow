@@ -1,0 +1,8 @@
+
+public class RegulThread extends Thread {
+	
+	public void run() {
+		
+	}
+
+}

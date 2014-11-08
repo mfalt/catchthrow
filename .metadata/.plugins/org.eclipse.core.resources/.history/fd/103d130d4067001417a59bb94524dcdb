@@ -1,0 +1,46 @@
+
+public abstract class Regul{
+	
+	/** calculates the control signal
+	 *  as for now it returns a double, to be changed
+	 *  to an OutSignal object if needed when we do
+	 *  more advanced stuffs
+	 */
+	public abstract double calculateOutput(double y, double yref);
+	
+	/** updates the controller state
+	 *  uses tracking-based anti-windup
+	 */
+	public abstract void updateState(double u);
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}
+	/*Main main;
+	long t0;
+	Thread finishChecker;
+
+	//Obs handle null prevRegul
+	public abstract void init(long t0, Regul prevRegul);
+	
+	public abstract boolean checkFinished();
+	
+	public abstract Regul getNextRegul();
+	
+	public class RegulCheckFinished extends Thread {
+		public void run() {
+			while(!checkFinished()){}
+			main.switchRegul(getNextRegul());
+		}
+	}
+*/
+

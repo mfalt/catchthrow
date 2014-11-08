@@ -1,0 +1,16 @@
+
+public class RegulThread extends Thread {
+	
+	Monitor mon;
+	
+	/** Constructor */
+	public RegulThread(Monitor monitor, int prio) {
+		mon = monitor;
+		setPriority(prio);
+	}
+	
+	public void run() {
+		
+	}
+
+}

@@ -1,0 +1,124 @@
+
+public class Monitor {
+	
+	private BeamRegul beamRegul;
+	private BeamBallRegul beamBallRegul;
+	private BeamBallRegul beamBallThrowSmall;
+	private BeamBallRegul beamBallThrowMedium;
+	private BeamBallRegul beamBallThrowBig;
+	private Regul currentRegul;
+	private long t;
+	private static final int OFF=0, BEAM=1, BALL=2;
+	private int mode;
+	
+	/** Constructor*/
+	public Monitor() {
+		mode = OFF;
+		beamRegul = new BeamRegul();
+		beamBallRegul = new BeamBallRegul();
+	}
+	
+	/** called by SwitchThread */
+	public synchronized void setCurrentRegul(Regul r) {
+		currentRegul = r;
+	}
+	
+	/** called by SwitchThread*/
+	public synchronized int getMode() {
+		return mode;
+	}
+	
+	/** called by RegulThread*/
+	public synchronized double calcOutput(double y, double yref) {
+		t = System.currentTimeMillis();
+		return currentRegul.calculateOutput(y, yref);
+	}
+	
+	/** called by RegulThread*/
+	public synchronized void updateState(double u) {
+		currentRegul.updateState(u);
+		notifyAll(); //I am going to sleep now people so you can use the monitor
+		
+		// sleep
+		long duration;
+		t = t + currentRegul.getHMillis();
+		duration = t - System.currentTimeMillis();
+		if (duration > 0) {
+			try {
+				wait(duration);  
+			} catch (InterruptedException x) {
+			}
+		}
+	}
+	
+	public synchronized void setInnerParameters(PIParameters p) {
+		beamRegul.setParameters(p);
+	}
+	
+	public synchronized PIParameters getInnerParameters() {
+		return beamRegul.getParameters();
+		
+	}
+	
+	public void setOuterParameters(PIDParameters p) {
+		beamBallRegul.setParameters(p);
+	}
+	
+	public PIDParameters getOuterParameters(){
+		return beamBallRegul.getParameters();
+	}
+	
+	public void setMode(int m){
+		mode = m;
+	}
+	
+	
+	
+}	
+	
+	
+	/*
+
+	
+	public Main(){
+		beam = new BeamRegul();
+		//Create other reguls
+		beam.setNextRegul(beamBall);
+		//Set the rest of the next
+		//Do something?
+		switchRegul(beam);
+	}
+
+	public synchronized void switchRegul(Regul r){
+		Regul prevRegul = currentRegul;
+		currentRegul = r;
+		r.init(System.currentTimeMillis(), prevRegul);
+		//r.start()?
+	}
+
+	public void run(){
+		long t = System.currentTimeMillis();
+		long h = 10;
+		Measurement measurement;
+		while(true){
+			measurement = new Measurement(Get input);
+			
+			
+			synchronized (this) {
+				currentRegul.calcOut(measurement);
+				// Set output
+				currentRegul.updateState();
+			}
+			long thist = System.currentTimeMillis();
+			if(thist < t+h){
+				try{
+					Thread.sleep(t+h-thist);
+				}catch (Exception e) {
+					System.exit(1);
+				}
+			}
+			t += h;
+		}
+	}*/
+	
+	

@@ -1,0 +1,90 @@
+
+public class Monitor {
+	
+	private BeamRegul beamRegul;
+	private BeamBallRegul beamBallRegul;
+	private BeamBallRegul beamBallThrowSmall;
+	private BeamBallRegul beamBallThrowMedium;
+	private BeamBallRegul beamBallThrowBig;
+	private Regul currentRegul;
+	private long t;
+	private static final int OFF=0, BEAM=1, BALL=2;
+	private int mode;
+	private double[] lastBeamAngle;
+	private int nextWrite, size;
+	
+	/** Constructor*/
+	public Monitor() {
+		mode = OFF;
+		beamRegul = new BeamRegul();
+		beamBallRegul = new BeamBallRegul();
+		size = 3;
+		lastBeamAngle = new double[size];
+	}
+	
+	/** called by SwitchThread */
+	public synchronized void setCurrentRegul(Regul r) {
+		currentRegul = r;
+	}
+	
+	/** called by SwitchThread*/
+	public synchronized double[] getLatestBeamAngles() {
+		return lastBeamAngle;
+	}
+	
+	/** called by RegulThread*/
+	public synchronized double calcOutput(double y, double yref) {
+		t = System.currentTimeMillis();
+		lastBeamAngle[nextWrite] = y;
+		nextWrite = (nextWrite + 1) % size;
+		return currentRegul.calculateOutput(y, yref);
+	}
+	
+	/** called by RegulThread*/
+	public synchronized void updateState(double u) {
+		currentRegul.updateState(u);
+		notifyAll(); //I am going to sleep now people so you can use the monitor
+		
+		// sleep
+		long duration;
+		t = t + currentRegul.getHMillis();
+		duration = t - System.currentTimeMillis();
+		if (duration > 0) {
+			try {
+				wait(duration);  
+			} catch (InterruptedException x) {
+			}
+		}
+	}
+	
+	/** called by Opcom*/
+	public synchronized void setInnerParameters(PIParameters p) {
+		beamRegul.setParameters(p);
+	}
+	
+	/** called by Opcom*/
+	public synchronized PIParameters getInnerParameters() {
+		return beamRegul.getParameters();
+	}
+	
+	/** called by Opcom*/
+	public void setOuterParameters(PIDParameters p) {
+		beamBallRegul.setParameters(p);
+	}
+	
+	/** called by Opcom*/
+	public PIDParameters getOuterParameters(){
+		return beamBallRegul.getParameters();
+	}
+	
+	/** called by Opcom*/
+	public void setMode(int m){
+		mode = m;
+	}
+	
+	/** called by SwitchThread and Opcom*/
+	public synchronized int getMode() {
+		return mode;
+	}
+	
+}	

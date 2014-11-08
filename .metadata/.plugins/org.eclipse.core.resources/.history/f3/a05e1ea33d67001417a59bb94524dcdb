@@ -1,0 +1,4 @@
+
+public class RegulThread extends Thread {
+
+}

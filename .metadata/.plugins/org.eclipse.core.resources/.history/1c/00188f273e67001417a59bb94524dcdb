@@ -1,0 +1,12 @@
+
+public class SwitchThread extends Thread {
+	
+	
+	
+	
+	
+	
+	public void run() {
+		
+	}
+}

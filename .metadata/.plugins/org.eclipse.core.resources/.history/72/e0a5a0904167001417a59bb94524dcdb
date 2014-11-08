@@ -1,0 +1,15 @@
+
+public class SwitchThread extends Thread {
+	Monitor mon;
+	
+	/** Constructor */
+	public SwitchThread(Monitor monitor) {
+		mon = monitor;
+	}
+	
+	
+	
+	public void run() {
+		
+	}
+}
