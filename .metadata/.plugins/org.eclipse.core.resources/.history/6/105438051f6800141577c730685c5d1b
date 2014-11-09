@@ -322,17 +322,17 @@ public class OpCom {
 		// Button action listeners.
 		offModeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				mon.setOFFMode();
+				mon.setMode(0);
 			}
 		});
 		beamModeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				mon.setBeamMode();
+				mon.setMode(1);
 			}
 		});
 		ballModeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				mon.setBallMode();
+				mon.setMode(2);
 			}
 		});
 		stopButton.addActionListener(new ActionListener() {

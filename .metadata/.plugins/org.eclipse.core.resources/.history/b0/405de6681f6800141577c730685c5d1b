@@ -11,7 +11,6 @@ public class RegulThread extends Thread {
 	private OpCom opcom;
 	private boolean shouldRun = true;
 	private Semaphore mutex; // used for synchronization at shut-down
-	private long startTime;
 	
 	//input and output analog signals to and from the real process
 	private AnalogIn analogInAngle;        // angle of the beam = yAngle
@@ -61,14 +60,6 @@ public class RegulThread extends Thread {
 		return v;
 	}
 	
-	private void sendDataToOpCom(double yref, double y, double u) {
-		double x = (double)(System.currentTimeMillis() - startTime) / 1000.0;
-		DoublePoint dp = new DoublePoint(x,u);
-		PlotData pd = new PlotData(x,yref,y);
-		opcom.putControlDataPoint(dp);
-		opcom.putMeasurementDataPoint(pd);
-	}
-	
 	/** Called from OpCom when shutting down */
 	public synchronized void shutDown() {
 		shouldRun = false;
@@ -80,7 +71,7 @@ public class RegulThread extends Thread {
 	}
 	
 	public void run() {
-		startTime = System.currentTimeMillis();
+		long startTime = System.currentTimeMillis();
 		
 		mutex.take();
 		while(shouldRun) {
@@ -114,9 +105,16 @@ public class RegulThread extends Thread {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-		
-				//might have to rethink this part...
-				sendDataToOpCom(ref, analogValues[0], uAngle);
+			
+			
+				//hmm... plots the beam angle and its reference
+				//to be changed if we want to plot the ball position and its ref
+				//must rethink this part...
+				double x = (double)(System.currentTimeMillis() - startTime) / 1000.0;
+				DoublePoint dp = new DoublePoint(x,uAngle);
+				PlotData pd = new PlotData(x,ref,analogValues[0]);
+				opcom.putControlDataPoint(dp);
+				opcom.putMeasurementDataPoint(pd);
 				
 				//if we do updateState here then this above calculation
 				//is done while holding the monitor but if we put the calculations outside

@@ -62,7 +62,7 @@ public class RegulThread extends Thread {
 	}
 	
 	private void sendDataToOpCom(double yref, double y, double u) {
-		double x = (double)(System.currentTimeMillis() - startTime) / 1000.0;
+		double x = (double)(System.currentTimeMillis() - starttime) / 1000.0;
 		DoublePoint dp = new DoublePoint(x,u);
 		PlotData pd = new PlotData(x,yref,y);
 		opcom.putControlDataPoint(dp);
@@ -114,9 +114,16 @@ public class RegulThread extends Thread {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-		
-				//might have to rethink this part...
-				sendDataToOpCom(ref, analogValues[0], uAngle);
+			
+			
+				//hmm... plots the beam angle and its reference
+				//to be changed if we want to plot the ball position and its ref
+				//must rethink this part...
+				double x = (double)(System.currentTimeMillis() - startTime) / 1000.0;
+				DoublePoint dp = new DoublePoint(x,uAngle);
+				PlotData pd = new PlotData(x,ref,analogValues[0]);
+				opcom.putControlDataPoint(dp);
+				opcom.putMeasurementDataPoint(pd);
 				
 				//if we do updateState here then this above calculation
 				//is done while holding the monitor but if we put the calculations outside

@@ -23,6 +23,24 @@ public class Monitor {
 		latestBeamAngles = new double[size];
 	}
 	
+	private void setCurrentRegul() {
+		
+		switch(mode) {
+		case 0: {
+			currentRegul = null;
+			break;
+		}
+		case 1: {
+			currentRegul = beamRegul;
+			break;
+		}
+		case 2: {
+			currentRegul = beamBallRegul;
+			break;
+		}
+		}
+	}
+	
 	/** called by SwitchThread*/
 	public synchronized double[] getLatestBeamAngles() {
 		return latestBeamAngles;
@@ -74,21 +92,9 @@ public class Monitor {
 	}
 	
 	/** called by Opcom*/
-	public synchronized void setOFFMode(){
-		mode = 0;
-		currentRegul = null; //update currentRegul
-	}
-	
-	/** called by Opcom*/
-	public synchronized void setBeamMode(){
-		mode = 1;
-		currentRegul = beamRegul; //update currentRegul
-	}
-	
-	/** called by Opcom*/
-	public synchronized void setBallMode(){
-		mode = 2;
-		currentRegul = beamBallRegul; //update currentRegul
+	public synchronized void setMode(int m){
+		mode = m;
+		setCurrentRegul(); //update currentRegul
 	}
 	
 	/** called by SwitchThread and Opcom*/

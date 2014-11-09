@@ -9,8 +9,7 @@ public class BeamBallRegul extends Regul {
 	private double[] sendToInner;
 	
 	/** Constructor */
-	public BeamBallRegul(BeamRegul in){
-		inner = in;
+	public BeamBallRegul(){
 		p = new PIDParameters();
 		inner = new BeamRegul();
 		p.K = -0.1;

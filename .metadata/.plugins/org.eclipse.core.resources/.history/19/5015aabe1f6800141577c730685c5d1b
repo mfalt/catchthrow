@@ -114,8 +114,11 @@ public class RegulThread extends Thread {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-		
-				//might have to rethink this part...
+			
+			
+				//hmm... plots the beam angle and its reference
+				//to be changed if we want to plot the ball position and its ref
+				//must rethink this part...
 				sendDataToOpCom(ref, analogValues[0], uAngle);
 				
 				//if we do updateState here then this above calculation
