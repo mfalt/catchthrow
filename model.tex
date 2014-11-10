@@ -1,0 +1,138 @@
+\subsection{System Equations}
+
+\begin{figure}[\textwidth]
+\centering
+\input{throwImage.tex}
+\caption{Image text HERE}
+\label{fig:throw}
+\end{figure}
+
+
+Ball Equation, where $x$ is the distance of the ball along the beam:
+
+\begin{equation}
+m(\ddot{x}-x\dot{\phi}^{2})=-mg\sin(\phi)-\frac{2}{5}m\ddot{x}
+\end{equation}
+
+
+Beam Equation:
+\begin{equation}
+J_{B}\ddot{\phi}=k_{u}u+mgx\cos(\phi)
+\end{equation}
+
+
+Let $x_{1}=x,\, x_{2}=\dot{x},\, x_{3}=\phi,\, x_{4}=\dot{\phi}$,
+we can then write ball equation as 
+\begin{eqnarray*}
+m(x_{2}-x_{1}x_{4}^{2}) & = & -mg\sin(x_{1})-\frac{2}{5}m\dot{x}_{2}\\
+ & \Leftrightarrow\\
+\dot{x}_{2} & = & \frac{5}{7}\left(-g\sin(x_{3})+\frac{1}{m}x_{1}x_{4}^{2}\right)
+\end{eqnarray*}
+
+
+and beam equation as
+\[
+\dot{x}_{4}=\frac{1}{J}\left(k_{u}u+mgx_{1}\cos(\phi)\right).
+\]
+
+
+We thus have then nonlinear first order system equations
+
+\[
+\begin{pmatrix}\dot{x}_{1}\\
+\dot{x}_{2}\\
+\dot{x}_{3}\\
+\dot{x}_{4}
+\end{pmatrix}=\begin{pmatrix}x_{2}\\
+\frac{5}{7}\left(-g\sin(x_{3})+\frac{1}{m}x_{1}x_{4}^{2}\right)\\
+x_{4}\\
+\frac{1}{J}mgx_{1}\cos(\phi)
+\end{pmatrix}+\begin{pmatrix}0\\
+0\\
+0\\
+\frac{k_{u}}{J}
+\end{pmatrix}u.
+\]
+
+
+
+\subsection{Throw Equations}
+
+The equations for a free falling body are
+
+\begin{eqnarray*}
+h & = & h_{0}+v_{y_{0}}t-\frac{gt^{2}}{2}\\
+d & = & d_{0}+v_{x_{0}}t,
+\end{eqnarray*}
+
+
+which results in the terminal time $t_{T}=(d_{T}-d_{0})/v_{x_{0}}$.
+
+We desire 
+\begin{eqnarray*}
+h_{T} & = & -d_{y}\\
+d_{T} & = & d_{x},
+\end{eqnarray*}
+
+
+and know
+\begin{eqnarray*}
+h_{0} & = & l\sin(\phi)\\
+d_{0} & = & l\cos(\phi),
+\end{eqnarray*}
+
+
+which gives
+\begin{eqnarray*}
+-d_{y} & = & l\sin(\phi)+v_{y_{0}}t-\frac{gt^{2}}{2}\\
+d_{x} & = & l\cos(\phi)+v_{x_{0}}t.
+\end{eqnarray*}
+
+
+The velocity of the ball in the horizontal and vertical directions
+are
+\begin{eqnarray*}
+v_{x} & = & \dot{x}\cos(\phi)-x\dot{\phi}\sin(\phi)\\
+v_{y} & = & \dot{x}\sin(\phi)-x\dot{\phi}\cos(\phi),
+\end{eqnarray*}
+
+
+and at the release-time, we have $x=l$. These equations gives
+\begin{eqnarray*}
+-d_{y} & = & l\sin(\phi)+\left(\dot{x}\sin(\phi)-l\dot{\phi}\cos(\phi)\right)t-\frac{gt^{2}}{2}\\
+d_{x} & = & l\cos(\phi)+\left(\dot{x}\cos(\phi)-l\dot{\phi}\sin(\phi)\right)t,
+\end{eqnarray*}
+
+
+and from the second equation we arrive at 
+\[
+t=\frac{\left(d_{x}-l\cos(\phi)\right)}{\dot{x}\cos(\phi)-l\dot{\phi}\sin(\phi)},
+\]
+
+
+and can thus insert that into the first equation:
+\begin{gather*}
+-d_{y}=l\sin(\phi)+\frac{\left(\dot{x}\sin(\phi)-l\dot{\phi}\cos(\phi)\right)\left(d_{x}-l\cos(\phi)\right)}{\dot{x}\cos(\phi)-l\dot{\phi}\sin(\phi)}-\frac{g}{2}\left(\frac{\left(d_{x}-l\cos(\phi)\right)}{\dot{x}\cos(\phi)-l\dot{\phi}\sin(\phi)}\right)^{2}.
+\end{gather*}
+
+
+
+\subsection{Assuming $\dot{\phi}=0$}
+
+We can simplify the equation if we assume stationary beam at realease
+($\dot{\phi}=0$) 
+\begin{eqnarray*}
+-d_{y}\dot{x}^{2}\cos^{2}(\phi) & = & \dot{x}^{2}\cos^{2}(\phi)l\sin(\phi)+\dot{x}^{2}\cos(\phi)\sin(\phi)\left(d_{x}-l\cos(\phi)\right)-\frac{g}{2}\left(d_{x}-l\cos(\phi)\right)^{2}
+\end{eqnarray*}
+simplify:
+
+\[
+-d_{y}\dot{x}^{2}\cos^{2}(\phi)=\dot{x}^{2}\cos(\phi)\sin(\phi)d_{x}-\frac{g}{2}\left(d_{x}-l\cos(\phi)\right)^{2}
+\]
+
+
+and we can then finally solve for $\dot{x}$:
+
+\[
+\dot{x}=\left(d_{x}-l\cos(\phi)\right)\frac{\sqrt{g}}{\sqrt{2\cos(\phi)\left(d_{y}\cos(\phi)+d_{x}\sin(\phi)\right)}},
+\]

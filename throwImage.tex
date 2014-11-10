@@ -1,0 +1,33 @@
+\begin{tikzpicture}[scale=1.5]
+\usetikzlibrary{patterns,snakes}
+\definecolor{Darkgreen}{rgb}{0,0.4,0}
+\tikzstyle{brace} = [decorate, decoration={brace, amplitude=5pt}]
+
+\node[inner sep=0] (v0) at (0,0) {};
+\node[inner sep=0] (v2) at (2,0.5) {};
+\node[inner sep=0] (v1) at (-1,-0.25) {};
+
+\draw[color=red]  (v1) edge (v2);
+
+\node (v3) at (8,-2) {};
+\node (v4) at (0,-2) {};
+\node (v5) at (8,0) {};
+
+\draw[ball color=blue] (2,0.6) circle (.1);
+
+\draw[dashed,->] (v2) -- (4,1) node[pos=1,above] {$\dot{x}$};
+\draw[dashed] (v0) -- (v5) {};
+\draw[dashed] (v0) -- (v4) {};
+\draw[brace] (v0) -- (v2) node[pos=0.5,above,yshift=6] {$l=x$};
+\draw[brace] (v3) -- (v4) node[pos=0.5,below,yshift=-6] {$d_x$};
+\draw[brace] (v5) -- (v3)  node[pos=0.5,right,xshift=5] {$d_y$};
+
+ \draw[color=green] plot[smooth] coordinates {(v2) (4,0.6) (6,0) (8,-2)};
+ 
+ 
+\node at (1.3,0.17) {$\phi$};
+
+\path[clip] (2,0.5) -- (0,0) -- (2,0);
+\node[circle,draw=Darkgreen, minimum size=90pt] at (0,0) (circ) {};
+
+\end{tikzpicture}
