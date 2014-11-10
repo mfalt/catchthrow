@@ -18,25 +18,25 @@ public class SwitchThread extends Thread {
 		
 		while(!isInterrupted()) {
 			mode = mon.getMode();
-			latestBeamAngles = mon.getLatestBeamAngles();
-			
-			for(int i = 0; i < 3; ++i){
-				sum += latestBeamAngles[i];
-			}
-			average = sum/3;
-			
-			//we know we are in beam mode and the beam angle has been
-			//relatively constant around zero
-			// Change to ball mode when the sensor triggers instead? //Lucas
-			if(mode == Monitor.BEAM && average > epsilon && average < 1) {
-				mon.setBallMode(); //i.e switch to ball
-				try {
-					sleep(500);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+//			latestBeamAngles = mon.getLatestBeamAngles();
+//			
+//			for(int i = 0; i < 3; ++i){
+//				sum += latestBeamAngles[i];
+//			}
+//			average = sum/3;
+//			
+//			//we know we are in beam mode and the beam angle has been
+//			//relatively constant around zero
+//			// Change to ball mode when the sensor triggers instead? //Lucas
+//			if(mode == Monitor.BEAM && average > epsilon && average < 1) {
+//				mon.setBallMode(); //i.e switch to ball
+//				try {
+//					sleep(500);
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
 			//to be continued
 		}
 	}

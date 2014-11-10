@@ -3,7 +3,6 @@ public class PIParameters implements Cloneable {
 	double Ti;
 	double Tr;
 	double Beta;
-	double H;
 	boolean integratorOn;
 	
 	public Object clone() {

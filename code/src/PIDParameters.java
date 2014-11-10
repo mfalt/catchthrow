@@ -6,7 +6,6 @@ public class PIDParameters implements Cloneable {
 	double Td;
 	double N;
 	double Beta;
-	double H;
 	boolean integratorOn;
 	
 	public Object clone() {

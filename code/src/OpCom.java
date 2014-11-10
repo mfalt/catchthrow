@@ -31,7 +31,6 @@ public class OpCom {
 	private DoubleField innerParTiField = new DoubleField(5,3);
 	private DoubleField innerParTrField = new DoubleField(5,3);
 	private DoubleField innerParBetaField = new DoubleField(5,3);
-	private DoubleField innerParHField = new DoubleField(5,3);
 	private JButton innerApplyButton;
 
 	private DoubleField outerParKField = new DoubleField(5,3);
@@ -40,8 +39,9 @@ public class OpCom {
 	private DoubleField outerParTrField = new DoubleField(5,3);
 	private DoubleField outerParNField = new DoubleField(5,3);
 	private DoubleField outerParBetaField = new DoubleField(5,3);
-	private DoubleField outerParHField = new DoubleField(5,3);
 	private JButton outerApplyButton;
+	
+	private DoubleField hField = new DoubleField(5,3);
 
 	private JRadioButton offModeButton;
 	private JRadioButton beamModeButton;
@@ -108,7 +108,7 @@ public class OpCom {
 		innerParFieldPanel.add(innerParTiField);
 		innerParFieldPanel.add(innerParTrField);
 		innerParFieldPanel.add(innerParBetaField);
-		innerParFieldPanel.add(innerParHField);
+		innerParFieldPanel.add(hField);
 
 		// Set initial parameter values of the fields
 		innerParKField.setValue(innerPar.K);
@@ -118,8 +118,8 @@ public class OpCom {
 		innerParTrField.setMinimum(-eps);
 		innerParBetaField.setValue(innerPar.Beta);
 		innerParBetaField.setMinimum(-eps);
-		innerParHField.setValue(innerPar.H);
-		innerParHField.setMinimum(-eps);
+		hField.setValue(mon.getH());
+		hField.setMinimum(-eps);
 
 		// Add action listeners to the fields
 		innerParKField.addActionListener(new ActionListener() {
@@ -152,11 +152,9 @@ public class OpCom {
 				innerApplyButton.setEnabled(true);
 			}
 		});
-		innerParHField.addActionListener(new ActionListener() {
+		hField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				innerPar.H = innerParHField.getValue();
-				outerPar.H = innerPar.H;
-				outerParHField.setValue(innerPar.H);
+				mon.setH(hField.getValue());
 				innerApplyButton.setEnabled(true);
 				hChanged = true;
 			}
@@ -210,7 +208,6 @@ public class OpCom {
 		outerParFieldPanel.add(outerParNField);
 		outerParFieldPanel.add(outerParTrField);
 		outerParFieldPanel.add(outerParBetaField);
-		outerParFieldPanel.add(outerParHField);
 		outerParKField.setValue(outerPar.K);
 		outerParTiField.setValue(outerPar.Ti);
 		outerParTiField.setMinimum(-eps);
@@ -220,8 +217,6 @@ public class OpCom {
 		outerParTrField.setValue(outerPar.Tr);
 		outerParBetaField.setValue(outerPar.Beta);
 		outerParBetaField.setMinimum(-eps);
-		outerParHField.setValue(outerPar.H);
-		outerParHField.setMinimum(-eps);
 		outerParKField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				outerPar.K = outerParKField.getValue();
@@ -262,15 +257,6 @@ public class OpCom {
 			public void actionPerformed(ActionEvent e) {
 				outerPar.Beta = outerParBetaField.getValue();
 				outerApplyButton.setEnabled(true);
-			}
-		});
-		outerParHField.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				outerPar.H = outerParHField.getValue();
-				innerPar.H = outerPar.H;
-				innerParHField.setValue(outerPar.H);
-				outerApplyButton.setEnabled(true);
-				hChanged = true;
 			}
 		});
 

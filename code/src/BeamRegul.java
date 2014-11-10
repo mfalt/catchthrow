@@ -15,7 +15,6 @@ public class BeamRegul extends Regul {
 		p.Ti = 0.0;
 		p.Tr = 0.0;
 		p.Beta = 1.0;
-		p.H = 0.1;
 		p.integratorOn = false;
 		setParameters(p);
 		I = 0;
@@ -27,7 +26,7 @@ public class BeamRegul extends Regul {
 	 *  to an OutSignal object if needed when we do
 	 *  more advanced stuffs
 	 */
-	public double calculateOutput(double[] yy, double yref) {
+	public double calculateOutput(double[] yy, double yref, double h) {
 		P = p.K*(p.Beta*yref - yy[0]);
 		v = P + I;
 		y = yy[0];
@@ -38,10 +37,10 @@ public class BeamRegul extends Regul {
 	/** updates the controller state
 	 *  uses tracking-based anti-windup
 	 */
-	public void updateState(double u) {
+	public void updateState(double u, double h) {
 		if(p.integratorOn) {
-			bi = p.K*p.H/p.Ti;
-			ar = p.H/p.Tr;
+			bi = p.K*h/p.Ti;
+			ar = h/p.Tr;
 			I = I + bi*(yref - y) + ar*(u - v); 
 			} else {
 				I = 0.0;
@@ -60,11 +59,6 @@ public class BeamRegul extends Regul {
 	
 	public PIParameters getParameters() {
 		return p;
-	}
-
-	/** returns this controller's sampling interval*/
-	public long getHMillis() {
-		return (long) (p.H*1000.0);
 	}
 
 }

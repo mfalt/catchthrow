@@ -7,11 +7,11 @@ public class Monitor {
 	private BeamBallRegul beamBallThrowMedium;
 	private BeamBallRegul beamBallThrowLarge;
 	private Regul currentRegul;
-	private long t;
 	public static final int OFF=0, BEAM=1, BALL=2;
 	private int mode;
 	private double[] latestBeamAngles;
 	private int nextWrite, size;
+	private double h = 0.1;
 	private double uPos, uAngle;
 	
 	/** Constructor*/
@@ -30,26 +30,19 @@ public class Monitor {
 	
 	/** called by RegulThread*/
 	public synchronized double calcOutput(double[] y, double yref) {
-		t = System.currentTimeMillis();
-		latestBeamAngles[nextWrite] = y[0];
-		nextWrite = (nextWrite + 1) % size;
-		return currentRegul.calculateOutput(y, yref);
+		if(currentRegul == null) {
+			return 0;
+		} else {
+			latestBeamAngles[nextWrite] = y[0];
+			nextWrite = (nextWrite + 1) % size;
+			return currentRegul.calculateOutput(y, yref, h);
+		}
 	}
 	
 	/** called by RegulThread*/
 	public synchronized void updateState(double u) {
-		currentRegul.updateState(u);
-		notifyAll(); //I am going to sleep now people so you can use the monitor
-		
-		// sleep
-		long duration;
-		t = t + currentRegul.getHMillis();
-		duration = t - System.currentTimeMillis();
-		if (duration > 0) {
-			try {
-				wait(duration);  
-			} catch (InterruptedException x) {
-			}
+		if(currentRegul != null) {
+			currentRegul.updateState(u, h);
 		}
 	}
 	
@@ -94,6 +87,16 @@ public class Monitor {
 	/** called by SwitchThread and Opcom*/
 	public synchronized int getMode() {
 		return mode;
+	}
+	
+	/** called by RegulThread*/
+	public synchronized void setH(double h) {
+		this.h = h;
+	}
+	
+	/** called by RegulThread*/
+	public synchronized double getH() {
+		return h;
 	}
 	
 }	

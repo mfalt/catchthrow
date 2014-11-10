@@ -19,7 +19,6 @@ public class BeamBallRegul extends Regul {
 		p.Td = 1.0;
 		p.N = 6.0;
 		p.Beta = 1.0;
-		p.H = 0.1;
 		p.integratorOn = false;
 		setParameters(p);
 		I = 0;
@@ -33,28 +32,28 @@ public class BeamBallRegul extends Regul {
 	 *  to an OutSignal object if needed when we do
 	 *  more advanced stuffs
 	 */
-	public double calculateOutput(double[] yy, double yref) {
+	public double calculateOutput(double[] yy, double yref, double h) {
 		y = yy[1];
 		this.yref = yref;
-		ad = p.Td/(p.Td + p.N*p.H);
+		ad = p.Td/(p.Td + p.N*h);
 		bd = p.K*p.N*ad;
 		P = p.K*(p.Beta*yref - y);
 		D = ad*D - bd*(y - yold);
 		uPos = P + I + D;
 		sendToInner[0] = yy[0];
 		sendToInner[1] = 0;
-		uAngle = inner.calculateOutput(sendToInner, uPos);
-		inner.updateState(uAngle);
+		uAngle = inner.calculateOutput(sendToInner, uPos, h);
+		inner.updateState(uAngle, h);
 		return uAngle;
 	}
 
 	/** updates the controller state
 	 *  uses tracking-based anti-windup
 	 */
-	public void updateState(double u) {
+	public void updateState(double u, double h) {
 		if(p.integratorOn) {
-			bi = p.K*p.H/p.Ti;
-			ar = p.H/p.Tr;
+			bi = p.K*h/p.Ti;
+			ar = h/p.Tr;
 			I = I + bi*(yref - y) + ar*(u - uPos); 
 			} else {
 				I = 0.0;
@@ -73,11 +72,6 @@ public class BeamBallRegul extends Regul {
 		return p;
 	}
 	
-	
-	/** returns this controller's sampling interval*/
-	public long getHMillis() {
-		return (long) (p.H*1000.0);
-	}
 }
 
 
