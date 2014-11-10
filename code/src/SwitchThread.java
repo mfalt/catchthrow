@@ -27,7 +27,8 @@ public class SwitchThread extends Thread {
 			
 			//we know we are in beam mode and the beam angle has been
 			//relatively constant around zero
-			if(mode == 1 && average > epsilon && average < 1) {
+			// Change to ball mode when the sensor triggers instead? //Lucas
+			if(mode == Monitor.BEAM && average > epsilon && average < 1) {
 				mon.setBallMode(); //i.e switch to ball
 				try {
 					sleep(500);

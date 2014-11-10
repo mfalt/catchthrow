@@ -8,7 +8,7 @@ public class Monitor {
 	private BeamBallRegul beamBallThrowLarge;
 	private Regul currentRegul;
 	private long t;
-	private static final int OFF=0, BEAM=1, BALL=2;
+	public static final int OFF=0, BEAM=1, BALL=2;
 	private int mode;
 	private double[] latestBeamAngles;
 	private int nextWrite, size;
@@ -75,19 +75,19 @@ public class Monitor {
 	
 	/** called by Opcom*/
 	public synchronized void setOFFMode(){
-		mode = 0;
+		mode = OFF;
 		currentRegul = null; //update currentRegul
 	}
 	
 	/** called by Opcom*/
 	public synchronized void setBeamMode(){
-		mode = 1;
+		mode = BEAM;
 		currentRegul = beamRegul; //update currentRegul
 	}
 	
 	/** called by Opcom*/
 	public synchronized void setBallMode(){
-		mode = 2;
+		mode = BALL;
 		currentRegul = beamBallRegul; //update currentRegul
 	}
 	
