@@ -16,7 +16,7 @@ public class RegulThread extends Thread {
 	//input and output analog signals to and from the real process
 	private AnalogIn analogInAngle;        // angle of the beam = yAngle
 	private AnalogIn analogInPosition;     // position of the ball = yPos
-	private AnalogOut analogOut;           // angle of the beam = uAngle
+	private AnalogOut analogOut;           // torque for the beam = uAngle
 	
 	private double uAngle, ref;
 	private double[] analogValues;  //yAngle on index 0, yPos on index 1
@@ -81,7 +81,7 @@ public class RegulThread extends Thread {
 	
 	public void run() {
 		startTime = System.currentTimeMillis();
-		
+		long t = startTime;
 		mutex.take();
 		while(shouldRun) {
 			
@@ -124,6 +124,15 @@ public class RegulThread extends Thread {
 				//realtime plot...I think it may be better here because
 				//opcom does not need the monitor to update the plot anyway
 				mon.updateState(uAngle);
+			}
+			t = t + mon.getHMillis();
+			long duration = System.currentTimeMillis() - t;
+			if(duration > 0) {
+				try {
+					sleep(duration);
+				} catch(InterruptedException e) {
+					
+				}
 			}
 		}
 		mutex.give();

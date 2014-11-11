@@ -11,13 +11,13 @@ public class SwitchThread extends Thread {
 	
 	
 	public void run() {
-		int mode;
-		double[] latestBeamAngles = new double[3];
-		double average, sum = 0;
-		double epsilon = 0.5;
-		
-		while(!isInterrupted()) {
-			mode = mon.getMode();
+//		int mode;
+//		double[] latestBeamAngles = new double[3];
+//		double average, sum = 0;
+//		double epsilon = 0.5;
+//		
+//		while(!isInterrupted()) {
+//			mode = mon.getMode();
 //			latestBeamAngles = mon.getLatestBeamAngles();
 //			
 //			for(int i = 0; i < 3; ++i){
@@ -38,6 +38,6 @@ public class SwitchThread extends Thread {
 //				}
 //			}
 			//to be continued
-		}
+//		}
 	}
 }

@@ -32,6 +32,7 @@ public class BeamRegul extends Regul {
 		y = yy[0];
 		this.yref = yref;
 		return v;
+//		return 0.0;
 	}
 
 	/** updates the controller state

@@ -89,14 +89,21 @@ public class Monitor {
 		return mode;
 	}
 	
-	/** called by RegulThread*/
+	/** called by OpCom*/
 	public synchronized void setH(double h) {
 		this.h = h;
 	}
 	
-	/** called by RegulThread*/
+	/** called by OpCom*/
 	public synchronized double getH() {
 		return h;
 	}
+	
+	/** called by RegulThread*/
+	public synchronized long getHMillis() {
+		return (long) (h*1000.0);
+	}
+	
+	
 	
 }	
