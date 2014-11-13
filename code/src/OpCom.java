@@ -11,7 +11,7 @@ public class OpCom {
 	public static final int OFF=0, BEAM=1, BALL=2;
 	private static final double eps = 0.000001;
 
-	private PIParameters innerPar;
+	private PIDParameters innerPar;
 	private PIDParameters outerPar;
 	private int priority;
 	private int mode;

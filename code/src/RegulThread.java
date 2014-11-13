@@ -134,7 +134,8 @@ public class RegulThread extends Thread {
 				mon.updateState(uAngle);
 			}
 			t = t + mon.getHMillis();
-			long duration = System.currentTimeMillis() - t;
+			long duration = t-System.currentTimeMillis();
+			//System.out.println(duration);
 			if(duration > 0) {
 				try {
 					sleep(duration);

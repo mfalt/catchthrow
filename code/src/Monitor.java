@@ -11,7 +11,7 @@ public class Monitor {
 	private int mode;
 	private double[] latestBeamAngles;
 	private int nextWrite, size;
-	private double h = 0.1;
+	private double h = 0.02;
 	private double uPos, uAngle;
 	
 	/** Constructor*/
@@ -47,12 +47,12 @@ public class Monitor {
 	}
 	
 	/** called by Opcom*/
-	public synchronized void setInnerParameters(PIParameters p) {
+	public synchronized void setInnerParameters(PIDParameters p) {
 		beamRegul.setParameters(p);
 	}
 	
 	/** called by Opcom*/
-	public synchronized PIParameters getInnerParameters() {
+	public synchronized PIDParameters getInnerParameters() {
 		return beamRegul.getParameters();
 	}
 	
