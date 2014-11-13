@@ -1,6 +1,8 @@
 import se.lth.control.DoublePoint;
 import se.lth.control.realtime.AnalogIn;
 import se.lth.control.realtime.AnalogOut;
+import se.lth.control.realtime.DigitalIn;
+import se.lth.control.realtime.DigitalOut;
 import se.lth.control.realtime.IOChannelException;
 import se.lth.control.realtime.Semaphore;
 
@@ -18,6 +20,9 @@ public class RegulThread extends Thread {
 	private AnalogIn analogInPosition;     // position of the ball = yPos
 	private AnalogOut analogOut;           // torque for the beam = uAngle
 	
+	private DigitalIn digitalIn;
+	private DigitalOut digitalOut;
+	
 	private double uAngle, ref;
 	private double[] analogValues;  //yAngle on index 0, yPos on index 1
 	private ReferenceGenerator referenceGenerator;
@@ -30,6 +35,9 @@ public class RegulThread extends Thread {
 			analogInAngle = new AnalogIn(0);
 			analogInPosition = new AnalogIn(1);
 			analogOut = new AnalogOut(0);
+			digitalIn = new DigitalIn(0);
+			digitalOut = new DigitalOut(0);
+			digitalOut.set(true); // Do not drop ball
 		} catch (IOChannelException e) { 
 			System.out.print("Error: IOChannelException: ");
 			System.out.println(e.getMessage());
