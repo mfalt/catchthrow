@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="javax.swing.SwingUtilities"/>
-<fullyQualifiedTypeName name="se.lth.control.realtime.Semaphore"/>
-<fullyQualifiedTypeName name="se.lth.control.realtime.AnalogIn"/>
-<fullyQualifiedTypeName name="se.lth.control.realtime.AnalogOut"/>
-<fullyQualifiedTypeName name="se.lth.control.realtime.IOChannelException"/>
-<fullyQualifiedTypeName name="se.lth.control.DoublePoint"/>
-</qualifiedTypeNameHistroy>
