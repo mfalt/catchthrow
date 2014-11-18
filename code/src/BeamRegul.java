@@ -12,10 +12,10 @@ public class BeamRegul extends Regul {
 	
 	public BeamRegul() {
 		p = new PIDParameters();
-		p.K = 0.2;
-		p.Ti = 0.5;
+		p.K = 3.0;
+		p.Ti = 2.0;
 		p.Tr = 10.0;
-		p.Td = 1.0;
+		p.Td = 0.3;
 		p.N = 20.0;
 		p.Beta = 1.0;
 		p.integratorOn = true;
@@ -23,6 +23,17 @@ public class BeamRegul extends Regul {
 		I = 0;
 		D = 0;
 		yold = 0;
+	}
+	
+	
+	/** anti wind-up */
+	private double limit(double v, double min, double max) {
+		if (v < min) {
+			v = min;
+		} else if (v > max) {
+			v = max;
+		}
+		return v;
 	}
 	
 	
@@ -41,18 +52,18 @@ public class BeamRegul extends Regul {
 		//System.out.println((y-yold)*10000);
 		v = P + I + D;
 		this.yref = yref;
-		return v;
+		return limit(v, -10, 10);
 //		return 2.0;
 	}
 
 	/** updates the controller state
 	 *  uses tracking-based anti-windup
 	 */
-	public void updateState(double u, double h) {
+	public void updateState(double h) {
 		if(p.integratorOn) {
 			bi = p.K*h/p.Ti;
 			ar = h/p.Tr;
-			I = I + bi*(yref - y) + ar*(u - v); 
+			I = I + bi*(yref - y) + ar*(limit(v, -10, 10) - v); 
 		} else {
 			I = 0.0;
 		}

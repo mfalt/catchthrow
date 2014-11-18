@@ -3,7 +3,7 @@ public abstract class Regul{
 	
 	public abstract double calculateOutput(double[] y, double yref, double h);
 	
-	public abstract void updateState(double u, double h);
+	public abstract void updateState(double h);
 	
 	
 	

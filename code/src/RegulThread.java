@@ -59,16 +59,6 @@ public class RegulThread extends Thread {
 		this.opcom = opcom;
 	}
 	
-	/** anti wind-up */
-	private double limit(double v, double min, double max) {
-		if (v < min) {
-			v = min;
-		} else if (v > max) {
-			v = max;
-		}
-		return v;
-	}
-	
 	private void sendDataToOpCom(double yref, double[] y, double u) {
 		double x = (double)(System.currentTimeMillis() - startTime) / 1000.0;
 		DoublePoint dp = new DoublePoint(x,u);
@@ -116,7 +106,6 @@ public class RegulThread extends Thread {
 			
 			synchronized(mon){ //to get synchronization between calcOutput and updateState
 				uAngle = mon.calcOutput(analogValues, ref);
-				uAngle = limit(uAngle, -10, 10); //anti-windup
 			
 				//send the control signal to the real process
 				try {
@@ -135,7 +124,7 @@ public class RegulThread extends Thread {
 				//the synchronized block then we get a bigger delay in the 
 				//realtime plot...I think it may be better here because
 				//opcom does not need the monitor to update the plot anyway
-				mon.updateState(uAngle);
+				mon.updateState();
 			}
 			t = t + mon.getHMillis();
 			long duration = t-System.currentTimeMillis();

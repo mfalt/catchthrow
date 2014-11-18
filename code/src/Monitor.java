@@ -3,16 +3,15 @@ public class Monitor {
 	
 	private BeamRegul beamRegul;
 	private BeamBallRegul beamBallRegul;
-	private BeamBallRegul beamBallThrowSmall;
-	private BeamBallRegul beamBallThrowMedium;
-	private BeamBallRegul beamBallThrowLarge;
+//	private BeamBallRegul beamBallThrowSmall;
+//	private BeamBallRegul beamBallThrowMedium;
+//	private BeamBallRegul beamBallThrowLarge;
 	private Regul currentRegul;
 	public static final int OFF=0, BEAM=1, BALL=2;
 	private int mode;
 	private double[] latestBeamAngles;
 	private int nextWrite, size;
 	private double h = 0.02;
-	private double uPos, uAngle;
 	
 	/** Constructor*/
 	public Monitor() {
@@ -40,9 +39,9 @@ public class Monitor {
 	}
 	
 	/** called by RegulThread*/
-	public synchronized void updateState(double u) {
+	public synchronized void updateState() {
 		if(currentRegul != null) {
-			currentRegul.updateState(u, h);
+			currentRegul.updateState(h);
 		}
 	}
 	

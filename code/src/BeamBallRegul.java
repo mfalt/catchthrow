@@ -5,7 +5,7 @@ public class BeamBallRegul extends Regul {
 	private BeamRegul inner;
 	private double P, I, D;
 	private double ad, bd, bi, ar;
-	private double uPos, uAngle, y, yref, yold;
+	private double angleRef, u, y, yref, yold;
 	private double[] sendToInner;
 	
 	/** Constructor */
@@ -13,13 +13,13 @@ public class BeamBallRegul extends Regul {
 		inner = in;
 		p = new PIDParameters();
 		//inner = new BeamRegul();
-		p.K = -0.1;
-		p.Ti = 0.0;
+		p.K = -0.05;
+		p.Ti = 20.0;
 		p.Tr = 10.0;
-		p.Td = 0.0;
+		p.Td = 3.0;
 		p.N = 6.0;
 		p.Beta = 1.0;
-		p.integratorOn = false;
+		p.integratorOn = true;
 		setParameters(p);
 		I = 0;
 		D = 0;
@@ -39,25 +39,24 @@ public class BeamBallRegul extends Regul {
 		bd = p.K*p.N*ad;
 		P = p.K*(p.Beta*yref - y);
 		D = ad*D - bd*(y - yold);
-		uPos = P + I + D;
+		angleRef = P + I + D;
 		sendToInner[0] = yy[0];
 		sendToInner[1] = 0;
-		uAngle = inner.calculateOutput(sendToInner, uPos, h);
-		inner.updateState(uAngle, h);
-		return uAngle;
+		u = inner.calculateOutput(sendToInner, angleRef, h);
+		inner.updateState(h);
+		return u;
 	}
 
 	/** updates the controller state
 	 *  uses tracking-based anti-windup
 	 */
-	public void updateState(double u, double h) {
+	public void updateState(double h) {
 		if(p.integratorOn) {
 			bi = p.K*h/p.Ti;
-			ar = h/p.Tr;
-			I = I + bi*(yref - y) + ar*(u - uPos);
-			} else {
-				I = 0.0;
-			}
+			I = I + bi*(yref - y);
+		} else {
+			I = 0.0;
+		}
 		yold = y;
 	}
 	
