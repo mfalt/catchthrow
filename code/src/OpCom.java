@@ -24,11 +24,13 @@ public class OpCom {
 	// Declarartion of panels.
 	private BoxPanel guiPanel, plotterPanel, innerParPanel, outerParPanel, parPanel;
 	private JPanel innerParLabelPanel, innerParFieldPanel, outerParLabelPanel, outerParFieldPanel, buttonPanel, somePanel, leftPanel;
-	private PlotterPanel measPanel, ctrlPanel;
+	private PlotterPanel measPanel, meas2Panel, ctrlPanel;
 
 	// Declaration of components.
 	private DoubleField innerParKField = new DoubleField(5,3);
 	private DoubleField innerParTiField = new DoubleField(5,3);
+	private DoubleField innerParTdField = new DoubleField(5,3);
+	private DoubleField innerParNField = new DoubleField(5,3);
 	private DoubleField innerParTrField = new DoubleField(5,3);
 	private DoubleField innerParBetaField = new DoubleField(5,3);
 	private JButton innerApplyButton;
@@ -65,6 +67,7 @@ public class OpCom {
 	/** Starts the threads. */
 	public void start() {
 		measPanel.start();
+		meas2Panel.start();
 		ctrlPanel.start();
 	}
 
@@ -80,12 +83,18 @@ public class OpCom {
 		measPanel.setYAxis(20, -10, 2, 2);
 		measPanel.setXAxis(10, 5, 5);
 		measPanel.setUpdateFreq(10);
+		meas2Panel = new PlotterPanel(2, priority);
+		meas2Panel.setYAxis(20, -10, 2, 2);
+		meas2Panel.setXAxis(10, 5, 5);
+		meas2Panel.setUpdateFreq(10);
 		ctrlPanel = new PlotterPanel(1, priority);
 		ctrlPanel.setYAxis(20, -10, 2, 2);
 		ctrlPanel.setXAxis(10, 5, 5);
 		ctrlPanel.setUpdateFreq(10);
 
 		plotterPanel.add(measPanel);
+		plotterPanel.addFixed(10);
+		plotterPanel.add(meas2Panel);
 		plotterPanel.addFixed(10);
 		plotterPanel.add(ctrlPanel);
 
@@ -99,6 +108,8 @@ public class OpCom {
 		innerParLabelPanel.setLayout(new GridLayout(0,1));
 		innerParLabelPanel.add(new JLabel("K: "));
 		innerParLabelPanel.add(new JLabel("Ti: "));
+		innerParLabelPanel.add(new JLabel("Td: "));
+		innerParLabelPanel.add(new JLabel("N: "));
 		innerParLabelPanel.add(new JLabel("Tr: "));
 		innerParLabelPanel.add(new JLabel("Beta: "));
 		innerParLabelPanel.add(new JLabel("h: "));
@@ -106,6 +117,8 @@ public class OpCom {
 		innerParFieldPanel.setLayout(new GridLayout(0,1));
 		innerParFieldPanel.add(innerParKField); 
 		innerParFieldPanel.add(innerParTiField);
+		innerParFieldPanel.add(innerParTdField);
+		innerParFieldPanel.add(innerParNField);
 		innerParFieldPanel.add(innerParTrField);
 		innerParFieldPanel.add(innerParBetaField);
 		innerParFieldPanel.add(hField);
@@ -114,6 +127,10 @@ public class OpCom {
 		innerParKField.setValue(innerPar.K);
 		innerParTiField.setValue(innerPar.Ti);
 		innerParTiField.setMinimum(-eps);
+		innerParTdField.setValue(innerPar.Td);
+		innerParTdField.setMinimum(-eps);
+		innerParNField.setValue(innerPar.N);
+		innerParNField.setMinimum(-eps);
 		innerParTrField.setValue(innerPar.Tr);
 		innerParTrField.setMinimum(-eps);
 		innerParBetaField.setValue(innerPar.Beta);
@@ -137,6 +154,18 @@ public class OpCom {
 				else {
 					innerPar.integratorOn = true;
 				}
+				innerApplyButton.setEnabled(true);
+			}
+		});
+		innerParTdField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				innerPar.Td = innerParTdField.getValue();
+				innerApplyButton.setEnabled(true);
+			}
+		});
+		innerParNField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				innerPar.N = innerParNField.getValue();
 				innerApplyButton.setEnabled(true);
 			}
 		});
@@ -198,7 +227,7 @@ public class OpCom {
 		outerParLabelPanel.add(new JLabel("N: "));
 		outerParLabelPanel.add(new JLabel("Tr: "));
 		outerParLabelPanel.add(new JLabel("Beta: "));
-		outerParLabelPanel.add(new JLabel("h: "));
+		//outerParLabelPanel.add(new JLabel("h: "));
 
 		outerParFieldPanel = new JPanel();
 		outerParFieldPanel.setLayout(new GridLayout(0,1));
@@ -325,6 +354,7 @@ public class OpCom {
 			public void actionPerformed(ActionEvent e) {
 				regul.shutDown();
 				measPanel.stopThread();
+				meas2Panel.stopThread();
 				ctrlPanel.stopThread();
 				System.exit(0);
 			}
@@ -409,6 +439,14 @@ public class OpCom {
 			measPanel.putData(pd.x, pd.yref, pd.y);
 		} else {
 			DebugPrint("Note: GUI not yet initialized. Ignoring call to putMeasurementDataPoint().");
+		}
+	}
+	
+	public synchronized void putMeasurement2DataPoint(PlotData pd) {
+		if (isInitialized) {
+			meas2Panel.putData(pd.x, pd.yref, pd.y);
+		} else {
+			DebugPrint("Note: GUI not yet initialized. Ignoring call to putMeasurement2DataPoint().");
 		}
 	}
 	

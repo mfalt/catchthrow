@@ -75,12 +75,14 @@ public class Monitor {
 	/** called by Opcom*/
 	public synchronized void setBeamMode(){
 		mode = BEAM;
+		beamRegul.reset();
 		currentRegul = beamRegul; //update currentRegul
 	}
 	
 	/** called by Opcom*/
 	public synchronized void setBallMode(){
 		mode = BALL;
+		beamBallRegul.reset();
 		currentRegul = beamBallRegul; //update currentRegul
 	}
 	

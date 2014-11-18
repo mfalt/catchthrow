@@ -69,12 +69,15 @@ public class RegulThread extends Thread {
 		return v;
 	}
 	
-	private void sendDataToOpCom(double yref, double y, double u) {
+	private void sendDataToOpCom(double yref, double[] y, double u) {
 		double x = (double)(System.currentTimeMillis() - startTime) / 1000.0;
 		DoublePoint dp = new DoublePoint(x,u);
-		PlotData pd = new PlotData(x,yref,y);
+		int mode = mon.getMode();
+		PlotData pd = new PlotData(x,(mode == Monitor.BEAM) ? yref : -10,y[0]);
+		PlotData pd2 = new PlotData(x,(mode == Monitor.BALL) ? yref : -10,y[1]);
 		opcom.putControlDataPoint(dp);
 		opcom.putMeasurementDataPoint(pd);
+		opcom.putMeasurement2DataPoint(pd2);
 	}
 	
 	/** Called from OpCom when shutting down */
@@ -124,7 +127,8 @@ public class RegulThread extends Thread {
 				}
 		
 				//might have to rethink this part...
-				sendDataToOpCom(ref, analogValues[0], uAngle);
+				sendDataToOpCom(ref, analogValues, uAngle);
+				//System.out.println(ref);
 				
 				//if we do updateState here then this above calculation
 				//is done while holding the monitor but if we put the calculations outside

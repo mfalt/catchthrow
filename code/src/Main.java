@@ -34,6 +34,7 @@ public class Main {
 
 		regThread.start();
 		switchThread.start();
+		refgen.start();
 		
 	}
 }

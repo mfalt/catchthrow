@@ -18,7 +18,7 @@ public class BeamRegul extends Regul {
 		p.Td = 1.0;
 		p.N = 20.0;
 		p.Beta = 1.0;
-		p.integratorOn = false;
+		p.integratorOn = true;
 		setParameters(p);
 		I = 0;
 		D = 0;
@@ -74,5 +74,9 @@ public class BeamRegul extends Regul {
 		return p;
 	}
 
+	public void reset(){
+		I = 0;
+		D = 0;
+	}
 }
 	

@@ -12,11 +12,11 @@ public class BeamBallRegul extends Regul {
 	public BeamBallRegul(BeamRegul in){
 		inner = in;
 		p = new PIDParameters();
-		inner = new BeamRegul();
+		//inner = new BeamRegul();
 		p.K = -0.1;
 		p.Ti = 0.0;
-		p.Tr = 0.0;
-		p.Td = 1.0;
+		p.Tr = 10.0;
+		p.Td = 0.0;
 		p.N = 6.0;
 		p.Beta = 1.0;
 		p.integratorOn = false;
@@ -54,7 +54,7 @@ public class BeamBallRegul extends Regul {
 		if(p.integratorOn) {
 			bi = p.K*h/p.Ti;
 			ar = h/p.Tr;
-			I = I + bi*(yref - y) + ar*(u - uPos); 
+			I = I + bi*(yref - y) + ar*(u - uPos);
 			} else {
 				I = 0.0;
 			}
@@ -70,6 +70,13 @@ public class BeamBallRegul extends Regul {
 	
 	public PIDParameters getParameters() {
 		return p;
+	}
+	
+	public void reset(){
+		inner.reset();
+		I = 0;
+		D = 0;
+		
 	}
 	
 }
