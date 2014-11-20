@@ -12,6 +12,7 @@ public class Monitor {
 	private double[] latestBeamAngles;
 	private int nextWrite, size;
 	private double h = 0.02;
+	private boolean LED = false;
 	
 	/** Constructor*/
 	public Monitor() {

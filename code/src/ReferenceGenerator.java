@@ -32,7 +32,7 @@ public class ReferenceGenerator extends Thread {
 		private JButton paramsButton = new JButton("Apply");
 		private JRadioButton sqButton = new JRadioButton("Square Wave");
 		private JRadioButton manButton = new JRadioButton("Manual");
-		private JSlider slider = new JSlider(JSlider.VERTICAL,-10,10,0);
+		private JSlider slider = new JSlider(JSlider.VERTICAL,-50,50,0);
 		
 		public RefGUI(double amp, double h) {
 			MainFrame.showLoading();
@@ -76,10 +76,11 @@ public class ReferenceGenerator extends Thread {
 			slider.setPaintTicks(true);
 			slider.setEnabled(false);
 			slider.setMajorTickSpacing(5); 
-			slider.setMinorTickSpacing(2); 
+			slider.setMinorTickSpacing(1); 
 			slider.setLabelTable(slider.createStandardLabels(10)); 
 			slider.setPaintLabels(true);
 			sliderPanel.setBorder(BorderFactory.createEtchedBorder());
+			slider.setSnapToTicks(false);
 			sliderPanel.add(slider);
 			
 			guiPanel.add(sliderPanel);
@@ -132,7 +133,7 @@ public class ReferenceGenerator extends Thread {
 			slider.addChangeListener(new ChangeListener() { 
 				public void stateChanged(ChangeEvent e) { 
 					if (!slider.getValueIsAdjusting()) { 
-						setManual(slider.getValue()); 
+						setManual(((double)slider.getValue())/5); 
 					} 
 				} 
 			}); 

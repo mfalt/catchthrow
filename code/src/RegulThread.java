@@ -20,7 +20,7 @@ public class RegulThread extends Thread {
 	private AnalogIn analogInPosition;     // position of the ball = yPos
 	private AnalogOut analogOut;           // torque for the beam = uAngle
 	
-	private DigitalIn digitalIn;
+	private DigitalIn digitalIn; 			// sensor light
 	private DigitalOut digitalOut;
 	
 	private double uAngle, ref;
