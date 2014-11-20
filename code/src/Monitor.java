@@ -7,10 +7,17 @@ public class Monitor {
 //	private BeamBallRegul beamBallThrowMedium;
 //	private BeamBallRegul beamBallThrowLarge;
 	private Regul currentRegul;
-	public static final int OFF=0, BEAM=1, BALL=2;
+	
+	private RefGenGUI refGenGUI;
+	private ConstantRef constantRef;
+	private RampRef pickupSearchRef;
+	private TrajectoryRef throwRefSmall;
+	private TrajectoryRef throwRefMedium;
+	private TrajectoryRef throwRefLarge;
+	private ReferenceGenerator currentRefGen;
+	
+	public static final int OFF=0, BEAM=1, BALL=2, SEQUENCE=3;
 	private int mode;
-	private double[] latestBeamAngles;
-	private int nextWrite, size;
 	private double h = 0.02;
 	private boolean LED = false;
 	
@@ -19,22 +26,58 @@ public class Monitor {
 		mode = OFF; //mode is the state of our program
 		beamRegul = new BeamRegul();
 		beamBallRegul = new BeamBallRegul(beamRegul);
-		size = 3;
-		latestBeamAngles = new double[size];
+		
+		constantRef = new ConstantRef();
+		pickupSearchRef = new RampRef();
 	}
 	
-	/** called by SwitchThread*/
-	public synchronized double[] getLatestBeamAngles() {
-		return latestBeamAngles;
+	/** called from Main */
+	public synchronized void setRefGenGUI(RefGenGUI referenceGenerator){
+		refGenGUI = referenceGenerator;
+		currentRefGen = refGenGUI;
+	}
+	
+	/** called from SwitchThread */
+	public synchronized void setRefGenConstant(double r){
+		constantRef.setRef(r);
+		currentRefGen = constantRef;
+	}
+	
+	/** called from SwitchThread */
+	public synchronized void setRefGenRamp(double velocity){
+		pickupSearchRef.setVelocity(velocity);
+		pickupSearchRef.resetTime();
+		pickupSearchRef.setInitialRef(currentRefGen.getRef());
+		currentRefGen = pickupSearchRef;
+	}
+	
+	/** called from SwitchThread */
+	public synchronized void setRefGenTrajectorySmall(){
+		throwRefSmall.resetTime();
+		currentRefGen = throwRefSmall;
+	}
+	
+	/** called from SwitchThread */
+	public synchronized void setRefGenTrajectoryMedium(){
+		throwRefMedium.resetTime();
+		currentRefGen = throwRefMedium;
+	}
+	
+	/** called from SwitchThread */
+	public synchronized void setRefGenTrajectoryLarge(){
+		throwRefLarge.resetTime();
+		currentRefGen = throwRefLarge;
+	}
+	
+	public synchronized double getRef() {
+		return currentRefGen.getRef();
 	}
 	
 	/** called by RegulThread*/
 	public synchronized double calcOutput(double[] y, double yref) {
 		if(currentRegul == null) {
-			return 0;
+			return 0.0;
 		} else {
-			latestBeamAngles[nextWrite] = y[0];
-			nextWrite = (nextWrite + 1) % size;
 			return currentRegul.calculateOutput(y, yref, h);
 		}
 	}
@@ -84,6 +127,15 @@ public class Monitor {
 		mode = BALL;
 		beamBallRegul.reset();
 		currentRegul = beamBallRegul; //update currentRegul
+	}
+	
+	/** called by Opcom*/
+	public synchronized void setSequenceMode(){
+		mode = SEQUENCE;
+//		beamBallRegul.reset();
+//		currentRegul = beamBallRegul; //update currentRegul
+		
+		/* Write semaphore thing for "starting SwitchThread" */
 	}
 	
 	/** called by SwitchThread and Opcom*/

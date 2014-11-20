@@ -8,14 +8,14 @@ public class Main {
 		final int switchPriority = 5;
 		final int refGenPriority = 6;
 		
-		ReferenceGenerator refgen = new ReferenceGenerator(refGenPriority);
+		RefGenGUI refgen = new RefGenGUI(refGenPriority);
 		Monitor mon = new Monitor();
 		final OpCom opcom = new OpCom(plotterPriority, mon);
 		RegulThread regThread= new RegulThread(mon, regulPriority);
 		SwitchThread switchThread = new SwitchThread(mon, switchPriority);
 		
 		regThread.setOpCom(opcom);
-		regThread.setRefGen(refgen);
+		mon.setRefGenGUI(refgen);
 		opcom.setRegul(regThread); 
 		
 		/** By doing this initializeGUI() is done in the event-dispatcher thread
@@ -34,7 +34,8 @@ public class Main {
 
 		regThread.start();
 		switchThread.start();
-		refgen.start();
+//		refgen.start();
+		new Thread(refgen).start();
 		
 	}
 }

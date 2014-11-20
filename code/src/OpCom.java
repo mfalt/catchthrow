@@ -8,7 +8,7 @@ import se.lth.control.plot.*;
 Uses two PlotterPanels for the plotters */
 public class OpCom {    
 
-	public static final int OFF=0, BEAM=1, BALL=2;
+	public static final int OFF=0, BEAM=1, BALL=2, SEQUENCE=3;
 	private static final double eps = 0.000001;
 
 	private PIDParameters innerPar;
@@ -48,6 +48,7 @@ public class OpCom {
 	private JRadioButton offModeButton;
 	private JRadioButton beamModeButton;
 	private JRadioButton ballModeButton;
+	private JRadioButton sequenceModeButton;
 	private JButton stopButton;
 
 	private boolean hChanged = false;
@@ -328,12 +329,14 @@ public class OpCom {
 		offModeButton = new JRadioButton("OFF");
 		beamModeButton = new JRadioButton("BEAM");
 		ballModeButton = new JRadioButton("BALL");
+		sequenceModeButton = new JRadioButton("SEQUENCE");
 		stopButton = new JButton("STOP");
 		// Group the radio buttons.
 		ButtonGroup group = new ButtonGroup();
 		group.add(offModeButton);
 		group.add(beamModeButton);
 		group.add(ballModeButton);
+		group.add(sequenceModeButton);
 		// Button action listeners.
 		offModeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -350,6 +353,11 @@ public class OpCom {
 				mon.setBallMode();
 			}
 		});
+		sequenceModeButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				mon.setSequenceMode();
+			}
+		});
 		stopButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				regul.shutDown();
@@ -361,9 +369,10 @@ public class OpCom {
 		});
 
 		// Add buttons to button panel.
-		buttonPanel.add(offModeButton, BorderLayout.NORTH);
+		buttonPanel.add(offModeButton, BorderLayout.WEST);
 		buttonPanel.add(beamModeButton, BorderLayout.CENTER);
-		buttonPanel.add(ballModeButton, BorderLayout.SOUTH);
+		buttonPanel.add(ballModeButton, BorderLayout.EAST);
+		buttonPanel.add(sequenceModeButton, BorderLayout.SOUTH);
 
 		// Panel for parameter panel and radio buttons
 		somePanel = new JPanel();
@@ -382,6 +391,9 @@ public class OpCom {
 			break;
 		case BALL:
 			ballModeButton.setSelected(true);
+			break;
+		case SEQUENCE:
+			sequenceModeButton.setSelected(true);
 		}
 
 

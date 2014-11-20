@@ -12,7 +12,18 @@ public class SwitchThread extends Thread {
 	
 	public void run() {
 		
-		//mon.setBeamMode();
+		/*Test change of reference values!
+		mon.setBeamMode();
+		try {
+			mon.setRefGenConstant(2.0);
+			sleep(2000);
+			mon.setRefGenRamp(-1.0);
+			sleep(2000);
+			mon.setRefGenConstant(-1.0);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
 		
 		//while(!isInterrupted()){
 			

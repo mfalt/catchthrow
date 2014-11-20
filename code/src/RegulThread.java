@@ -25,7 +25,6 @@ public class RegulThread extends Thread {
 	
 	private double uAngle, ref;
 	private double[] analogValues;  //yAngle on index 0, yPos on index 1
-	private ReferenceGenerator referenceGenerator;
 	
 	/** Constructor */
 	public RegulThread(Monitor monitor, int prio) {
@@ -47,11 +46,6 @@ public class RegulThread extends Thread {
 		mon = monitor;
 		mutex = new Semaphore(1);
 		setPriority(prio);
-	}
-	
-	/** called from Main */
-	public void setRefGen(ReferenceGenerator referenceGenerator){
-		this.referenceGenerator = referenceGenerator;
 	}
 	
 	/** called from Main */
@@ -102,7 +96,7 @@ public class RegulThread extends Thread {
 				e.printStackTrace();
 			}
 			
-			ref = referenceGenerator.getRef();
+			ref = mon.getRef();
 			
 			synchronized(mon){ //to get synchronization between calcOutput and updateState
 				uAngle = mon.calcOutput(analogValues, ref);
