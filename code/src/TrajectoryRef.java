@@ -7,7 +7,7 @@ import com.jmatio.io.MatFileReader;
 public class TrajectoryRef extends ReferenceGenerator {
 
 	public TrajectoryRef(String file) throws FileNotFoundException, IOException {
-		new MatFileReader(file);
+		MatFileReader matFileReader = new MatFileReader(file);
 	}
 	
 	@Override
