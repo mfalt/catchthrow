@@ -1,17 +1,29 @@
+import se.lth.control.realtime.Semaphore;
+
 
 public class SwitchThread extends Thread {
-	Monitor mon;
+	private Monitor mon;
+	private boolean shouldRun = true; 
+	private Semaphore sem;
 	
 	/** Constructor */
-	public SwitchThread(Monitor monitor, int prio) {
+	public SwitchThread(Monitor monitor, Semaphore sem, int prio) {
 		mon = monitor;
 		setPriority(prio);
+		this.sem = sem;
 	}
 	
 	
 	
 	public void run() {
-		
+		while(shouldRun){
+			sem.take();
+			if(!shouldRun){
+				break;
+			}
+			
+			
+			
 		/*Test change of reference values!
 		mon.setBeamMode();
 		try {
@@ -27,8 +39,15 @@ public class SwitchThread extends Thread {
 		
 		//while(!isInterrupted()){
 			
-		//}
+		//}// TODO Auto-generated method stub
+			
+		}
 		
-		
+	}
+
+
+
+	public void shutdown() {
+		shouldRun = false;
 	}
 }

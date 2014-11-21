@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 import se.lth.control.*;
 import se.lth.control.plot.*;
+import se.lth.control.realtime.Semaphore;
 
 /** Class that creates and maintains a GUI for the Ball and Beam process. 
 Uses two PlotterPanels for the plotters */
@@ -16,6 +17,8 @@ public class OpCom {
 	private int priority;
 	private int mode;
 	private RegulThread regul;
+	private SwitchThread switchThread;
+	private Semaphore switchThreadSem;
 	private Monitor mon;
 
 	// Declarartion of main frame.
@@ -55,14 +58,20 @@ public class OpCom {
 	private boolean isInitialized = false;
 
 	/** Constructor. */
-	public OpCom(int plotterPriority, Monitor m) {
+	public OpCom(int plotterPriority, Monitor m, Semaphore switchThreadSem) {
 		priority = plotterPriority;
 		mon = m;
+		this.switchThreadSem = switchThreadSem;
+		switchThreadSem.take();
 	}
 	
 	/** Sets up a reference to RegulThread. Called by Main. */
 	public void setRegul(RegulThread r) {
 		regul = r;
+	}
+	
+	public void setSwitchThread(SwitchThread s) {
+		switchThread = s;
 	}
 
 	/** Starts the threads. */
@@ -361,6 +370,7 @@ public class OpCom {
 		stopButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				regul.shutDown();
+				switchThread.shutdown();
 				measPanel.stopThread();
 				meas2Panel.stopThread();
 				ctrlPanel.stopThread();

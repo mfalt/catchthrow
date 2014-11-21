@@ -1,5 +1,7 @@
 import javax.swing.SwingUtilities;
 
+import se.lth.control.realtime.Semaphore;
+
 public class Main {
 	public static void main(String args[]){
 		
@@ -10,13 +12,15 @@ public class Main {
 		
 		RefGenGUI refgen = new RefGenGUI(refGenPriority);
 		Monitor mon = new Monitor();
-		final OpCom opcom = new OpCom(plotterPriority, mon);
+		Semaphore switchThreadSem = new Semaphore(1);
+		final OpCom opcom = new OpCom(plotterPriority, mon,switchThreadSem);
 		RegulThread regThread= new RegulThread(mon, regulPriority);
-		SwitchThread switchThread = new SwitchThread(mon, switchPriority);
+		SwitchThread switchThread = new SwitchThread(mon, switchThreadSem, switchPriority);
 		
 		regThread.setOpCom(opcom);
 		mon.setRefGenGUI(refgen);
 		opcom.setRegul(regThread); 
+		opcom.setSwitchThread(switchThread);
 		
 		/** By doing this initializeGUI() is done in the event-dispatcher thread
 		 *  see "Swing Thread Safety" in Exercise 4 */

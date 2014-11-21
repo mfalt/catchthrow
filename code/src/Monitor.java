@@ -138,6 +138,22 @@ public class Monitor {
 		/* Write semaphore thing for "starting SwitchThread" */
 	}
 	
+	/** called by SwitchThread*/
+	public synchronized void setBeamRegul(){
+		if(mode == SEQUENCE){
+			beamRegul.reset();
+			currentRegul = beamRegul;
+		}
+	}
+	
+	/** called by SwitchThread*/
+	public synchronized void setBallRegul(){
+		if(mode == SEQUENCE){
+			beamBallRegul.reset();
+			currentRegul = beamBallRegul;
+		}
+	}
+	
 	/** called by SwitchThread and Opcom*/
 	public synchronized int getMode() {
 		return mode;
