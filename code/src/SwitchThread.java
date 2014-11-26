@@ -11,10 +11,10 @@ public class SwitchThread extends Thread {
 	private boolean shouldRun = true; 
 	private Semaphore sem;
 	private double epsilon = 0.01; //close to 0
-	
+
 	private DigitalIn digitalIn; 			// sensor light
 	private DigitalOut digitalOut;
-	
+
 	/** Constructor */
 	public SwitchThread(Monitor monitor, Semaphore sem, int prio) {
 		mon = monitor;
@@ -29,56 +29,56 @@ public class SwitchThread extends Thread {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	
+
+
+
 	public void run() {
 		while(shouldRun){
 //			sem.take();
 //			if(!shouldRun){
 //				break;
 //			}
-			
-		mon.setBeamRegul();
-		mon.setRefGenConstant(0.0);
-		
-		//TODO:make sure beam is stationary at 0
-		
-		
-		mon.setRefGenRamp(-1.0);
-		while(!getLED()&& mon.getMode()==Monitor.SEQUENCE){
-			
-			synchronized (mon) {
-				try {
-					mon.wait();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+
+			mon.setBeamRegul();
+			mon.setRefGenConstant(0.0);
+
+			//TODO:make sure beam is stationary at 0
+
+
+			mon.setRefGenRamp(-1.0);
+			while(!getLED()&& mon.getMode()==Monitor.SEQUENCE){
+
+				synchronized (mon) {
+					try {
+						mon.wait();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
+
+			synchronized(mon){
+				mon.setRefGenConstant(mon.getRef()); //keep beam at angle
+			}
+
+			FIRE(false);
+			try {
+				Thread.sleep(400); //measure proper time
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			FIRE(true);
+
+
+
+
+
+
+
 		}
-		
-		synchronized(mon){
-			mon.setRefGenConstant(mon.getRef()); //keep beam at angle
-		}
-		
-		FIRE(false);
-		try {
-			Thread.sleep(400); //measure proper time
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		FIRE(true);
-		
-		
-		
-		
-		
-		
-			
-		}
-		
+
 	}
 
 	private boolean getLED(){
@@ -89,7 +89,7 @@ public class SwitchThread extends Thread {
 			return false;
 		}
 	}
-	
+
 	private void FIRE(boolean push){
 		try {
 			digitalOut.set(push);
