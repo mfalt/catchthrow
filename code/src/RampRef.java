@@ -2,15 +2,15 @@
 public class RampRef extends ReferenceGenerator {
 	
 	private double initRef = 0.0;
-	private double velocity = 0.0;
+	private double rampSlope = 0.0;
 	
 	@Override
 	public double getRef() {
-		return initRef + velocity*getTimeSeconds();
+		return initRef + rampSlope*getTimeSeconds();
 	}
 
 	public void setVelocity(double velocity) {
-		this.velocity = velocity;
+		this.rampSlope = velocity;
 	}
 
 	public void setInitialRef(double initRef) {
