@@ -1,6 +1,6 @@
 public abstract class ReferenceGenerator {
 	
-	public final int POS=0, VEL=1, ANGLE=3, ANGLEVEL=4; 
+	public static final int POS=0, VEL=1, ANGLE=3, ANGLEVEL=4; 
 	private long t0 = -1;
 	protected double ref[] = new double[4];
 	
