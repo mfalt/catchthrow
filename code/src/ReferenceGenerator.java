@@ -1,7 +1,14 @@
 public abstract class ReferenceGenerator {
+	
 	private long t0 = -1;
 	
-	public abstract double getRef();
+	/**
+	 * References in the order:
+	 * (posRef, velRef, angleRef, angleVelRef) 
+	 */
+	protected double ref[] = new double[4];
+	
+	public abstract double[] getRef();
 	
 	public void resetTime() {
 		t0 = System.currentTimeMillis();
