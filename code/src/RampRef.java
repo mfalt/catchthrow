@@ -10,7 +10,7 @@ public class RampRef extends ScalarRef {
 		return ref;
 	}
 
-	public void setVelocity(double rampSlope) {
+	public void setRampSlope(double rampSlope) {
 		this.rampSlope = rampSlope;
 	}
 
