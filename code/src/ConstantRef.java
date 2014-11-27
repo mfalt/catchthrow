@@ -1,14 +1,12 @@
 
-public class ConstantRef extends ReferenceGenerator {
-
-	private double r = 0.0;
+public class ConstantRef extends ScalarRef {
 	
-	public double getRef() {
-		return r;
+	public double[] getRef() {
+		return ref;
 	}
 	
 	public void setRef(double r) {
-		this.r = r;
+		ref[actualState] = r;
 	}
 
 }
