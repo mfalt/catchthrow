@@ -45,7 +45,7 @@ public class TrajectoryRef extends ReferenceGenerator {
 	
 	@Override
 	public double getRef() {
-		return getPosRef();
+		return getAngleRef();
 	}
 
 	public double getPosRef() {
@@ -64,7 +64,7 @@ public class TrajectoryRef extends ReferenceGenerator {
 		return angleVelRef.get(currentArrayIdx);
 	}
 	
-	private void updateCurrentArrayIdx() {
+	public void updateCurrentArrayIdx() {
 		currentArrayIdx = Math.min((int) Math.floor(getTimeSeconds() / h), N-1);
 	}
 
