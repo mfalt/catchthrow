@@ -42,7 +42,8 @@ public class BeamRegul extends Regul {
 	 *  to an OutSignal object if needed when we do
 	 *  more advanced stuffs
 	 */
-	public double calculateOutput(double[] yy, double yref, double h) {
+	public double calculateOutput(double[] yy, double[] yrefs, double h) {
+		double yref = yrefs[ReferenceGenerator.ANGLE];
 		P = p.K*(p.Beta*yref - yy[0]);
 		ad = p.Td/(p.Td + p.N*h);
 		bd = p.K*p.N*ad;

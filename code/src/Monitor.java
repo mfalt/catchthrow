@@ -9,8 +9,9 @@ public class Monitor {
 	private Regul currentRegul;
 
 	private RefGenGUI refGenGUI;
-	private ConstantRef constantRef;
+	private ConstantRef constantAngleRef;
 	private RampRef pickupSearchRef;
+	private ConstantRef constantPosRef;
 	private TrajectoryRef throwRefSmall;
 	private TrajectoryRef throwRefMedium;
 	private TrajectoryRef throwRefLarge;
@@ -29,8 +30,12 @@ public class Monitor {
 		beamRegul = new BeamRegul();
 		beamBallRegul = new BeamBallRegul(beamRegul);
 
-		constantRef = new ConstantRef();
+		constantAngleRef = new ConstantRef();
+		constantAngleRef.pickState(ReferenceGenerator.ANGLE);
 		pickupSearchRef = new RampRef();
+		pickupSearchRef.pickState(ReferenceGenerator.ANGLE);
+		constantPosRef = new ConstantRef();
+		constantPosRef.pickState(ReferenceGenerator.POS);
 	}
 
 	/** called from Main */
@@ -40,16 +45,22 @@ public class Monitor {
 	}
 
 	/** called from SwitchThread */
-	public synchronized void setRefGenConstant(double r){
-		constantRef.setRef(r);
-		currentRefGen = constantRef;
+	public synchronized void setRefGenConstantPos(double r){
+		constantPosRef.setRef(r);
+		currentRefGen = constantPosRef;
 	}
 
 	/** called from SwitchThread */
-	public synchronized void setRefGenRamp(double velocity){
-		pickupSearchRef.setVelocity(velocity);
+	public synchronized void setRefGenConstantAngle(double r){
+		constantAngleRef.setRef(r);
+		currentRefGen = constantAngleRef;
+	}
+
+	/** called from SwitchThread */
+	public synchronized void setRefGenRamp(double rampSlope, int state){
+		pickupSearchRef.setRampSlope(rampSlope);
 		pickupSearchRef.resetTime();
-		pickupSearchRef.setInitialRef(currentRefGen.getRef());
+		pickupSearchRef.setInitialRef(currentRefGen.getRef()[state]);
 		currentRefGen = pickupSearchRef;
 
 	}
@@ -72,7 +83,7 @@ public class Monitor {
 		currentRefGen = throwRefLarge;
 	}
 
-	public synchronized double getRef() {
+	public synchronized double[] getRef() {
 		return currentRefGen.getRef();
 	}
 

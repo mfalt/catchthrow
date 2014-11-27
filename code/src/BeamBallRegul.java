@@ -5,8 +5,8 @@ public class BeamBallRegul extends Regul {
 	private BeamRegul inner;
 	private double P, I, D;
 	private double ad, bd, bi, ar;
-	private double angleRef, u, y, yref, yold;
-	private double[] sendToInner;
+	private double angleRef, u, pos, posRef, angleFF, posOld;
+	private double[] angleRefs = new double[4];
 	
 	/** Constructor */
 	public BeamBallRegul(BeamRegul in){
@@ -23,8 +23,7 @@ public class BeamBallRegul extends Regul {
 		setParameters(p);
 		I = 0;
 		D = 0;
-		yold = 0;
-		sendToInner = new double[2];
+		posOld = 0;
 	}
 	
 	/** calculates the control signal
@@ -32,17 +31,18 @@ public class BeamBallRegul extends Regul {
 	 *  to an OutSignal object if needed when we do
 	 *  more advanced stuffs
 	 */
-	public double calculateOutput(double[] yy, double yref, double h) {
-		y = yy[1];
-		this.yref = yref;
+	public double calculateOutput(double[] measurements, double[] yrefs, double h) {
+		posRef = yrefs[ReferenceGenerator.POS];
+		angleFF = yrefs[ReferenceGenerator.ANGLE];
+		angleRefs = yrefs;
+		pos = measurements[1];
 		ad = p.Td/(p.Td + p.N*h);
 		bd = p.K*p.N*ad;
-		P = p.K*(p.Beta*yref - y);
-		D = ad*D - bd*(y - yold);
-		angleRef = P + I + D;
-		sendToInner[0] = yy[0];
-		sendToInner[1] = 0;
-		u = inner.calculateOutput(sendToInner, angleRef, h);
+		P = p.K*(p.Beta*posRef - pos);
+		D = ad*D - bd*(pos - posOld);
+		angleRef = P + I + D + angleFF;
+		angleRefs[ReferenceGenerator.ANGLE] = angleRef;
+		u = inner.calculateOutput(measurements, angleRefs, h);
 		inner.updateState(h);
 		return u;
 	}
@@ -53,11 +53,11 @@ public class BeamBallRegul extends Regul {
 	public void updateState(double h) {
 		if(p.integratorOn) {
 			bi = p.K*h/p.Ti;
-			I = I + bi*(yref - y);
+			I = I + bi*(posRef - pos);
 		} else {
 			I = 0.0;
 		}
-		yold = y;
+		posOld = pos;
 	}
 	
 	public void setParameters(PIDParameters newParameters) {
