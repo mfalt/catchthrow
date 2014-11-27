@@ -64,7 +64,7 @@ public class TrajectoryRef extends ReferenceGenerator {
 		return angleVelRef.get(currentArrayIdx);
 	}
 	
-	public void updateCurrentArrayIdx() {
+	public void updateReferences() {
 		currentArrayIdx = Math.min((int) Math.floor(getTimeSeconds() / h), N-1);
 	}
 
