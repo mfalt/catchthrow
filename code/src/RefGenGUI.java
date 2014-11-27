@@ -14,7 +14,7 @@ public class RefGenGUI extends ReferenceGenerator implements Runnable {
 	private double amplitude;
 	private double period;
 	private double sign = -1.0;
-	private double ref;
+	private double singleRef;
 	private double manual;
 	private int mode = SQWAVE;
 	private boolean premature, ampChanged, periodChanged;
@@ -150,7 +150,7 @@ public class RefGenGUI extends ReferenceGenerator implements Runnable {
 		amplitude = 4.0;
 		period = 20.0*1000.0/2.0;
 		manual = 0.0;
-		ref = amplitude * sign;
+		singleRef = amplitude * sign;
 		new RefGUI(4.0, 20.0);
 	}
 	
@@ -165,7 +165,7 @@ public class RefGenGUI extends ReferenceGenerator implements Runnable {
 	}
 	
 	private synchronized void setRef(double newRef) {
-		ref = newRef;
+		singleRef = newRef;
 	}
 	
 	private synchronized void setManual(double newManual) {
@@ -180,9 +180,10 @@ public class RefGenGUI extends ReferenceGenerator implements Runnable {
 		mode = MANUAL;
 	}
 	
-	public synchronized double getRef() 
+	public synchronized double[] getRef() 
 	{
-		return (mode == SQWAVE) ? ref : manual;
+		ref[2] = (mode == SQWAVE) ? singleRef : manual; // Let the beam angle (ref[2] be reference always because of laziness
+		return ref;
 	}
 	
 	public void run() {
@@ -196,7 +197,7 @@ public class RefGenGUI extends ReferenceGenerator implements Runnable {
 			while (!Thread.currentThread().isInterrupted()) {
 				synchronized (this) {
 					sign = - sign;
-					ref = amplitude * sign;
+					singleRef = amplitude * sign;
 				}
 				t = t + h;
 				duration = t - System.currentTimeMillis();
