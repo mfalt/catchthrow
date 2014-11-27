@@ -9,8 +9,8 @@ public class RampRef extends ReferenceGenerator {
 		return initRef + rampSlope*getTimeSeconds();
 	}
 
-	public void setVelocity(double velocity) {
-		this.rampSlope = velocity;
+	public void setVelocity(double rampSlope) {
+		this.rampSlope = rampSlope;
 	}
 
 	public void setInitialRef(double initRef) {
