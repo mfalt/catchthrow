@@ -1,13 +1,10 @@
-function [u_k,x_k]=BallAndBeam(T,u_k)
-s.offset = [1 .3 pi/6 0]'; %Offset (or requested final values)
-s.g = 9.82; s.m = 0.6; s.h=0.01; s.N=T/s.h; t=[0:s.N]*s.h;               % STEP 0: initialize simulation
-alpha=0.1;s.B = [0 0 0 1];
-s.Q=10*diag([0 .5 .1 .1]); s.R=.02; s.QT=1000*diag([10 5 2 1]);
-if nargin<2, u_k=zeros(s.N+1,1); end, 
-startx = [-.5  0  0  0]'; %The real values where the system starts
-s.x0 = startx-s.offset;
+function [u_k,x_k]=BallAndBeam(T,s,u_k)
+% STEP 0: initialize simulation
+s.offset = s.endx; s.N=T/s.h; t=[0:s.N]*s.h; alpha=0.1;s.B = [0 0 0 1];
+if nargin<3, u_k=zeros(s.N+1,1); end, 
+s.x0 = s.startx-s.offset;
 x_k(1:4,1)=s.x0; res=0;
-for k=0:1000, k
+for k=0:200, k
   u=u_k(1); x=s.x0; J=0.25*s.h*(x'*s.Q*x+u'*s.R*u); c=.5; % STEP 1: march/save state
   for n=1:s.N, u=u_k(n);                                  % (from t=0 -> T), compute cost
     f1=RHS(x,u,s); f2=RHS(x+s.h*f1/2,u,s); f3=RHS(x+s.h*f2/2,u,s); f4=RHS(x+s.h*f3,u,s);
@@ -49,11 +46,11 @@ E=eye(4);
 end % function Compute_E
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function N=Compute_N(x,u,s)
-N=[x(2); 5/7*(-s.g*sin(x(3))+1/s.m*x(1)*x(4).^2); x(4); u];
+N=[x(2); 5/7*(-s.g*sin(x(3))+x(1)*x(4).^2); x(4); u];
 end % function Compute_N
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function A=Compute_A(x,s)
-a21 = 5/7*1/s.m*x(4).^2; a23 = 5/7*(-s.g*cos(x(3))); a24 = 10/7*1/s.m*x(1)*x(4);
+a21 = 5/7*x(4).^2; a23 = 5/7*(-s.g*cos(x(3))); a24 = 10/7*x(1)*x(4);
 A=[0 1 0 0; a21 0 a23 a24; 0 0 0 1;0 0 0 0];
 end % function Compute_A
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
