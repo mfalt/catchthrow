@@ -34,6 +34,7 @@ public class SwitchThread extends Thread {
 
 	public void run() {
 		while(shouldRun){
+			
 //			sem.take();
 //			if(!shouldRun){
 //				break;

@@ -18,6 +18,9 @@ public class Monitor {
 	private ReferenceGenerator currentRefGen;
 	
 	private StateChecker stateCheck;
+	private LEDChecker ledCheck;
+	private ConstBallChecker constBallCheck;
+	private ConstBeamChecker constBeamCheck;
 
 	public static final int OFF=0, BEAM=1, BALL=2, SEQUENCE=3;
 	private int mode;
@@ -212,5 +215,23 @@ public class Monitor {
 			return true; //returnera true eller false här?
 		}
 		return stateCheck.check(y);
+	}
+	
+	public synchronized void setConstBeamCheck(double y){
+		stateCheck = constBeamCheck;
+		constBeamCheck.setValue(y);
+	}
+	
+	public synchronized void setConstBallCheck(double y){
+		stateCheck = constBallCheck;
+		constBallCheck.setValue(y);
+	}
+	
+	public synchronized void setNullChecker(){
+		stateCheck = null;
+	}
+	
+	public synchronized void setLEDChecker() {
+		stateCheck = ledCheck;
 	}
 }	
