@@ -169,6 +169,7 @@ public class Monitor {
 	/** called by Opcom*/
 	public synchronized void setSequenceMode(){
 		mode = SEQUENCE;
+		notifyAll();
 		//		beamBallRegul.reset();
 		//		currentRegul = beamBallRegul; //update currentRegul
 
@@ -226,7 +227,7 @@ public class Monitor {
 
 	public synchronized boolean checkState(){
 		if(stateCheck==null){
-			return true; //returnera true eller false här?
+			return false; //returnera true eller false här?
 		}
 		return stateCheck.check(y);
 	}
@@ -241,11 +242,11 @@ public class Monitor {
 		constBallCheck.setValue(y);
 	}
 	
-	public synchronized void setNullChecker(){
+	public synchronized void setNullCheck(){
 		stateCheck = null;
 	}
 	
-	public synchronized void setLEDChecker() {
+	public synchronized void setLEDCheck() {
 		stateCheck = ledCheck;
 	}
 }	
