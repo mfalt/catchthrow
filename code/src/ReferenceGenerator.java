@@ -11,7 +11,7 @@ public abstract class ReferenceGenerator {
 	}
 	
 	protected double getTimeSeconds() {
-		return (System.currentTimeMillis() - t0) / 1000.0;
+		return (System.currentTimeMillis() - t0) * 0.001;
 	}
 
 }

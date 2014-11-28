@@ -1,3 +1,6 @@
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 
 public class Monitor {
 
@@ -30,12 +33,23 @@ public class Monitor {
 		beamRegul = new BeamRegul();
 		beamBallRegul = new BeamBallRegul(beamRegul);
 
+		
 		constantAngleRef = new ConstantRef();
 		constantAngleRef.pickState(ReferenceGenerator.ANGLE);
 		pickupSearchRef = new RampRef();
 		pickupSearchRef.pickState(ReferenceGenerator.ANGLE);
 		constantPosRef = new ConstantRef();
 		constantPosRef.pickState(ReferenceGenerator.POS);
+		
+		try {
+			throwRefSmall = new TrajectoryRef("../simulink_test/throwPath.mat");
+			throwRefMedium = new TrajectoryRef("../simulink_test/throwPath.mat");
+			throwRefLarge = new TrajectoryRef("../simulink_test/throwPath.mat");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/** called from Main */

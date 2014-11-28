@@ -33,6 +33,15 @@ public class SwitchThread extends Thread {
 
 
 	public void run() {
+		
+//		TEST CODE FOR FOLLOWING THROW TRAJECTORY (comment out the while loop if you want to test)
+//		synchronized(mon) {
+//			mon.setBeamRegul();
+//			mon.setRefGenTrajectoryMedium();
+//		}
+		
+		
+		
 		while(shouldRun){
 //			sem.take();
 //			if(!shouldRun){
@@ -41,7 +50,7 @@ public class SwitchThread extends Thread {
 
 			mon.setBeamRegul();
 			mon.setRefGenConstantAngle(0.0);
-
+			
 			//TODO:make sure beam is stationary at 0
 
 
