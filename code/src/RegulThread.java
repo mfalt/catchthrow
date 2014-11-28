@@ -23,7 +23,6 @@ public class RegulThread extends Thread {
 	
 	private double uAngle;
 	private double[] ref = new double[4];
-	private double[] refsToOpcom = new double[2];
 	private double[] analogValues;  //yAngle on index 0, yPos on index 1
 	
 	/** Constructor */
@@ -118,9 +117,7 @@ public class RegulThread extends Thread {
 				//might have to rethink this part...
 				ref = mon.getRef();
 
-				refsToOpcom[0] = ref[ReferenceGenerator.ANGLE];
-				refsToOpcom[1] = ref[ReferenceGenerator.POS];
-				sendDataToOpCom(refsToOpcom, analogValues, uAngle);
+				sendDataToOpCom(ref, analogValues, uAngle);
 				//System.out.println(ref);
 				
 				//if we do updateState here then this above calculation
