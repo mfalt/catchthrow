@@ -117,7 +117,9 @@ public class RegulThread extends Thread {
 					e.printStackTrace();
 				}
 				
-				mon.notifyAll(); //wake up switchthread (might change how this is done)
+				if(mon.checkState()){
+					mon.notifyAll(); //wake up switchthread (might change how this is done)
+				}
 				
 				//might have to rethink this part...
 				ref = mon.getRef();

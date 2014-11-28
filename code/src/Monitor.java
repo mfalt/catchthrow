@@ -15,6 +15,8 @@ public class Monitor {
 	private TrajectoryRef throwRefMedium;
 	private TrajectoryRef throwRefLarge;
 	private ReferenceGenerator currentRefGen;
+	
+	private StateChecker stateCheck;
 
 	public static final int OFF=0, BEAM=1, BALL=2, SEQUENCE=3;
 	private int mode;
@@ -194,4 +196,10 @@ public class Monitor {
 	}
 
 
+	public synchronized boolean checkState(){
+		if(stateCheck==null){
+			return true; //returnera true eller false här?
+		}
+		return stateCheck.check(y);
+	}
 }	
