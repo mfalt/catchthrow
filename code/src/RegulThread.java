@@ -27,7 +27,7 @@ public class RegulThread extends Thread {
 	
 	private double uAngle, ref;
 	private double[] analogValues;  //yAngle on index 0, yPos on index 1
-	private boolean digitalValue;
+//	private boolean digitalValue;
 	
 	/** Constructor */
 	public RegulThread(Monitor monitor, int prio) {
