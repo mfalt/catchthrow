@@ -44,28 +44,17 @@ public class TrajectoryRef extends ReferenceGenerator {
 	}
 	
 	@Override
-	public double getRef() {
-		return getAngleRef();
+	public double[] getRef() {
+		updateReferences();
+		return ref;
 	}
 
-	public double getPosRef() {
-		return posRef.get(currentArrayIdx);
-	}
-	
-	public double getVelRef() {
-		return velRef.get(currentArrayIdx);
-	}
-	
-	public double getAngleRef() {
-		return angleRef.get(currentArrayIdx);
-	}
-	
-	public double getAngleVelRef() {
-		return angleVelRef.get(currentArrayIdx);
-	}
-	
-	public void updateReferences() {
+	private void updateReferences() {
 		currentArrayIdx = Math.min((int) Math.floor(getTimeSeconds() / h), N-1);
+		ref[0] = posRef.get(currentArrayIdx);
+		ref[1] = velRef.get(currentArrayIdx);
+		ref[2] = angleRef.get(currentArrayIdx);
+		ref[3] = angleVelRef.get(currentArrayIdx);
 	}
 
 }

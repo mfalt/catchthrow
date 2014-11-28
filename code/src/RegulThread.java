@@ -1,10 +1,6 @@
-import java.io.IOException;
-
 import se.lth.control.DoublePoint;
 import se.lth.control.realtime.AnalogIn;
 import se.lth.control.realtime.AnalogOut;
-import se.lth.control.realtime.DigitalIn;
-import se.lth.control.realtime.DigitalOut;
 import se.lth.control.realtime.IOChannelException;
 import se.lth.control.realtime.Semaphore;
 
@@ -25,9 +21,11 @@ public class RegulThread extends Thread {
 //	private DigitalIn digitalIn; 			// sensor light
 //	private DigitalOut digitalOut;
 	
-	private double uAngle, ref;
+	private double uAngle;
+	private double[] ref = new double[4];
+	private double[] refsToOpcom = new double[2];
 	private double[] analogValues;  //yAngle on index 0, yPos on index 1
-//	private boolean digitalValue;
+
 	
 	/** Constructor */
 	public RegulThread(Monitor monitor, int prio) {
@@ -56,12 +54,11 @@ public class RegulThread extends Thread {
 		this.opcom = opcom;
 	}
 	
-	private void sendDataToOpCom(double yref, double[] y, double u) {
+	private void sendDataToOpCom(double[] yref, double[] y, double u) {
 		double x = (double)(System.currentTimeMillis() - startTime) / 1000.0;
 		DoublePoint dp = new DoublePoint(x,u);
-		int mode = mon.getMode();
-		PlotData pd = new PlotData(x,(mode == Monitor.BEAM) ? yref : -10,y[0]);
-		PlotData pd2 = new PlotData(x,(mode == Monitor.BALL) ? yref : -10,y[1]);
+		PlotData pd = new PlotData(x, yref[ReferenceGenerator.ANGLE], y[0]);
+		PlotData pd2 = new PlotData(x, yref[ReferenceGenerator.POS], y[1]);
 		opcom.putControlDataPoint(dp);
 		opcom.putMeasurementDataPoint(pd);
 		opcom.putMeasurement2DataPoint(pd2);
@@ -124,7 +121,9 @@ public class RegulThread extends Thread {
 				//might have to rethink this part...
 				ref = mon.getRef();
 
-				sendDataToOpCom(ref, analogValues, uAngle);
+				refsToOpcom[0] = ref[ReferenceGenerator.ANGLE];
+				refsToOpcom[1] = ref[ReferenceGenerator.POS];
+				sendDataToOpCom(refsToOpcom, analogValues, uAngle);
 				//System.out.println(ref);
 				
 				//if we do updateState here then this above calculation

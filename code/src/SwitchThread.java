@@ -40,12 +40,12 @@ public class SwitchThread extends Thread {
 //			}
 
 			mon.setBeamRegul();
-			mon.setRefGenConstant(0.0);
+			mon.setRefGenConstantAngle(0.0);
 
 			//TODO:make sure beam is stationary at 0
 
 
-			mon.setRefGenRamp(-1.0);
+			mon.setRefGenRamp(-1.0, ReferenceGenerator.ANGLE);
 			while(!getLED()&& mon.getMode()==Monitor.SEQUENCE){
 
 				synchronized (mon) {
@@ -59,7 +59,7 @@ public class SwitchThread extends Thread {
 			}
 
 			synchronized(mon){
-				mon.setRefGenConstant(mon.getRef()); //keep beam at angle
+				mon.setRefGenConstantAngle(mon.getRef()[ReferenceGenerator.ANGLE]); //keep beam at angle
 			}
 
 			FIRE(false);
