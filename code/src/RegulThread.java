@@ -56,9 +56,8 @@ public class RegulThread extends Thread {
 	private void sendDataToOpCom(double[] yref, double[] y, double u) {
 		double x = (double)(System.currentTimeMillis() - startTime) / 1000.0;
 		DoublePoint dp = new DoublePoint(x,u);
-		int mode = mon.getMode();
-		PlotData pd = new PlotData(x,(mode == Monitor.BEAM) ? yref[0] : -10,y[0]);
-		PlotData pd2 = new PlotData(x,(mode == Monitor.BALL) ? yref[1] : -10,y[1]);
+		PlotData pd = new PlotData(x, yref[ReferenceGenerator.ANGLE], y[0]);
+		PlotData pd2 = new PlotData(x, yref[ReferenceGenerator.POS], y[1]);
 		opcom.putControlDataPoint(dp);
 		opcom.putMeasurementDataPoint(pd);
 		opcom.putMeasurement2DataPoint(pd2);
