@@ -24,6 +24,7 @@ public class RegulThread extends Thread {
 	private double uAngle;
 	private double[] ref = new double[4];
 	private double[] analogValues;  //yAngle on index 0, yPos on index 1
+
 	
 	/** Constructor */
 	public RegulThread(Monitor monitor, int prio) {
@@ -112,7 +113,9 @@ public class RegulThread extends Thread {
 					e.printStackTrace();
 				}
 				
-				mon.notifyAll(); //wake up switchthread (might change how this is done)
+				if(mon.checkState()){
+					mon.notifyAll(); //wake up switchthread (might change how this is done)
+				}
 				
 				//might have to rethink this part...
 				ref = mon.getRef();

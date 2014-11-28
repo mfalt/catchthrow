@@ -43,6 +43,7 @@ public class SwitchThread extends Thread {
 		
 		
 		while(shouldRun){
+			
 //			sem.take();
 //			if(!shouldRun){
 //				break;
