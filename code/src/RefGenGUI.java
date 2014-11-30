@@ -1,5 +1,3 @@
-
-
 import javax.swing.*;
 import javax.swing.event.*;
 import java.awt.*;
@@ -7,7 +5,7 @@ import java.awt.event.*;
 import se.lth.control.*;
 
 /** This class is the same as the one from lab 1*/
-public class RefGenGUI extends ScalarRef implements Runnable {
+public class RefGenGUI extends ReferenceGenerator implements Runnable {
 	private static final int SQWAVE=0, MANUAL=1;
 	private final int priority;
 	
@@ -182,7 +180,7 @@ public class RefGenGUI extends ScalarRef implements Runnable {
 	
 	public synchronized double[] getRef() 
 	{
-		ref[actualState] = (mode == SQWAVE) ? singleRef : manual; // Let the beam angle (ref[2] be reference always because of laziness
+		ref[2] = (mode == SQWAVE) ? singleRef : manual; // Let the beam angle (ref[2] be reference always because of laziness
 		return ref;
 	}
 	

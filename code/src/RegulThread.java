@@ -4,7 +4,6 @@ import se.lth.control.realtime.AnalogOut;
 import se.lth.control.realtime.IOChannelException;
 import se.lth.control.realtime.Semaphore;
 
-
 public class RegulThread extends Thread {
 	
 	private Monitor mon;
@@ -17,9 +16,6 @@ public class RegulThread extends Thread {
 	private AnalogIn analogInAngle;        // angle of the beam = yAngle
 	private AnalogIn analogInPosition;     // position of the ball = yPos
 	private AnalogOut analogOut;           // torque for the beam = uAngle
-	
-//	private DigitalIn digitalIn; 			// sensor light
-//	private DigitalOut digitalOut;
 	
 	private double uAngle;
 	private double[] ref = new double[4];
@@ -34,9 +30,6 @@ public class RegulThread extends Thread {
 			analogInAngle = new AnalogIn(0);
 			analogInPosition = new AnalogIn(1);
 			analogOut = new AnalogOut(0);
-//			digitalIn = new DigitalIn(0);
-//			digitalOut = new DigitalOut(0);
-//			digitalOut.set(true); // Do not drop ball
 		} catch (IOChannelException e) { 
 			System.out.print("Error: IOChannelException: ");
 			System.out.println(e.getMessage());
@@ -79,17 +72,10 @@ public class RegulThread extends Thread {
 		mutex.take();
 		while(shouldRun) {
 			
-//			try {
-//				digitalValue = digitalIn.get();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-			
 			//get the angle of the beam and its set point
 			try {
 				analogValues[0] = analogInAngle.get();
 			} catch (IOChannelException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -97,10 +83,8 @@ public class RegulThread extends Thread {
 			try {
 				analogValues[1] = analogInPosition.get();
 			} catch (IOChannelException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 						
 			synchronized(mon){ //to get synchronization between calcOutput and updateState
 				uAngle = mon.calcOutput(analogValues);
@@ -109,19 +93,13 @@ public class RegulThread extends Thread {
 				try {
 					analogOut.set(uAngle);
 				} catch (IOChannelException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
-				
-				if(mon.checkState()){
-					mon.notifyAll(); //wake up switchthread (might change how this is done)
 				}
 				
 				//might have to rethink this part...
 				ref = mon.getRef();
 
 				sendDataToOpCom(ref, analogValues, uAngle);
-				//System.out.println(ref);
 				
 				//if we do updateState here then this above calculation
 				//is done while holding the monitor but if we put the calculations outside
@@ -130,6 +108,9 @@ public class RegulThread extends Thread {
 				//opcom does not need the monitor to update the plot anyway
 				mon.updateState();
 			}
+			
+			mon.checkState();
+			
 			t = t + mon.getHMillis();
 			long duration = t-System.currentTimeMillis();
 			//System.out.println(duration);

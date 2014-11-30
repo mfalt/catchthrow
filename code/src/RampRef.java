@@ -1,21 +1,29 @@
 
-public class RampRef extends ScalarRef {
+public class RampRef extends ReferenceGenerator {
 	
-	private double initRef = 0.0;
+	private int actualState;
 	private double rampSlope = 0.0;
+	private long tBefore, tNow; //tNow is current time, tLast is what the time was at the sample before
 	
-	@Override
+	public RampRef(int state) {
+		actualState = state; 
+	}
+	
+	//@Override
 	public double[] getRef() {
-		ref[actualState] = initRef + rampSlope*getTimeSeconds();
+		tNow = System.currentTimeMillis();
+		ref[actualState] = ref[actualState] + rampSlope*(tNow - tBefore) * 0.001;
+		tBefore = tNow;
 		return ref;
 	}
 
-	public void setRampSlope(double rampSlope) {
+	public void setRef(double rampSlope) {
 		this.rampSlope = rampSlope;
+		tBefore = System.currentTimeMillis();
 	}
 
 	public void setInitialRef(double initRef) {
-		this.initRef = initRef;
+		ref[actualState] = initRef;
 	}
 	
 }

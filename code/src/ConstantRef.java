@@ -1,5 +1,11 @@
 
-public class ConstantRef extends ScalarRef {
+public class ConstantRef extends ReferenceGenerator {
+	
+	private int actualState;
+	
+	public ConstantRef(int state) {
+		actualState = state; 
+	}
 	
 	public double[] getRef() {
 		return ref;
