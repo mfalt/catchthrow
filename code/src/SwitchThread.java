@@ -73,7 +73,7 @@ public class SwitchThread extends Thread {
 //				synchronized(mon){
 					
 					//Move beam towards catch position
-					mon.setRefGenRamp(-1.0, ReferenceGenerator.ANGLE);
+					mon.setRefGenRampAngle(-1.0, ReferenceGenerator.ANGLE);
 					mon.setLEDCheck();
 					mon.wait(); //wakes up when beam is at catch position
 					

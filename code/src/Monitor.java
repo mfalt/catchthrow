@@ -13,7 +13,7 @@ public class Monitor {
 
 	private RefGenGUI refGenGUI;
 	private ConstantRef constantAngleRef;
-	private RampRef pickupSearchRef;
+	private RampRef rampAngleRef;
 	private ConstantRef constantPosRef;
 	private TrajectoryRef throwRefSmall;
 	private TrajectoryRef throwRefMedium;
@@ -41,8 +41,8 @@ public class Monitor {
 		
 		constantAngleRef = new ConstantRef();
 		constantAngleRef.pickState(ReferenceGenerator.ANGLE);
-		pickupSearchRef = new RampRef();
-		pickupSearchRef.pickState(ReferenceGenerator.ANGLE);
+		rampAngleRef = new RampRef();
+		rampAngleRef.pickState(ReferenceGenerator.ANGLE);
 		constantPosRef = new ConstantRef();
 		constantPosRef.pickState(ReferenceGenerator.POS);
 		
@@ -76,11 +76,11 @@ public class Monitor {
 	}
 
 	/** called from SwitchThread */
-	public synchronized void setRefGenRamp(double rampSlope, int state){
-		pickupSearchRef.setRampSlope(rampSlope);
-		pickupSearchRef.resetTime();
-		pickupSearchRef.setInitialRef(currentRefGen.getRef()[state]);
-		currentRefGen = pickupSearchRef;
+	public synchronized void setRefGenRampAngle(double rampSlope, int state){
+		rampAngleRef.setRampSlope(rampSlope);
+		rampAngleRef.resetTime();
+		rampAngleRef.setInitialRef(currentRefGen.getRef()[state]);
+		currentRefGen = rampAngleRef;
 
 	}
 
