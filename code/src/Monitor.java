@@ -47,6 +47,10 @@ public class Monitor {
 		constantPosRef = new ConstantRef(ReferenceGenerator.POS);
 		rampAngleRef = new RampRef(ReferenceGenerator.ANGLE);
 		
+		constBeamCheck = new ConstBeamChecker();
+		constBallCheck = new ConstBallChecker();
+		ledCheck = new LEDChecker();
+		
 		try {
 			throwRefSmall = new TrajectoryRef("../simulink_test/throwPath.mat");
 			throwRefMedium = new TrajectoryRef("../simulink_test/throwPath.mat");

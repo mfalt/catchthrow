@@ -30,7 +30,7 @@ public class SwitchThread extends Thread {
 	public void run() {
 
 		while (shouldRun) {
-			try{
+			//try{
 		
 				// Wait until sequence mode
 					while (mon.getMode() != Monitor.SEQUENCE) {
@@ -51,7 +51,7 @@ public class SwitchThread extends Thread {
 				mon.setConstBeamCheck(0.0);
 				
 				// Move beam towards catch position
-				mon.setRefGenRamp(-1.0, ReferenceGenerator.ANGLE);
+				mon.setRefGenRamp(-0.001, ReferenceGenerator.ANGLE);
 				// wait until the beam is at the catch position, this method calls wait()
 				mon.setLEDCheck();
 
@@ -73,11 +73,11 @@ public class SwitchThread extends Thread {
 				}
 				// FIRE!
 				fire(true);
-				try {
-					Thread.sleep(200);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} //TODO: find good time or change to detecting if ball is on beam
+//				try {
+//					Thread.sleep(200);
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				} //TODO: find good time or change to detecting if ball is on beam
 				
 				// switch to ball control and wait until the ball is at position 3.0 for example
 				synchronized (mon) {
@@ -90,24 +90,26 @@ public class SwitchThread extends Thread {
 				currentControlSignal = mon.getCurrentControlSignal();
 				weight = checkWeight(currentControlSignal);
 			
-				switch(weight) {
-				case SMALL:
-					synchronized(mon) {
-						mon.setBeamRegul();
-						mon.setRefGenConstantAngle(-5.0); //TODO experiment with this value
-					}
-					break;
-				case MEDIUM:
-					synchronized(mon) {
-						
-					}
-					break;
-				}
+//				switch(weight) {
+//				case SMALL:
+//
+//				case MEDIUM:
+//					synchronized(mon) {
+//						
+//					}
+//					break;
+//				case LARGE:
+//					synchronized(mon) {
+//						mon.setBeamRegul();
+//						mon.setRefGenConstantAngle(-5.0); //TODO experiment with this value
+//					}
+//					break;
+//				}
 				
-			} catch(InterruptedException e){
-			Thread.interrupted();
-			continue;
-			}
+			//} catch(InterruptedException e){
+			//Thread.interrupted();
+			//continue;
+			//}
 		}
 	}
 	
