@@ -77,7 +77,7 @@ public class SwitchThread extends Thread {
 				// Ready...
 				fire(false);
 				// here we should sleep until the ball is detected
-				while(mon.getBallPosition() <= -0.45) {
+				while(mon.getBallPosition() <= RegulThread.posMin+0.05) { //Wait until ball is at least 5 cm from the left edge
 					try {
 						// Hooooold...
 						Thread.sleep(10); // measure proper time for the ball to fall on the beam
@@ -96,7 +96,7 @@ public class SwitchThread extends Thread {
 				// switch to ball control and wait until the ball is at position 3.0 for example
 				synchronized (mon) {
 					mon.setBallRegul();
-					mon.setRefGenConstantPos(0.35);
+					mon.setRefGenConstantPos(0.35); // 35 cm
 					mon.setConstBallCheck(0.35);
 				}
 				// Make ball weight decision
