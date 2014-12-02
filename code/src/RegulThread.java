@@ -26,11 +26,12 @@ public class RegulThread extends Thread {
 	private double[] measurement;  //yAngle on index 0, yPos on index 1
 	
 	/**
-	 * Conversion of measurements from Volt to SI units 
+	 * Conversion of measurements from Volt to SI units
+	 * TEMPORARY NUMBERS 
 	 */
-	private static final double radiansPerVolt = 1.0;
+	private static final double radiansPerVolt = 3.1415926535897932384626d / 4 / 10;
 	private static final double angleBiasVolt = 0.0;
-	private static final double metersPerVolt = 1.0;
+	private static final double metersPerVolt = 0.55 / 10;
 	private static final double positionBiasVolt = 0.0;
 
 	
