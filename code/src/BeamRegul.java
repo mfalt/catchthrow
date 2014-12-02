@@ -42,12 +42,12 @@ public class BeamRegul extends Regul {
 	 *  to an OutSignal object if needed when we do
 	 *  more advanced stuffs
 	 */
-	public double calculateOutput(double[] yy, double[] yrefs, double h) {
+	public double calculateOutput(double[] measurement, double[] yrefs, double h) {
 		double yref = yrefs[ReferenceGenerator.ANGLE];
-		P = p.K*(p.Beta*yref - yy[0]);
+		P = p.K*(p.Beta*yref - measurement[0]);
 		ad = p.Td/(p.Td + p.N*h);
 		bd = p.K*p.N*ad;
-		y = yy[0];
+		y = measurement[0];
 		D = ad*D - bd*(y - yold);
 		
 		//System.out.println((y-yold)*10000);
