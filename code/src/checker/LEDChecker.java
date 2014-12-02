@@ -18,9 +18,9 @@ public class LEDChecker implements StateChecker {
 	}
 
 	// @Override
-	public boolean check(double[] y) {
+	public boolean check(double[] measurement) {
 		try {
-			return digitalIn.get();
+			return !digitalIn.get();
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;

@@ -42,13 +42,14 @@ public class SwitchThread extends Thread {
 				// Wait until sequence mode
 					while (mon.getMode() != Monitor.SEQUENCE) {
 						try {
-							Thread.sleep(2000);
+							synchronized(mon) {
+								mon.wait();
+							}
+//							Thread.sleep(2000);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
 				}
-					
-				System.out.println("#1");
 		
 				synchronized (mon) {
 					// set the reference value of the beam angle to 0
@@ -56,27 +57,36 @@ public class SwitchThread extends Thread {
 					mon.setRefGenConstantAngle(-0.05);
 				}
 				
-				System.out.println("#2");
 				// wait until the beam angle has become 0, this method calls wait()
 				mon.setConstBeamCheck(-0.05);
-				System.out.println("#3");
 				
 				// Move beam towards catch position
-				mon.setRefGenRamp(-0.1, ReferenceGenerator.ANGLE);
+				mon.setRefGenRamp(-0.03, ReferenceGenerator.ANGLE);
 				// wait until the beam is at the catch position, this method calls wait()
-				System.out.println("#4");
 				mon.setLEDCheck();
 
-				System.out.println("#5");
 				// Make sure beam is stationary before continuing
 				mon.setRefGenConstantAngle(mon.getRef()[ReferenceGenerator.ANGLE]); // keep
 																						// beam
-				System.out.println("#6");
 																						// at angle
 				mon.setConstBeamCheck(mon.getRef()[ReferenceGenerator.ANGLE]);
+				
+				/**
+				 * 
+				 * 
+				 * 
+				 * 
+				 * Look through the following!
+				 * Use Checkers and fix many parts where people are trying to do
+				 * different things at the same time!
+				 * 
+				 * 
+				 * 
+				 * 
+				 * 
+				 * */
 				// Ready...
-				fire(false);
-				// here we should sleep until the ball is detected
+				fire(false); // Reset the solenoid
 				while(mon.getBallPosition() <= RegulThread.posMin+0.05) { //Wait until ball is at least 5 cm from the left edge
 					try {
 						// Hooooold...
@@ -87,11 +97,12 @@ public class SwitchThread extends Thread {
 				}
 				// FIRE!
 				fire(true);
-//				try {
-//					Thread.sleep(200);
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				} //TODO: find good time or change to detecting if ball is on beam
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} //TODO: find good time or change to detecting if ball is on beam
+				fire(false);
 				
 				// switch to ball control and wait until the ball is at position 3.0 for example
 				synchronized (mon) {

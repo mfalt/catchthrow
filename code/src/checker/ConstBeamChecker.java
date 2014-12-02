@@ -1,15 +1,19 @@
 package checker;
 
+import refgen.ReferenceGenerator;
+
+import com.sun.org.apache.xml.internal.security.encryption.Reference;
+
 public class ConstBeamChecker implements StateChecker {
-	double yRef;
+	double angleRef;
 	int count = 0;
 	final double TOL = 0.01;
 	final int SAMPLES = 5;
 
 	// y = beamangle,ballpos
 	// @Override
-	public boolean check(double[] y) {
-		if (Math.abs(y[0] - yRef) < TOL) {// TODO: Find good tolerance
+	public boolean check(double[] measurement) {
+		if (Math.abs(measurement[0] - angleRef) < TOL) {// TODO: Find good tolerance
 			count++;
 			if (count > SAMPLES) { // TODO: find good amount of samples
 				return true;
@@ -22,7 +26,7 @@ public class ConstBeamChecker implements StateChecker {
 		}
 	}
 
-	public void setValue(double y) {
-		yRef = y;
+	public void setValue(double angleRef) {
+		this.angleRef = angleRef;
 	}
 }
