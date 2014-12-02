@@ -1,8 +1,11 @@
+package main;
+
 import se.lth.control.DoublePoint;
 import se.lth.control.realtime.AnalogIn;
 import se.lth.control.realtime.AnalogOut;
 import se.lth.control.realtime.IOChannelException;
 import se.lth.control.realtime.Semaphore;
+import refgen.*;
 
 public class RegulThread extends Thread {
 	

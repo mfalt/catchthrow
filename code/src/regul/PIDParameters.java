@@ -1,12 +1,14 @@
+package regul;
+
 
 public class PIDParameters implements Cloneable {
-	double K;
-	double Ti;
-	double Tr;
-	double Td;
-	double N;
-	double Beta;
-	boolean integratorOn;
+	public double K;
+	public double Ti;
+	public double Tr;
+	public double Td;
+	public double N;
+	public double Beta;
+	public boolean integratorOn;
 	
 	public Object clone() {
 		try {

@@ -1,3 +1,5 @@
+package refgen;
+
 public abstract class ReferenceGenerator {
 	
 	public static final int POS=0, VEL=1, ANGLE=3, ANGLEVEL=4; 

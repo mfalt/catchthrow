@@ -1,8 +1,11 @@
+package main;
+
 import java.io.IOException;
 
 import se.lth.control.realtime.DigitalOut;
 import se.lth.control.realtime.IOChannelException;
 import se.lth.control.realtime.Semaphore;
+import refgen.*;
 
 public class SwitchThread extends Thread {
 	private Monitor mon;
@@ -25,6 +28,9 @@ public class SwitchThread extends Thread {
 		} catch (IOChannelException e) {
 			e.printStackTrace();
 		}
+
+
+
 		
 	}
 

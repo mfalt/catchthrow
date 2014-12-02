@@ -1,3 +1,5 @@
+package main;
+
 public class PlotData implements Cloneable {
 	public double yref, y;
 	public double x; // holds the current time

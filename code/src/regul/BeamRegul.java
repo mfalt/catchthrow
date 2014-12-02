@@ -1,3 +1,6 @@
+package regul;
+import refgen.ReferenceGenerator;
+import main.*;
 
 public class BeamRegul extends Regul {
 	

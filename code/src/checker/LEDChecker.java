@@ -1,3 +1,5 @@
+package checker;
+
 import java.io.IOException;
 
 import se.lth.control.realtime.DigitalIn;

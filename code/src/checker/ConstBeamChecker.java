@@ -1,4 +1,6 @@
-public class ConstBallChecker implements StateChecker {
+package checker;
+
+public class ConstBeamChecker implements StateChecker {
 	double yRef;
 	int count = 0;
 	final double TOL = 0.01;
@@ -7,7 +9,7 @@ public class ConstBallChecker implements StateChecker {
 	// y = beamangle,ballpos
 	// @Override
 	public boolean check(double[] y) {
-		if (Math.abs(y[1] - yRef) < TOL) {// TODO: Find good tolerance
+		if (Math.abs(y[0] - yRef) < TOL) {// TODO: Find good tolerance
 			count++;
 			if (count > SAMPLES) { // TODO: find good amount of samples
 				return true;

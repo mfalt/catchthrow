@@ -1,9 +1,12 @@
+package main;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import se.lth.control.*;
 import se.lth.control.plot.*;
 import se.lth.control.realtime.Semaphore;
+import regul.*;
 
 /** Class that creates and maintains a GUI for the Ball and Beam process. 
 Uses two PlotterPanels for the plotters */

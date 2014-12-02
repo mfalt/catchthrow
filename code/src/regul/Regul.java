@@ -1,3 +1,5 @@
+package regul;
+
 
 public abstract class Regul{
 	

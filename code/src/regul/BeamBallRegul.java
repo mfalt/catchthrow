@@ -1,3 +1,8 @@
+package regul;
+
+import main.*;
+import refgen.*;
+
 
 public class BeamBallRegul extends Regul {
 

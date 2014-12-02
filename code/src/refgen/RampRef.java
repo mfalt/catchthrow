@@ -1,3 +1,5 @@
+package refgen;
+
 
 public class RampRef extends ReferenceGenerator {
 	

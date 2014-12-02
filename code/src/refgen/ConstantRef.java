@@ -1,3 +1,5 @@
+package refgen;
+
 
 public class ConstantRef extends ReferenceGenerator {
 	

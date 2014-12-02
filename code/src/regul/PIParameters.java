@@ -1,3 +1,5 @@
+package regul;
+
 public class PIParameters implements Cloneable {
 	double K;
 	double Ti;

@@ -1,3 +1,5 @@
+package checker;
+
 
 
 public interface StateChecker {
