@@ -31,18 +31,18 @@ public class BeamBallRegul extends Regul {
 	 *  to an OutSignal object if needed when we do
 	 *  more advanced stuffs
 	 */
-	public double calculateOutput(double[] measurements, double[] yrefs, double h) {
+	public double calculateOutput(double[] measurement, double[] yrefs, double h) {
 		posRef = yrefs[ReferenceGenerator.POS];
 		angleFF = yrefs[ReferenceGenerator.ANGLE];
 		angleRefs = yrefs;
-		pos = measurements[1];
+		pos = measurement[1];
 		ad = p.Td/(p.Td + p.N*h);
 		bd = p.K*p.N*ad;
 		P = p.K*(p.Beta*posRef - pos);
 		D = ad*D - bd*(pos - posOld);
 		angleRef = P + I + D + angleFF;
 		angleRefs[ReferenceGenerator.ANGLE] = angleRef;
-		u = inner.calculateOutput(measurements, angleRefs, h);
+		u = inner.calculateOutput(measurement, angleRefs, h);
 		inner.updateState(h);
 		return u;
 	}

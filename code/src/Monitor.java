@@ -112,14 +112,14 @@ public class Monitor {
 	}*/
 
 	/** called by RegulThread*/
-	public synchronized double calcOutput(double[] y) {
-		this.y[0] = y[0];
-		this.y[1] = y[1];
-		
+	public synchronized double calcOutput(double[] measurement) {
+		this.y[0] = measurement[0];
+		this.y[1] = measurement[1];
+		//		LED = digitalValue;
 		if(currentRegul == null) {
 			return 0.0;
 		} else {
-			currentControlSignal = currentRegul.calculateOutput(y, currentRefGen.getRef(), h);
+			currentControlSignal = currentRegul.calculateOutput(measurement, currentRefGen.getRef(), h);
 			return currentControlSignal;
 		}
 	}

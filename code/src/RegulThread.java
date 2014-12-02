@@ -19,7 +19,16 @@ public class RegulThread extends Thread {
 	
 	private double uAngle;
 	private double[] ref = new double[4];
-	private double[] analogValues;  //yAngle on index 0, yPos on index 1
+	private double[] measurement;  //yAngle on index 0, yPos on index 1
+	
+	/**
+	 * Conversion of measurements from Volt to SI units
+	 * TEMPORARY NUMBERS 
+	 */
+	private static final double radiansPerVolt = 3.1415926535897932384626d / 4 / 10;
+	private static final double angleBiasVolt = 0.0;
+	private static final double metersPerVolt = 0.55 / 10;
+	private static final double positionBiasVolt = 0.0;
 
 	
 	/** Constructor */
@@ -35,7 +44,7 @@ public class RegulThread extends Thread {
 			System.out.println(e.getMessage());
 		}
 		
-		analogValues = new double[2]; 
+		measurement = new double[2]; 
 		mon = monitor;
 		mutex = new Semaphore(1);
 		setPriority(prio);
@@ -74,20 +83,20 @@ public class RegulThread extends Thread {
 			
 			//get the angle of the beam and its set point
 			try {
-				analogValues[0] = analogInAngle.get();
+				measurement[0] = radiansPerVolt*(analogInAngle.get() - angleBiasVolt);
 			} catch (IOChannelException e) {
 				e.printStackTrace();
 			}
 			
 			//get the position of the ball
 			try {
-				analogValues[1] = analogInPosition.get();
+				measurement[1] = metersPerVolt*(analogInPosition.get() - positionBiasVolt);
 			} catch (IOChannelException e) {
 				e.printStackTrace();
 			}
 						
 			synchronized(mon){ //to get synchronization between calcOutput and updateState
-				uAngle = mon.calcOutput(analogValues);
+				uAngle = mon.calcOutput(measurement);
 			
 				//send the control signal to the real process
 				try {
@@ -99,7 +108,7 @@ public class RegulThread extends Thread {
 				//might have to rethink this part...
 				ref = mon.getRef();
 
-				sendDataToOpCom(ref, analogValues, uAngle);
+				sendDataToOpCom(ref, measurement, uAngle);
 				
 				//if we do updateState here then this above calculation
 				//is done while holding the monitor but if we put the calculations outside
