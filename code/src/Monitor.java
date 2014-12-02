@@ -62,7 +62,7 @@ public class Monitor {
 		}
 	}
 
-	/** called from Main */
+	/** called fr9.5om Main */
 	public synchronized void setRefGenGUI(RefGenGUI referenceGenerator){
 		refGenGUI = referenceGenerator;
 		currentRefGen = refGenGUI;
