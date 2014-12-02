@@ -44,11 +44,11 @@ public class SwitchThread extends Thread {
 				synchronized (mon) {
 					// set the reference value of the beam angle to 0
 					mon.setBeamRegul();
-					mon.setRefGenConstantAngle(0.0);
+					mon.setRefGenConstantAngle(-0.1);
 				}
 				
 				// wait until the beam angle has become 0, this method calls wait()
-				mon.setConstBeamCheck(0.0);
+				mon.setConstBeamCheck(-0.1);
 				
 				// Move beam towards catch position
 				mon.setRefGenRamp(-0.001, ReferenceGenerator.ANGLE);
@@ -63,10 +63,10 @@ public class SwitchThread extends Thread {
 				// Ready...
 				fire(false);
 				// here we should sleep until the ball is detected
-				while(mon.getBallPosition() >= 10) {
+				while(mon.getBallPosition() <= -0.45) {
 					try {
 						// Hooooold...
-						Thread.sleep(400); // measure proper time for the ball to fall on the beam
+						Thread.sleep(10); // measure proper time for the ball to fall on the beam
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
