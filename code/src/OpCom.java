@@ -90,11 +90,11 @@ public class OpCom {
 		plotterPanel = new BoxPanel(BoxPanel.VERTICAL);
 		// Create PlotterPanels.
 		measPanel = new PlotterPanel(2, priority);
-		measPanel.setYAxis(20, -10, 2, 2);
+		measPanel.setYAxis(Math.PI/2, -Math.PI/4, 2, 2);
 		measPanel.setXAxis(10, 5, 5);
 		measPanel.setUpdateFreq(10);
 		meas2Panel = new PlotterPanel(2, priority);
-		meas2Panel.setYAxis(20, -10, 2, 2);
+		meas2Panel.setYAxis(1.1, -0.55, 2, 2);
 		meas2Panel.setXAxis(10, 5, 5);
 		meas2Panel.setUpdateFreq(10);
 		ctrlPanel = new PlotterPanel(1, priority);

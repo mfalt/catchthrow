@@ -13,7 +13,7 @@ public class BeamBallRegul extends Regul {
 		inner = in;
 		p = new PIDParameters();
 		//inner = new BeamRegul();
-		p.K = -0.05;
+		p.K = -0.05 / RegulThread.metersPerVolt;
 		p.Ti = 20.0;
 		p.Tr = 10.0;
 		p.Td = 3.0;

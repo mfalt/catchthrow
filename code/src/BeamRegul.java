@@ -12,7 +12,7 @@ public class BeamRegul extends Regul {
 	
 	public BeamRegul() {
 		p = new PIDParameters();
-		p.K = 3.0;
+		p.K = 3.0 / RegulThread.radiansPerVolt;
 		p.Ti = 2.0;
 		p.Tr = 10.0;
 		p.Td = 0.3;

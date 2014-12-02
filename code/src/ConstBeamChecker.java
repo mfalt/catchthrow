@@ -1,7 +1,7 @@
 public class ConstBeamChecker implements StateChecker {
 	double yRef;
 	int count = 0;
-	final double TOL = 0.1;
+	final double TOL = 0.01;
 	final int SAMPLES = 5;
 
 	// y = beamangle,ballpos

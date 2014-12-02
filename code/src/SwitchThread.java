@@ -14,6 +14,7 @@ public class SwitchThread extends Thread {
 	private double uSmall = 0, uMedium = 0, uLarge = 0;
 	private int weight = 0;
 
+	
 	/** Constructor */
 	public SwitchThread(Monitor monitor, Semaphore sem, int prio) {
 		mon = monitor;
@@ -40,24 +41,31 @@ public class SwitchThread extends Thread {
 							e.printStackTrace();
 						}
 				}
+					
+				System.out.println("#1");
 		
 				synchronized (mon) {
 					// set the reference value of the beam angle to 0
 					mon.setBeamRegul();
-					mon.setRefGenConstantAngle(-0.1);
+					mon.setRefGenConstantAngle(-0.05);
 				}
 				
+				System.out.println("#2");
 				// wait until the beam angle has become 0, this method calls wait()
-				mon.setConstBeamCheck(-0.1);
+				mon.setConstBeamCheck(-0.05);
+				System.out.println("#3");
 				
 				// Move beam towards catch position
-				mon.setRefGenRamp(-0.001, ReferenceGenerator.ANGLE);
+				mon.setRefGenRamp(-0.1, ReferenceGenerator.ANGLE);
 				// wait until the beam is at the catch position, this method calls wait()
+				System.out.println("#4");
 				mon.setLEDCheck();
 
+				System.out.println("#5");
 				// Make sure beam is stationary before continuing
 				mon.setRefGenConstantAngle(mon.getRef()[ReferenceGenerator.ANGLE]); // keep
 																						// beam
+				System.out.println("#6");
 																						// at angle
 				mon.setConstBeamCheck(mon.getRef()[ReferenceGenerator.ANGLE]);
 				// Ready...
@@ -82,8 +90,8 @@ public class SwitchThread extends Thread {
 				// switch to ball control and wait until the ball is at position 3.0 for example
 				synchronized (mon) {
 					mon.setBallRegul();
-					mon.setRefGenConstantPos(3.0);
-					mon.setConstBallCheck(3.0);
+					mon.setRefGenConstantPos(0.35);
+					mon.setConstBallCheck(0.35);
 				}
 				// Make ball weight decision
 				mon.setNullCheck();
