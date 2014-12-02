@@ -145,11 +145,11 @@ public class RefGenGUI extends ReferenceGenerator implements Runnable {
 	public RefGenGUI(int refGenPriority) {
 		super();
 		priority = refGenPriority;
-		amplitude = 4.0;
+		amplitude = 0.2;
 		period = 20.0*1000.0/2.0;
 		manual = 0.0;
 		singleRef = amplitude * sign;
-		new RefGUI(4.0, 20.0);
+		new RefGUI(amplitude, 20.0);
 	}
 	
 	private synchronized void wakeUpThread() {

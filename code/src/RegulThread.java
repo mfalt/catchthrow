@@ -30,10 +30,10 @@ public class RegulThread extends Thread {
 	public static final double metersPerVolt = 0.55 / 10;
 	public static final double positionBiasVolt = 0.0;
 
-	public static final double angleMin = -10 * radiansPerVolt;
-	public static final double angleMax = 10 * radiansPerVolt;
-	public static final double posMin = -10 * metersPerVolt;
-	public static final double posMax = 10 * metersPerVolt;
+	public static final double angleMin = (-10 - angleBiasVolt)*radiansPerVolt;
+	public static final double angleMax = (10 - angleBiasVolt)*radiansPerVolt;
+	public static final double posMin = (-10 - positionBiasVolt)*metersPerVolt;
+	public static final double posMax = (10 - positionBiasVolt)*metersPerVolt;
 	
 	/** Constructor */
 	public RegulThread(Monitor monitor, int prio) {
