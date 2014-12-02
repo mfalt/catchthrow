@@ -6,8 +6,8 @@ public class Main {
 	public static void main(String args[]){
 		
 		final int regulPriority = 8;
-		final int plotterPriority = 7;
-		final int switchPriority = 5;
+		final int plotterPriority = 6;
+		final int switchPriority = 7;
 		final int refGenPriority = 6;
 		
 		RefGenGUI refgen = new RefGenGUI(refGenPriority);
