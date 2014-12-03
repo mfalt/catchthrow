@@ -1,15 +1,17 @@
 package checker;
 
-public class ConstBallChecker implements StateChecker {
-	double positionRef;
+import main.RegulThread;
+
+public class BallOnBeamChecker implements StateChecker {
+	final double TOL = 0.05; //Wait until ball is at least 5 cm from the left edge
+	double positionRef = RegulThread.posMin + TOL;
 	int count = 0;
-	final double TOL = 0.1; // Stiction makes small tolerances hard, currently set to 1 dm
 	final int SAMPLES = 5;
 
 	// y = beamangle,ballpos
 	// @Override
 	public boolean check(double[] measurement) {
-		if (Math.abs(measurement[1] - positionRef) < TOL) {// TODO: Find good tolerance
+		if (measurement[1] > positionRef + TOL) {
 			count++;
 			if (count > SAMPLES) { // TODO: find good amount of samples
 				return true;
@@ -22,7 +24,4 @@ public class ConstBallChecker implements StateChecker {
 		}
 	}
 
-	public void setValue(double y) {
-		positionRef = y;
-	}
 }

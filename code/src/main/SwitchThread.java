@@ -86,22 +86,16 @@ public class SwitchThread extends Thread {
 				 * 
 				 * */
 				fire(false); // Reset the solenoid to let ball take position in front of solenoid
-				while(mon.getBallPosition() <= RegulThread.posMin+0.05) { //Wait until ball is at least 5 cm from the left edge
-					try {
-						// Hooooold...
-						Thread.sleep(10); // measure proper time for the ball to fall on the beam
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-				// FIRE!
-				fire(true);
 				try {
-					Thread.sleep(200);
+					// Hooooold...
+					Thread.sleep(1500);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
-				} //TODO: find good time or change to detecting if ball is on beam
-				fire(false);
+				}
+				// FIRE!
+				fire(true); // Push ball on beam
+				mon.setBallOnBeamCheck();
+				fire(false); // Reset the solenoid again
 				
 				// switch to ball control and wait until the ball is at position 3.0 for example
 				synchronized (mon) {
@@ -111,7 +105,7 @@ public class SwitchThread extends Thread {
 				}
 				// Make ball weight decision
 				mon.setNullCheck();
-				currentControlSignal = mon.getCurrentControlSignal();
+				currentControlSignal = mon.getCurrentControlSignal(); // Take MANY measurements and average since the signal is VERY noisy!
 				weight = checkWeight(currentControlSignal);
 			
 //				switch(weight) {

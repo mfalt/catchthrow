@@ -32,6 +32,7 @@ public class Monitor {
 	private LEDChecker ledCheck;
 	private ConstBallChecker constBallCheck;
 	private ConstBeamChecker constBeamCheck;
+	private BallOnBeamChecker ballOnBeamCheck;
 
 	public static final int OFF=0, BEAM=1, BALL=2, SEQUENCE=3;
 	private int mode;
@@ -56,6 +57,7 @@ public class Monitor {
 		
 		constBeamCheck = new ConstBeamChecker();
 		constBallCheck = new ConstBallChecker();
+		ballOnBeamCheck = new BallOnBeamChecker();
 		ledCheck = new LEDChecker();
 		
 		try {
@@ -261,6 +263,15 @@ public class Monitor {
 	public synchronized void setConstBallCheck(double y) {
 		stateCheck = constBallCheck;
 		constBallCheck.setValue(y);
+		try {
+			wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public synchronized void setBallOnBeamCheck() {
+		stateCheck = ballOnBeamCheck;
 		try {
 			wait();
 		} catch (InterruptedException e) {
