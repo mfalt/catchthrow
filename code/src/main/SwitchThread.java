@@ -61,7 +61,7 @@ public class SwitchThread extends Thread {
 				mon.setConstBeamCheck(-0.05);
 				
 				// Move beam towards catch position
-				mon.setRefGenRamp(-0.03, ReferenceGenerator.ANGLE);
+				mon.setRefGenRampAngle(-0.03);
 				// wait until the beam is at the catch position, this method calls wait()
 				mon.setLEDCheck();
 
@@ -85,8 +85,7 @@ public class SwitchThread extends Thread {
 				 * 
 				 * 
 				 * */
-				// Ready...
-				fire(false); // Reset the solenoid
+				fire(false); // Reset the solenoid to let ball take position in front of solenoid
 				while(mon.getBallPosition() <= RegulThread.posMin+0.05) { //Wait until ball is at least 5 cm from the left edge
 					try {
 						// Hooooold...

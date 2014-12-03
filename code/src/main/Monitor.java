@@ -19,8 +19,9 @@ public class Monitor {
 
 	/** Reference generators */
 	private RefGenGUI refGenGUI;
-	private ConstantRef constantAngleRef;
 	private ConstantRef constantPosRef;
+	private ConstantRef constantAngleRef;
+	private RampRef rampPosRef;
 	private RampRef rampAngleRef;
 	private TrajectoryRef throwRefSmall;
 	private TrajectoryRef throwRefMedium;
@@ -48,8 +49,9 @@ public class Monitor {
 		beamRegul = new BeamRegul();
 		beamBallRegul = new BeamBallRegul(beamRegul);
 
-		constantAngleRef = new ConstantRef(ReferenceGenerator.ANGLE);
 		constantPosRef = new ConstantRef(ReferenceGenerator.POS);
+		constantAngleRef = new ConstantRef(ReferenceGenerator.ANGLE);
+		rampPosRef = new RampRef(ReferenceGenerator.POS);
 		rampAngleRef = new RampRef(ReferenceGenerator.ANGLE);
 		
 		constBeamCheck = new ConstBeamChecker();
@@ -91,10 +93,18 @@ public class Monitor {
 	}
 
 	/** called from SwitchThread */
-	public synchronized void setRefGenRamp(double rampSlope, int state){
+	public synchronized void setRefGenRampPos(double rampSlope){
+		rampPosRef.setRef(rampSlope);
+		//rampAngleRef.resetTime();
+		rampPosRef.setInitialRef(currentRefGen.getRef()[ReferenceGenerator.POS]);
+		currentRefGen = rampPosRef;
+	}
+
+	/** called from SwitchThread */
+	public synchronized void setRefGenRampAngle(double rampSlope){
 		rampAngleRef.setRef(rampSlope);
 		//rampAngleRef.resetTime();
-		rampAngleRef.setInitialRef(currentRefGen.getRef()[state]);
+		rampAngleRef.setInitialRef(currentRefGen.getRef()[ReferenceGenerator.ANGLE]);
 		currentRefGen = rampAngleRef;
 	}
 
