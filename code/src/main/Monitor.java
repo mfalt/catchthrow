@@ -21,6 +21,7 @@ public class Monitor {
 	private RefGenGUI refGenGUI;
 	private ConstantRef constantPosRef;
 	private ConstantRef constantAngleRef;
+	private ConstantVectorRef constantVectorRef;
 	private RampRef rampPosRef;
 	private RampRef rampAngleRef;
 	private TrajectoryRef throwRefSmall;
@@ -92,6 +93,14 @@ public class Monitor {
 	public synchronized void setRefGenConstantAngle(double r){
 		constantAngleRef.setRef(r);
 		currentRefGen = constantAngleRef;
+	}
+
+	/** called from SwitchThread */
+	public synchronized void setRefGenConstantPosAndAngle(double posRef, double angleRef){
+		constantVectorRef.setZeroRef();
+		constantVectorRef.setPosRef(posRef);
+		constantVectorRef.setAngleRef(angleRef);
+		currentRefGen = constantVectorRef;
 	}
 
 	/** called from SwitchThread */
