@@ -84,7 +84,7 @@ public class Monitor {
 
 	/** called from SwitchThread */
 	public synchronized void setRefGenConstantPos(double r){
-		constantAngleRef.setRef(r);
+		constantPosRef.setRef(r);
 		currentRefGen = constantPosRef;
 	}
 

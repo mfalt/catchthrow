@@ -19,8 +19,9 @@ public class SwitchThread extends Thread {
 	/**
 	 * Some choices of positions, times etc.
 	 */
-	private final double pickupStartAngle = -0.05; // From which angle (radians) the search for ball magazine will start.
-	private final double pickupRampSlope = -0.03; // Angular velocity of beam when searching for ball magazine
+	private final double pickupStartAngle = -0.09; // From which angle (radians) the search for ball magazine will start.
+	private final double pickupEndAngleBias = 0.02; // Lower beam a little so that the ball actually slides on.
+	private final double pickupRampSlope = -0.015; // Angular velocity of beam when searching for ball magazine
 	private final double ballWeighPosition = 0.35; // 35 cm
 
 	
@@ -72,12 +73,12 @@ public class SwitchThread extends Thread {
 				mon.setLEDCheck();
 
 				// Make sure beam is stationary before continuing
-				mon.setRefGenConstantAngle(mon.getRef()[ReferenceGenerator.ANGLE]); // keep
+				mon.setRefGenConstantAngle(mon.getRef()[ReferenceGenerator.ANGLE] + pickupEndAngleBias); // keep
 																						// beam
 																						// at angle
 				mon.setConstBeamCheck(mon.getRef()[ReferenceGenerator.ANGLE]);
 				
-				fire(false); // Reset the solenoid to let ball take position in front of solenoid
+				fire(true); // Reset the solenoid to let ball take position in front of solenoid
 				try {
 					// Hooooold...
 					Thread.sleep(1500);
@@ -85,9 +86,9 @@ public class SwitchThread extends Thread {
 					e.printStackTrace();
 				}
 				// FIRE!
-				fire(true); // Push ball on beam
+				fire(false); // Push ball on beam
 				mon.setBallOnBeamCheck();
-				fire(false); // Reset the solenoid again
+				fire(true); // Reset the solenoid again
 				
 				// switch to ball control and wait until the ball is at weighing position
 				synchronized (mon) {

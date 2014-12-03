@@ -39,7 +39,7 @@ public class BeamBallRegul extends Regul {
 	public double calculateOutput(double[] measurement, double[] yrefs, double h) {
 		posRef = yrefs[ReferenceGenerator.POS];
 		angleFF = yrefs[ReferenceGenerator.ANGLE];
-		angleRefs = yrefs;
+		angleRefs = yrefs.clone();
 		pos = measurement[1];
 		ad = p.Td/(p.Td + p.N*h);
 		bd = p.K*p.N*ad;

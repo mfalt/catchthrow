@@ -28,6 +28,11 @@ public class RegulThread extends Thread {
 	 * Conversion of measurements from Volt to SI units
 	 * TEMPORARY NUMBERS 
 	 */
+//	public static final double radiansPerVolt = 1.0;
+//	public static final double angleBiasVolt = 0.0;
+//	public static final double metersPerVolt = 1.0;
+//	public static final double positionBiasVolt = 0.0;
+
 	public static final double radiansPerVolt = 3.1415926535897932384626d / 4 / 10;
 	public static final double angleBiasVolt = 0.0;
 	public static final double metersPerVolt = 0.55 / 10;
