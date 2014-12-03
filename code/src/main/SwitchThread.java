@@ -12,6 +12,8 @@ public class SwitchThread extends Thread {
 	private boolean shouldRun = true;
 	private DigitalOut digitalOut;
 
+	private final boolean heuristicApproach = true; // Use this boolean instead of heuristic branch
+	
 	public final int SMALL = 0, MEDIUM = 1, LARGE = 2;
 	private double gravityForceSmall = 0, gravityForceMedium = 0, gravityForceLarge = 0; // These are not in SI units!
 	private int weight = -1;
@@ -106,8 +108,12 @@ public class SwitchThread extends Thread {
 //				case SMALL:
 //
 //				case MEDIUM:
-//					synchronized(mon) {
-//						
+//					if(heuristicApproach) {
+//						synchronized(mon) {
+//							
+//						}
+//					} else {
+//						// Do something with TrajectoryRef
 //					}
 //					break;
 //				case LARGE:
