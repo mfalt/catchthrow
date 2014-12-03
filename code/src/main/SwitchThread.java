@@ -96,6 +96,7 @@ public class SwitchThread extends Thread {
 				synchronized (mon) {
 					mon.setBallRegul();
 					mon.setRefGenConstantPos(ballWeighPosition);
+//					mon.setRefGenConstantPosAndAngle(ballWeighPosition, -mon.getRef()[ReferenceGenerator.ANGLE]); // FF to retrieve ball better, not entirely sure of this
 					mon.setConstBallCheck(ballWeighPosition);
 				}
 				// Make ball weight decision
