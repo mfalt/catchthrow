@@ -13,9 +13,15 @@ public class SwitchThread extends Thread {
 	private DigitalOut digitalOut;
 
 	public final int SMALL = 0, MEDIUM = 1, LARGE = 2;
-	private double currentControlSignal = 0;
-	private double uSmall = 0, uMedium = 0, uLarge = 0;
-	private int weight = 0;
+	private double gravityForceSmall = 0, gravityForceMedium = 0, gravityForceLarge = 0; // These are not in SI units!
+	private int weight = -1;
+	
+	/**
+	 * Some choices of positions, times etc.
+	 */
+	private final double pickupStartAngle = -0.05; // From which angle (radians) the search for ball magazine will start.
+	private final double pickupRampSlope = -0.03; // Angular velocity of beam when searching for ball magazine
+	private final double ballWeighPosition = 0.35; // 35 cm
 
 	
 	/** Constructor */
@@ -54,14 +60,14 @@ public class SwitchThread extends Thread {
 				synchronized (mon) {
 					// set the reference value of the beam angle to 0
 					mon.setBeamRegul();
-					mon.setRefGenConstantAngle(-0.05);
+					mon.setRefGenConstantAngle(pickupStartAngle);
 				}
 				
 				// wait until the beam angle has become 0, this method calls wait()
-				mon.setConstBeamCheck(-0.05);
+				mon.setConstBeamCheck(pickupStartAngle);
 				
 				// Move beam towards catch position
-				mon.setRefGenRampAngle(-0.03);
+				mon.setRefGenRampAngle(pickupRampSlope);
 				// wait until the beam is at the catch position, this method calls wait()
 				mon.setLEDCheck();
 
@@ -71,20 +77,6 @@ public class SwitchThread extends Thread {
 																						// at angle
 				mon.setConstBeamCheck(mon.getRef()[ReferenceGenerator.ANGLE]);
 				
-				/**
-				 * 
-				 * 
-				 * 
-				 * 
-				 * Look through the following!
-				 * Use Checkers and fix many parts where people are trying to do
-				 * different things at the same time!
-				 * 
-				 * 
-				 * 
-				 * 
-				 * 
-				 * */
 				fire(false); // Reset the solenoid to let ball take position in front of solenoid
 				try {
 					// Hooooold...
@@ -97,16 +89,17 @@ public class SwitchThread extends Thread {
 				mon.setBallOnBeamCheck();
 				fire(false); // Reset the solenoid again
 				
-				// switch to ball control and wait until the ball is at position 3.0 for example
+				// switch to ball control and wait until the ball is at weighing position
 				synchronized (mon) {
 					mon.setBallRegul();
-					mon.setRefGenConstantPos(0.35); // 35 cm
-					mon.setConstBallCheck(0.35);
+					mon.setRefGenConstantPos(ballWeighPosition);
+					mon.setConstBallCheck(ballWeighPosition);
 				}
 				// Make ball weight decision
 				mon.setNullCheck();
-				currentControlSignal = mon.getCurrentControlSignal(); // Take MANY measurements and average since the signal is VERY noisy!
-				weight = checkWeight(currentControlSignal);
+				double currentControlSignal = mon.getCurrentControlSignal(); // Take MANY measurements and average since the signal is VERY noisy!
+				double currentBallPos = mon.getBallPosition();
+				weight = checkWeight(currentControlSignal / currentBallPos);
 			
 //				switch(weight) {
 //				case SMALL:
@@ -132,9 +125,16 @@ public class SwitchThread extends Thread {
 	}
 	
 	private int checkWeight(double value) {
-		if (currentControlSignal >= uSmall && currentControlSignal < uMedium) {
+		/**
+		 * Due to stiction we will have uncertainties in the position of the ball when weighing.
+		 * Make decision of ball weight based on currentControlSignal/currentBallPos instead of just currentControlSignal.
+		 * 
+		 * Gravity force variables are not in SI units, so they have to be measured looking at the control signal and
+		 * dividing with the ball position for each ball.
+		 */
+		if (value >= gravityForceSmall && value < gravityForceMedium) {
 			return SMALL;
-		} else if (currentControlSignal >= uMedium && currentControlSignal < uLarge) {
+		} else if (value >= gravityForceMedium && value < gravityForceLarge) {
 			return MEDIUM;
 		} else {
 			return LARGE;
