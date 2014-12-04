@@ -302,12 +302,3 @@ public class Monitor {
 	}
 	
 }
-
-class Print {
-	static private final boolean DEBUG = true; 
-	static synchronized void print(String s){
-		if(DEBUG){
-			System.out.println(s);
-		}
-	}
-}

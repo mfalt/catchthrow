@@ -140,9 +140,10 @@ public class SwitchThread extends Thread {
 		 * Gravity force variables are not in SI units, so they have to be measured looking at the control signal and
 		 * dividing with the ball position for each ball.
 		 */
-		if (value >= gravityForceSmall && value < gravityForceMedium) {
+		
+		if(value < (gravityForceSmall+gravityForceMedium)/2) {
 			return SMALL;
-		} else if (value >= gravityForceMedium && value < gravityForceLarge) {
+		} else if(value < (gravityForceMedium+gravityForceLarge)/2) {
 			return MEDIUM;
 		} else {
 			return LARGE;
