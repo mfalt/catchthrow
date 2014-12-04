@@ -25,7 +25,7 @@ public class ConstPosRampAngleRef extends ReferenceGenerator {
 		tBefore = System.currentTimeMillis();
 	}
 
-	public void setInitialRef(double initRef) {
+	public void setInitialAngleRef(double initRef) {
 		ref[rampState] = initRef;
 	}
 	

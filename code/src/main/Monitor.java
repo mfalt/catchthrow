@@ -23,6 +23,7 @@ public class Monitor {
 	private ConstantRef constantPosRef;
 	private ConstantRef constantAngleRef;
 	private ConstantVectorRef constantVectorRef;
+	private ConstPosRampAngleRef constPosRampAngleRef;
 	private RampRef rampPosRef;
 	private RampRef rampAngleRef;
 	private TrajectoryRef throwRefSmall;
@@ -54,6 +55,7 @@ public class Monitor {
 
 		constantPosRef = new ConstantRef(ReferenceGenerator.POS);
 		constantAngleRef = new ConstantRef(ReferenceGenerator.ANGLE);
+		constPosRampAngleRef = new ConstPosRampAngleRef();
 		rampPosRef = new RampRef(ReferenceGenerator.POS);
 		rampAngleRef = new RampRef(ReferenceGenerator.ANGLE);
 		
@@ -103,6 +105,13 @@ public class Monitor {
 		constantVectorRef.setPosRef(posRef);
 		constantVectorRef.setAngleRef(angleRef);
 		currentRefGen = constantVectorRef;
+	}
+
+	/** called from SwitchThread */
+	public synchronized void setRefGenConstPosRampAngle(double posRef, double angleRampSlope){
+		constPosRampAngleRef.setRef(posRef, angleRampSlope);
+		constPosRampAngleRef.setInitialAngleRef(currentRefGen.getRef()[ReferenceGenerator.ANGLE]);
+		currentRefGen = constPosRampAngleRef;
 	}
 
 	/** called from SwitchThread */
