@@ -56,6 +56,7 @@ public class BeamRegul extends Regul {
 		//System.out.println((y-yold)*10000);
 		v = P + I + D;
 		this.angleRef = angleRef;
+//		System.out.println(I);
 		return limit(v, -10, 10);
 //		return 2.0;
 	}

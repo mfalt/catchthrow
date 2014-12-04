@@ -179,7 +179,7 @@ public class Monitor {
 			return 0.0;
 		} else {
 			currentControlSignal = currentRegul.calculateOutput(measurement, currentRefGen.getRef(), h);
-			averageControlSignal = averageControlSignal*0.99+currentControlSignal*0.01;
+			averageControlSignal = averageControlSignal*0.97+currentControlSignal*0.03;
 			return currentControlSignal;
 		}
 	}

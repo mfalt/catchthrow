@@ -15,14 +15,14 @@ public class SwitchThread extends Thread {
 	private final boolean heuristicApproach = true; // Use this boolean instead of heuristic branch
 
 	public final int SMALL = 0, MEDIUM = 1, LARGE = 2;
-	private double gravityForceSmall = 1.95, gravityForceMedium = 3.42, gravityForceLarge = 5.8;//8.31; // These are not in SI units!
+	private double gravityForceSmall = 1.95, gravityForceMedium = 2.9, gravityForceLarge = 7.4;//?,3.42,8.31; // These are not in SI units!
 	private int weight = -1;
 
 	/**
 	 * Some choices of positions, times etc.
 	 */
-	private final double pickupStartAngle = -0.07; // From which angle (radians) the search for ball magazine will start.
-	private final double pickupEndAngleBias = 0.02; // Lower beam a little so that the ball actually slides on.
+	private final double pickupStartAngle = -0.04; // From which angle (radians) the search for ball magazine will start.
+	private final double pickupEndAngleBias = 0.01; // Lower beam a little so that the ball actually slides on.
 	private final double pickupRampSlope = -0.015; // Angular velocity of beam when searching for ball magazine
 	private final double ballWeighPosition = 0.45; // 35 cm
 
@@ -115,7 +115,7 @@ public class SwitchThread extends Thread {
 			}
 			// Wait for stability
 			try {
-				Thread.sleep(3000);
+				Thread.sleep(1500);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -134,11 +134,48 @@ public class SwitchThread extends Thread {
 			System.out.println("WEIGHT: "+weight+" Value: "+averageControlSignal / currentBallPos);
 			switch(weight) {
 			case SMALL:
-
+				synchronized(mon) {
+					mon.setBeamRegul();
+					mon.setRefGenConstantAngle(0.3); //TODO experiment with this value
+				}
+				try {//Wait for ball to fall off
+					Thread.sleep(700);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				synchronized(mon) {
+					mon.setBeamRegul();
+					mon.setRefGenConstantAngle(-0.25); //TODO experiment with this value
+				}
+				try {//Wait for ball to fall off
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				break;
 			case MEDIUM:
 				if(heuristicApproach) {
 					synchronized(mon) {
-
+						mon.setRefGenConstantPos(-0.4);
+						mon.setConstBallCheck(-0.4);
+					}
+					synchronized(mon) {
+						mon.setBeamRegul();
+						mon.setRefGenConstantAngle(-0.55); //TODO experiment with this value
+					}
+					try {//Wait for ball to fall off
+						Thread.sleep(600);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					synchronized(mon) {
+						mon.setBeamRegul();
+						mon.setRefGenConstantAngle(0.1); //TODO experiment with this value
+					}
+					try {//Wait for ball to fall off
+						Thread.sleep(2000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
 					}
 				} else {
 					// Do something with TrajectoryRef
@@ -147,7 +184,7 @@ public class SwitchThread extends Thread {
 			case LARGE:
 				synchronized(mon) {
 					mon.setBeamRegul();
-					mon.setRefGenConstantAngle(0); //TODO experiment with this value
+					mon.setRefGenConstantAngle(-0.03); //TODO experiment with this value
 				}
 				try {//Wait for ball to fall off
 					Thread.sleep(2000);
