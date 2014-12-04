@@ -30,7 +30,7 @@ public class Monitor {
 	private TrajectoryRef throwRefMedium;
 	private TrajectoryRef throwRefLarge;
 	private ReferenceGenerator currentRefGen;
-	
+
 	private StateChecker stateCheck;
 	private LEDChecker ledCheck;
 	private ConstBallChecker constBallCheck;
@@ -41,14 +41,15 @@ public class Monitor {
 	private int mode;
 	private double h = 0.02, currentControlSignal = 0;
 	private double y[] = {0.0,0.0}; //beam angle, ball position
-	
+	private double averageControlSignal = 0;
+
 	private boolean resetSequence = false;
-	
+
 	//TODO try to move out the methods getHMillis() and setHMillis(), they
 	// are called each sample which is more traffic here for the monitor
 	// and I think we can easily assume the sample period is not gonna change
 	// that often. Maybe h could be set by Opcom as before with one of the setParameters methods
-	
+
 	/** Constructor*/
 	public Monitor() {
 		mode = OFF; //mode is the state of our program
@@ -57,15 +58,16 @@ public class Monitor {
 
 		constantPosRef = new ConstantRef(ReferenceGenerator.POS);
 		constantAngleRef = new ConstantRef(ReferenceGenerator.ANGLE);
+		constantVectorRef = new ConstantVectorRef();
 		constPosRampAngleRef = new ConstPosRampAngleRef();
 		rampPosRef = new RampRef(ReferenceGenerator.POS);
 		rampAngleRef = new RampRef(ReferenceGenerator.ANGLE);
-		
+
 		constBeamCheck = new ConstBeamChecker();
 		constBallCheck = new ConstBallChecker();
 		ballOnBeamCheck = new BallOnBeamChecker();
 		ledCheck = new LEDChecker();
-		
+
 		try {
 			throwRefSmall = new TrajectoryRef("../simulink_test/throwPath.mat");
 			throwRefMedium = new TrajectoryRef("../simulink_test/throwPath.mat");
@@ -88,7 +90,7 @@ public class Monitor {
 		this.refGenGUIAngle = refGenGUIAngle;
 		currentRefGen = refGenGUIPos;
 	}
-	
+
 	/** called from SwitchThread */
 	public synchronized void setRefGenConstantPos(double r){
 		if(!resetSequence){
@@ -177,6 +179,7 @@ public class Monitor {
 			return 0.0;
 		} else {
 			currentControlSignal = currentRegul.calculateOutput(measurement, currentRefGen.getRef(), h);
+			averageControlSignal = averageControlSignal*0.99+currentControlSignal*0.01;
 			return currentControlSignal;
 		}
 	}
@@ -282,11 +285,15 @@ public class Monitor {
 	public synchronized double getBallPosition(){
 		return y[1];
 	}
-	
+
 	public synchronized double getCurrentControlSignal(){
 		return currentControlSignal;
 	}
-	
+
+	public synchronized double getAverageControlSignal(){
+		return averageControlSignal;
+	}
+
 	public synchronized void checkState() {
 		if (stateCheck != null && stateCheck.check(y)) {
 			notifyAll();
@@ -351,10 +358,10 @@ public class Monitor {
 			}
 		}
 	}
-	
+
 	//Called by SwitchThread
 	public synchronized void clearResetSequence(){
 		resetSequence = false;
 	}
-	
+
 }

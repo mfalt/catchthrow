@@ -16,9 +16,9 @@ public class BeamRegul extends Regul {
 	public BeamRegul() {
 		p = new PIDParameters();
 		p.K = 3.0 / RegulThread.radiansPerVolt;
-		p.Ti = 2.0;
+		p.Ti = 0.2;
 		p.Tr = 10.0;
-		p.Td = 0.3;
+		p.Td = 0.4;
 		p.N = 20.0;
 		p.Beta = 1.0;
 		p.integratorOn = true;

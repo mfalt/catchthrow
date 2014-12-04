@@ -11,7 +11,7 @@ public class BallOnBeamChecker implements StateChecker {
 	// y = beamangle,ballpos
 	// @Override
 	public boolean check(double[] measurement) {
-		if (measurement[1] > positionRef + TOL) {
+		if (measurement[1] > positionRef) {
 			count++;
 			if (count > SAMPLES) { // TODO: find good amount of samples
 				return true;
