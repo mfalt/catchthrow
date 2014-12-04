@@ -22,12 +22,31 @@ Iulia Stoica -- mariajstoica@gmail.com
 
 \section{Introduction}
 % Should state the problem to be solved
+The goal of this project is to control a "ball and beam" process (depicted in figure \ref{process_fig}) in a predetermined sequence of tasks:
+\begin{itemize}
+\item Dispatch a ball from a ball magazine and let the beam catch it.
+\item Determine the weight of the ball (comparing with three predefined possible weights).
+\item Depending on the weight do either of the following:
+\begin{itemize}
+\item \textbf{Small ball}: Let it roll into the little cup to the upper left of the beam.
+\item \textbf{Medium ball}: Throw it into a basket on the floor.
+\item \textbf{Large ball}: Simply drop it on the floor.
+\end{itemize}
+\end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.7\textwidth]{figures/process_fig.jpg}
+\caption{The process to control.}\label{process_fig}
+\end{figure}
 
 \section{Process model}
 \input{model}
 
 \section{Controller structure}
 % Should describe the control design aspects of the project.
+We are using a cascaded PID controller setup
+
 
 \section{Program structure}
 % Should describe the main program structure, both from a class and and a real-time perspective. If possible illustrate this with some type of figure.

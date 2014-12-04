@@ -26,7 +26,6 @@ public class SwitchThread extends Thread {
 	private final double pickupRampSlope = -0.015; // Angular velocity of beam when searching for ball magazine
 	private final double ballWeighPosition = 0.45; // 35 cm
 
-
 	/** Constructor */
 	public SwitchThread(Monitor monitor, Semaphore sem, int prio) {
 		mon = monitor;
@@ -46,17 +45,20 @@ public class SwitchThread extends Thread {
 	public void run() {
 
 		while (shouldRun) {
-			//try{
-			// Wait until sequence mode
-			while (mon.getMode() != Monitor.SEQUENCE) {
-				try {
-					synchronized(mon) {
+
+			//The whole loop has to be synchronized, in case someone chooses sequence mode
+			//between loop evaluation and call to wait().
+			synchronized(mon) {
+				// Wait until sequence mode
+				while (mon.getMode() != Monitor.SEQUENCE) {
+					try {
 						mon.wait();
+						//							Thread.sleep(2000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
 					}
-					//							Thread.sleep(2000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
 				}
+				mon.clearResetSequence(); //clear reset flag to enable function calls
 			}
 
 			synchronized (mon) {
@@ -64,6 +66,7 @@ public class SwitchThread extends Thread {
 				mon.setBeamRegul();
 				mon.setRefGenConstantAngle(pickupStartAngle);
 			}
+
 			System.out.println("Waiting for constant initial pickup angle");
 
 			// wait until the beam angle has become 0, this method calls wait()
@@ -83,6 +86,7 @@ public class SwitchThread extends Thread {
 			mon.setConstBeamCheck(mon.getRef()[ReferenceGenerator.ANGLE]);
 			System.out.println("Reached constant angle, shooting!");
 
+
 			fire(true); // Reset the solenoid to let ball take position in front of solenoid
 			try {
 				// Hooooold...
@@ -92,6 +96,7 @@ public class SwitchThread extends Thread {
 			}
 			// FIRE!
 			fire(false); // Push ball on beam
+
 			System.out.println("FIRE! Sleeping until ball on beam (short time)");
 
 			try {//Wait for ball on beam!!
