@@ -275,7 +275,7 @@ public class Monitor {
 	public synchronized double getCurrentControlSignal(){
 		return currentControlSignal;
 	}
-
+	
 	public synchronized void checkState() {
 		if (stateCheck != null && stateCheck.check(y)) {
 			notifyAll();
@@ -337,6 +337,7 @@ public class Monitor {
 		}
 	}
 	
+	//Called by SwitchThread
 	public synchronized void clearResetSequence(){
 		resetSequence = false;
 	}
