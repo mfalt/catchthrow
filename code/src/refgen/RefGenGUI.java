@@ -34,7 +34,7 @@ public class RefGenGUI extends ReferenceGenerator implements Runnable {
 		private JButton paramsButton = new JButton("Apply");
 		private JRadioButton sqButton = new JRadioButton("Square Wave");
 		private JRadioButton manButton = new JRadioButton("Manual");
-		private JSlider slider = new JSlider(JSlider.VERTICAL,-50,50,0);
+		private JSlider slider = new JSlider(JSlider.VERTICAL,-100,100,0);
 		
 		public RefGUI(double amp, double h) {
 			MainFrame.showLoading();
@@ -135,7 +135,7 @@ public class RefGenGUI extends ReferenceGenerator implements Runnable {
 			slider.addChangeListener(new ChangeListener() { 
 				public void stateChanged(ChangeEvent e) { 
 					if (!slider.getValueIsAdjusting()) { 
-						setManual(((double)slider.getValue())/5); 
+						setManual(((double)slider.getValue())/100); 
 					} 
 				} 
 			}); 
