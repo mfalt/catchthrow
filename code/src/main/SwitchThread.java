@@ -45,7 +45,6 @@ public class SwitchThread extends Thread {
 
 		while (shouldRun) {
 			//try{
-		
 				// Wait until sequence mode
 					while (mon.getMode() != Monitor.SEQUENCE) {
 						try {
@@ -81,7 +80,7 @@ public class SwitchThread extends Thread {
 				fire(true); // Reset the solenoid to let ball take position in front of solenoid
 				try {
 					// Hooooold...
-					Thread.sleep(1500);
+					Thread.sleep(4500);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -89,12 +88,12 @@ public class SwitchThread extends Thread {
 				fire(false); // Push ball on beam
 				mon.setBallOnBeamCheck();
 				fire(true); // Reset the solenoid again
-				
+				System.out.println("Ball noticed!");
 				// switch to ball control and wait until the ball is at weighing position
 				synchronized (mon) {
 					mon.setBallRegul();
-					mon.setRefGenConstantPos(ballWeighPosition);
-//					mon.setRefGenConstantPosAndAngle(ballWeighPosition, -mon.getRef()[ReferenceGenerator.ANGLE]); // FF to retrieve ball better, not entirely sure of this
+//					mon.setRefGenConstantPos(ballWeighPosition);
+					mon.setRefGenConstantPosAndAngle(ballWeighPosition, -10*mon.getRef()[ReferenceGenerator.ANGLE]); // FF to retrieve ball better, not entirely sure of this
 					mon.setConstBallCheck(ballWeighPosition);
 				}
 				// Make ball weight decision
