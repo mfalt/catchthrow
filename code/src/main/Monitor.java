@@ -117,9 +117,11 @@ public class Monitor {
 
 	/** called from SwitchThread */
 	public synchronized void setRefGenConstPosRampAngle(double posRef, double angleRampSlope){
-		constPosRampAngleRef.setRef(posRef, angleRampSlope);
-		constPosRampAngleRef.setInitialAngleRef(currentRefGen.getRef()[ReferenceGenerator.ANGLE]);
-		currentRefGen = constPosRampAngleRef;
+		if(!resetSequence){
+			constPosRampAngleRef.setRef(posRef, angleRampSlope);
+			constPosRampAngleRef.setInitialAngleRef(currentRefGen.getRef()[ReferenceGenerator.ANGLE]);
+			currentRefGen = constPosRampAngleRef;
+		}
 	}
 
 	/** called from SwitchThread */
@@ -233,7 +235,7 @@ public class Monitor {
 
 	/** called by Opcom*/
 	public synchronized void setSequenceMode(){
-		mode = SEQUENCE;
+		mode = SEQUENCE; //resetSequence NOT set on purpose
 		notifyAll();
 	}
 
