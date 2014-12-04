@@ -182,7 +182,7 @@ public class RefGenGUI extends ReferenceGenerator implements Runnable {
 	
 	public synchronized double[] getRef() 
 	{
-		ref[2] = (mode == SQWAVE) ? singleRef : manual; // Let the beam angle (ref[2] be reference always because of laziness
+		ref[ReferenceGenerator.POS] = (mode == SQWAVE) ? singleRef : manual; // Let the beam angle (ref[2] be reference always because of laziness
 		return ref;
 	}
 	
