@@ -29,4 +29,10 @@ public class ConstBeamChecker implements StateChecker {
 	public void setValue(double angleRef) {
 		this.angleRef = angleRef;
 	}
+
+	@Override
+	public void reset() {
+		count = 0;
+		
+	}
 }

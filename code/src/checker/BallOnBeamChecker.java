@@ -24,4 +24,10 @@ public class BallOnBeamChecker implements StateChecker {
 		}
 	}
 
+	@Override
+	public void reset() {
+		count = 0;
+		
+	}
+
 }
