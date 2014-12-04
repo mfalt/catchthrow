@@ -33,7 +33,6 @@ The goal of this project is to control a "ball and beam" process (depicted in fi
 \item \textbf{Large ball}: Simply drop it on the floor.
 \end{itemize}
 \end{itemize}
-
 \begin{figure}
 \centering
 \includegraphics[width=0.7\textwidth]{figures/process_fig.jpg}
@@ -45,7 +44,22 @@ The goal of this project is to control a "ball and beam" process (depicted in fi
 
 \section{Controller structure}
 % Should describe the control design aspects of the project.
-We are using a cascaded PID controller setup
+When controlling the beam angle without any ball on the beam, we are using a simple PID controller. When controlling the ball position along the beam, we are instead using a cascaded PID controller setup (see figure \ref{cascaded_pid_fig}). An additional beam angle reference is also supplied as a feed forward signal at certain times.
+\begin{figure}
+\centering
+\includegraphics[width=0.7\textwidth]{figures/process_fig.jpg}
+\caption{The cascaded PID setup.}\label{cascaded_pid_fig}
+\end{figure}
+
+As mentioned in the introduction, we have a sequence of tasks to be performed, and each of these (catching, weighing and delivering the ball) will be described in further detail in the following sections.
+
+\subsection{Ball catching}
+
+
+\subsection{Ball weighing}
+
+
+\subsection{Ball delivery}
 
 
 \section{Program structure}
