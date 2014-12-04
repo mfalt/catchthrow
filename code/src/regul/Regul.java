@@ -3,7 +3,7 @@ package regul;
 
 public abstract class Regul{
 	
-	public abstract double calculateOutput(double[] measurement, double[] yref, double h);
+	public abstract double calculateOutput(double[] measurement, double[] ref, double h);
 	
 	public abstract void updateState(double h);
 	

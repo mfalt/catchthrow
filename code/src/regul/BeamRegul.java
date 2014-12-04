@@ -10,8 +10,8 @@ public class BeamRegul extends Regul {
 	private double D;
 	private double bi, ar, ad, bd;
 	private double v;      //output: desired control signal
-	private double y,yold;      //input: measured variable
-	private double yref;   //input: set point
+	private double angle,angleOld;      //input: measured variable
+	private double angleRef;   //input: set point
 	
 	public BeamRegul() {
 		p = new PIDParameters();
@@ -25,7 +25,7 @@ public class BeamRegul extends Regul {
 		setParameters(p);
 		I = 0;
 		D = 0;
-		yold = 0;
+		angleOld = 0;
 	}
 	
 	
@@ -45,17 +45,17 @@ public class BeamRegul extends Regul {
 	 *  to an OutSignal object if needed when we do
 	 *  more advanced stuffs
 	 */
-	public double calculateOutput(double[] measurement, double[] yrefs, double h) {
-		double yref = yrefs[ReferenceGenerator.ANGLE];
-		P = p.K*(p.Beta*yref - measurement[0]);
+	public double calculateOutput(double[] measurement, double[] ref, double h) {
+		double angleRef = ref[ReferenceGenerator.ANGLE];
+		P = p.K*(p.Beta*angleRef - measurement[0]);
 		ad = p.Td/(p.Td + p.N*h);
 		bd = p.K*p.N*ad;
-		y = measurement[0];
-		D = ad*D - bd*(y - yold);
+		angle = measurement[0];
+		D = ad*D - bd*(angle - angleOld);
 		
 		//System.out.println((y-yold)*10000);
 		v = P + I + D;
-		this.yref = yref;
+		this.angleRef = angleRef;
 		return limit(v, -10, 10);
 //		return 2.0;
 	}
@@ -67,11 +67,11 @@ public class BeamRegul extends Regul {
 		if(p.integratorOn) {
 			bi = p.K*h/p.Ti;
 			ar = h/p.Tr;
-			I = I + bi*(yref - y) + ar*(limit(v, -10, 10) - v); 
+			I = I + bi*(angleRef - angle) + ar*(limit(v, -10, 10) - v); 
 		} else {
 			I = 0.0;
 		}
-		yold = y;
+		angleOld = angle;
 		//System.out.println("P: "+ P + " I: " + I + "D: " + D);
 	}
 
