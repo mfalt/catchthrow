@@ -15,7 +15,8 @@ public class Main {
 		final int switchPriority = 7;
 		final int refGenPriority = 6;
 		
-		RefGenGUI refgen = new RefGenGUI(refGenPriority);
+		RefGenGUI refGenPos = new RefGenGUI(refGenPriority, ReferenceGenerator.POS, "Position RefGen");
+		RefGenGUI refGenAngle = new RefGenGUI(refGenPriority, ReferenceGenerator.ANGLE, "Angle RefGen");
 		Monitor mon = new Monitor();
 		Semaphore switchThreadSem = new Semaphore(1);
 		final OpCom opcom = new OpCom(plotterPriority, mon,switchThreadSem);
@@ -23,7 +24,7 @@ public class Main {
 		SwitchThread switchThread = new SwitchThread(mon, switchThreadSem, switchPriority);
 		
 		regThread.setOpCom(opcom);
-		mon.setRefGenGUI(refgen);
+		mon.initRefGenGUI(refGenPos, refGenAngle);
 		opcom.setRegul(regThread); 
 		opcom.setSwitchThread(switchThread);
 		
@@ -44,7 +45,8 @@ public class Main {
 		regThread.start();
 		switchThread.start();
 //		refgen.start();
-		new Thread(refgen).start();
+		new Thread(refGenPos).start();
+		new Thread(refGenAngle).start();
 		
 	}
 }
