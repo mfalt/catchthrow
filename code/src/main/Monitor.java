@@ -297,6 +297,7 @@ public class Monitor {
 	public synchronized void setConstBeamCheck(double y) {
 		if(!resetSequence){
 			stateCheck = constBeamCheck;
+			constBeamCheck.reset();
 			constBeamCheck.setValue(y);
 			try {
 				wait();
@@ -310,6 +311,7 @@ public class Monitor {
 	public synchronized void setConstBallCheck(double y) {
 		if(!resetSequence){
 			stateCheck = constBallCheck;
+			constBallCheck.reset();
 			constBallCheck.setValue(y);
 			try {
 				wait();
@@ -323,6 +325,7 @@ public class Monitor {
 	public synchronized void setBallOnBeamCheck() {
 		if(!resetSequence){
 			stateCheck = ballOnBeamCheck;
+			ballOnBeamCheck.reset();
 			try {
 				wait();
 			} catch (InterruptedException e) {
@@ -340,6 +343,7 @@ public class Monitor {
 	public synchronized void setLEDCheck() {
 		if(!resetSequence){
 			stateCheck = ledCheck;
+			ledCheck.reset();
 			try {
 				wait();
 			} catch (InterruptedException e) {

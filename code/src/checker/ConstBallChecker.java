@@ -25,4 +25,10 @@ public class ConstBallChecker implements StateChecker {
 	public void setValue(double y) {
 		positionRef = y;
 	}
+
+	@Override
+	public void reset() {
+		count = 0;
+		
+	}
 }

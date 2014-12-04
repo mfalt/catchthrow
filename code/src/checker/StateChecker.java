@@ -12,4 +12,6 @@ public interface StateChecker {
 	 * @return true if state is OK, false otherwise
 	 */
 	public boolean check(double[] measurement);
+	
+	public void reset();
 }

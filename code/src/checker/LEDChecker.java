@@ -26,4 +26,9 @@ public class LEDChecker implements StateChecker {
 			return false;
 		}
 	}
+
+	@Override
+	public void reset() {
+		//nothing to reset
+	}
 }
