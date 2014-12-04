@@ -53,6 +53,7 @@ public class Monitor {
 
 		constantPosRef = new ConstantRef(ReferenceGenerator.POS);
 		constantAngleRef = new ConstantRef(ReferenceGenerator.ANGLE);
+		constantVectorRef = new ConstantVectorRef();
 		rampPosRef = new RampRef(ReferenceGenerator.POS);
 		rampAngleRef = new RampRef(ReferenceGenerator.ANGLE);
 		

@@ -3,8 +3,8 @@ package checker;
 public class ConstBallChecker implements StateChecker {
 	double positionRef;
 	int count = 0;
-	final double TOL = 0.1; // Stiction makes small tolerances hard, currently set to 1 dm
-	final int SAMPLES = 5;
+	final double TOL = 0.05; // Stiction makes small tolerances hard, currently set to 1 dm
+	final int SAMPLES = 50;
 
 	// y = beamangle,ballpos
 	// @Override
