@@ -18,7 +18,8 @@ public class Monitor {
 	private Regul currentRegul;
 
 	/** Reference generators */
-	private RefGenGUI refGenGUI;
+	private RefGenGUI refGenGUIPos;
+	private RefGenGUI refGenGUIAngle;
 	private ConstantRef constantPosRef;
 	private ConstantRef constantAngleRef;
 	private ConstantVectorRef constantVectorRef;
@@ -72,17 +73,18 @@ public class Monitor {
 		}
 	}
 
-	/** called fr9.5om Main */
-	public synchronized void setRefGenGUI(RefGenGUI referenceGenerator){
-		refGenGUI = referenceGenerator;
-		currentRefGen = refGenGUI;
-	}
-	
 	/** Called from RegulThread */
 	public synchronized double[] getRef() {
 		return currentRefGen.getRef();
 	}
 
+	/** called fr9.5om Main */
+	public synchronized void initRefGenGUI(RefGenGUI refGenGUIPos, RefGenGUI refGenGUIAngle){
+		this.refGenGUIPos = refGenGUIPos;
+		this.refGenGUIAngle = refGenGUIAngle;
+		currentRefGen = refGenGUIPos;
+	}
+	
 	/** called from SwitchThread */
 	public synchronized void setRefGenConstantPos(double r){
 		constantPosRef.setRef(r);
@@ -188,7 +190,7 @@ public class Monitor {
 		mode = BEAM;
 		beamRegul.reset();
 		currentRegul = beamRegul; //update currentRegul
-		currentRefGen = refGenGUI; //ifall man var i sequence mode innan?
+		currentRefGen = refGenGUIAngle; //ifall man var i sequence mode innan?
 	}
 
 	/** called by Opcom*/
@@ -196,7 +198,7 @@ public class Monitor {
 		mode = BALL;
 		beamBallRegul.reset();
 		currentRegul = beamBallRegul; //update currentRegul
-		currentRefGen = refGenGUI;
+		currentRefGen = refGenGUIPos;
 	}
 
 	/** called by Opcom*/
