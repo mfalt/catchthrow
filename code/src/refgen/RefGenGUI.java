@@ -19,6 +19,8 @@ public class RefGenGUI extends ReferenceGenerator implements Runnable {
 	private int mode = SQWAVE;
 	private boolean premature, ampChanged, periodChanged;
 	
+	private int actualState = ReferenceGenerator.ANGLE;
+	
 	private class RefGUI {
 		private BoxPanel guiPanel = new BoxPanel(BoxPanel.HORIZONTAL);
 		private JPanel sliderPanel = new JPanel();
@@ -36,7 +38,7 @@ public class RefGenGUI extends ReferenceGenerator implements Runnable {
 		private JRadioButton manButton = new JRadioButton("Manual");
 		private JSlider slider = new JSlider(JSlider.VERTICAL,-100,100,0);
 		
-		public RefGUI(double amp, double h) {
+		public RefGUI(double amp, double h, String title) {
 			MainFrame.showLoading();
 			paramsLabelPanel.setLayout(new GridLayout(0,1));
 			paramsLabelPanel.add(new JLabel("Amp: "));
@@ -79,7 +81,7 @@ public class RefGenGUI extends ReferenceGenerator implements Runnable {
 			slider.setEnabled(false);
 			slider.setMajorTickSpacing(5); 
 			slider.setMinorTickSpacing(1); 
-			slider.setLabelTable(slider.createStandardLabels(10)); 
+			slider.setLabelTable(slider.createStandardLabels(20)); 
 			slider.setPaintLabels(true);
 			sliderPanel.setBorder(BorderFactory.createEtchedBorder());
 			slider.setSnapToTicks(false);
@@ -140,18 +142,19 @@ public class RefGenGUI extends ReferenceGenerator implements Runnable {
 				} 
 			}); 
 			
-			MainFrame.setPanel(guiPanel,"RefGen");
+			MainFrame.setPanel(guiPanel, title);
 		}
 	}
 	
-	public RefGenGUI(int refGenPriority) {
+	public RefGenGUI(int refGenPriority, int refState, String title) {
 		super();
 		priority = refGenPriority;
 		amplitude = 0.2;
 		period = 20.0*1000.0/2.0;
 		manual = 0.0;
 		singleRef = amplitude * sign;
-		new RefGUI(amplitude, 20.0);
+		actualState = refState;
+		new RefGUI(amplitude, 20.0, title);
 	}
 	
 	private synchronized void wakeUpThread() {
@@ -182,7 +185,7 @@ public class RefGenGUI extends ReferenceGenerator implements Runnable {
 	
 	public synchronized double[] getRef() 
 	{
-		ref[ReferenceGenerator.POS] = (mode == SQWAVE) ? singleRef : manual; // Let the beam angle (ref[2] be reference always because of laziness
+		ref[actualState] = (mode == SQWAVE) ? singleRef : manual;
 		return ref;
 	}
 	
