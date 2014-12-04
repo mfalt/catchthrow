@@ -7,7 +7,7 @@ import com.sun.org.apache.xml.internal.security.encryption.Reference;
 public class ConstBeamChecker implements StateChecker {
 	double angleRef;
 	int count = 0;
-	final double TOL = 0.01;
+	final double TOL = 0.02;
 	final int SAMPLES = 5;
 
 	// y = beamangle,ballpos

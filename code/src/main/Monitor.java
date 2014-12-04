@@ -40,6 +40,7 @@ public class Monitor {
 	private int mode;
 	private double h = 0.02, currentControlSignal = 0;
 	private double y[] = {0.0,0.0}; //beam angle, ball position
+	private double averageControlSignal = 0;
 	
 	//TODO try to move out the methods getHMillis() and setHMillis(), they
 	// are called each sample which is more traffic here for the monitor
@@ -149,6 +150,7 @@ public class Monitor {
 			return 0.0;
 		} else {
 			currentControlSignal = currentRegul.calculateOutput(measurement, currentRefGen.getRef(), h);
+			averageControlSignal = averageControlSignal*0.99+currentControlSignal*0.01;
 			return currentControlSignal;
 		}
 	}
@@ -254,6 +256,10 @@ public class Monitor {
 	
 	public synchronized double getCurrentControlSignal(){
 		return currentControlSignal;
+	}
+	
+	public synchronized double getAverageControlSignal(){
+		return averageControlSignal;
 	}
 
 	public synchronized void checkState() {
