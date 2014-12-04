@@ -41,6 +41,8 @@ public class Monitor {
 	private double h = 0.02, currentControlSignal = 0;
 	private double y[] = {0.0,0.0}; //beam angle, ball position
 	
+	private boolean resetSequence = false;
+	
 	//TODO try to move out the methods getHMillis() and setHMillis(), they
 	// are called each sample which is more traffic here for the monitor
 	// and I think we can easily assume the sample period is not gonna change
@@ -78,7 +80,7 @@ public class Monitor {
 		return currentRefGen.getRef();
 	}
 
-	/** called fr9.5om Main */
+	/** called from Main */
 	public synchronized void initRefGenGUI(RefGenGUI refGenGUIPos, RefGenGUI refGenGUIAngle){
 		this.refGenGUIPos = refGenGUIPos;
 		this.refGenGUIAngle = refGenGUIAngle;
@@ -87,56 +89,72 @@ public class Monitor {
 	
 	/** called from SwitchThread */
 	public synchronized void setRefGenConstantPos(double r){
-		constantPosRef.setRef(r);
-		currentRefGen = constantPosRef;
+		if(!resetSequence){
+			constantPosRef.setRef(r);
+			currentRefGen = constantPosRef;
+		}
 	}
 
 	/** called from SwitchThread */
 	public synchronized void setRefGenConstantAngle(double r){
-		constantAngleRef.setRef(r);
-		currentRefGen = constantAngleRef;
+		if(!resetSequence){
+			constantAngleRef.setRef(r);
+			currentRefGen = constantAngleRef;
+		}
 	}
 
 	/** called from SwitchThread */
 	public synchronized void setRefGenConstantPosAndAngle(double posRef, double angleRef){
-		constantVectorRef.setZeroRef();
-		constantVectorRef.setPosRef(posRef);
-		constantVectorRef.setAngleRef(angleRef);
-		currentRefGen = constantVectorRef;
+		if(!resetSequence){
+			constantVectorRef.setZeroRef();
+			constantVectorRef.setPosRef(posRef);
+			constantVectorRef.setAngleRef(angleRef);
+			currentRefGen = constantVectorRef;
+		}
 	}
 
 	/** called from SwitchThread */
 	public synchronized void setRefGenRampPos(double rampSlope){
-		rampPosRef.setRef(rampSlope);
-		//rampAngleRef.resetTime();
-		rampPosRef.setInitialRef(currentRefGen.getRef()[ReferenceGenerator.POS]);
-		currentRefGen = rampPosRef;
+		if(!resetSequence){
+			rampPosRef.setRef(rampSlope);
+			//rampAngleRef.resetTime();
+			rampPosRef.setInitialRef(currentRefGen.getRef()[ReferenceGenerator.POS]);
+			currentRefGen = rampPosRef;
+		}
 	}
 
 	/** called from SwitchThread */
 	public synchronized void setRefGenRampAngle(double rampSlope){
-		rampAngleRef.setRef(rampSlope);
-		//rampAngleRef.resetTime();
-		rampAngleRef.setInitialRef(currentRefGen.getRef()[ReferenceGenerator.ANGLE]);
-		currentRefGen = rampAngleRef;
+		if(!resetSequence){
+			rampAngleRef.setRef(rampSlope);
+			//rampAngleRef.resetTime();
+			rampAngleRef.setInitialRef(currentRefGen.getRef()[ReferenceGenerator.ANGLE]);
+			currentRefGen = rampAngleRef;
+		}
 	}
 
 	/** called from SwitchThread */
 	/*public synchronized void setRefGenTrajectorySmall(){
-		throwRefSmall.resetTime();
-		currentRefGen = throwRefSmall;
+		if(!resetSequence){
+			throwRefSmall.resetTime();
+			currentRefGen = throwRefSmall;
+		}
 	}*/
 
 	/** called from SwitchThread */
 	/*public synchronized void setRefGenTrajectoryMedium(){
-		throwRefMedium.resetTime();
-		currentRefGen = throwRefMedium;
+		if(!resetSequence){
+			throwRefMedium.resetTime();
+			currentRefGen = throwRefMedium;
+		}
 	}*/
 
 	/** called from SwitchThread */
 	/*public synchronized void setRefGenTrajectoryLarge(){
-		throwRefLarge.resetTime();
-		currentRefGen = throwRefLarge;
+		if(!resetSequence){
+			throwRefLarge.resetTime();
+			currentRefGen = throwRefLarge;
+		}
 	}*/
 
 	/** called by RegulThread*/
@@ -183,6 +201,7 @@ public class Monitor {
 	public synchronized void setOFFMode(){
 		mode = OFF;
 		currentRegul = null; //update currentRegul
+		resetSequence = true;
 	}
 
 	/** called by Opcom*/
@@ -191,6 +210,7 @@ public class Monitor {
 		beamRegul.reset();
 		currentRegul = beamRegul; //update currentRegul
 		currentRefGen = refGenGUIAngle; //ifall man var i sequence mode innan?
+		resetSequence = true;
 	}
 
 	/** called by Opcom*/
@@ -199,6 +219,7 @@ public class Monitor {
 		beamBallRegul.reset();
 		currentRegul = beamBallRegul; //update currentRegul
 		currentRefGen = refGenGUIPos;
+		resetSequence = true;
 	}
 
 	/** called by Opcom*/
@@ -209,7 +230,7 @@ public class Monitor {
 
 	/** called by SwitchThread*/
 	public synchronized void setBeamRegul(){
-		if(mode == SEQUENCE){
+		if(!resetSequence){
 			beamRegul.reset();
 			currentRegul = beamRegul;
 		}
@@ -217,7 +238,7 @@ public class Monitor {
 
 	/** called by SwitchThread*/
 	public synchronized void setBallRegul(){
-		if(mode == SEQUENCE){
+		if(!resetSequence){
 			beamBallRegul.reset();
 			currentRegul = beamBallRegul;
 		}
@@ -261,46 +282,63 @@ public class Monitor {
 		}
 	}
 
+	//Called by SwitchThread
 	public synchronized void setConstBeamCheck(double y) {
-		stateCheck = constBeamCheck;
-		constBeamCheck.setValue(y);
-		try {
-			wait();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		if(!resetSequence){
+			stateCheck = constBeamCheck;
+			constBeamCheck.setValue(y);
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
+	//Called by SwitchThread
 	public synchronized void setConstBallCheck(double y) {
-		stateCheck = constBallCheck;
-		constBallCheck.setValue(y);
-		try {
-			wait();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		if(!resetSequence){
+			stateCheck = constBallCheck;
+			constBallCheck.setValue(y);
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
+	//Called by SwitchThread
 	public synchronized void setBallOnBeamCheck() {
-		stateCheck = ballOnBeamCheck;
-		try {
-			wait();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		if(!resetSequence){
+			stateCheck = ballOnBeamCheck;
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
+	//Called by SwitchThread?
 	public synchronized void setNullCheck() {
 		stateCheck = null;
 	}
 
+	//Called by SwitchThread
 	public synchronized void setLEDCheck() {
-		stateCheck = ledCheck;
-		try {
-			wait();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		if(!resetSequence){
+			stateCheck = ledCheck;
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
+	}
+	
+	public synchronized void clearResetSequence(){
+		resetSequence = false;
 	}
 	
 }
