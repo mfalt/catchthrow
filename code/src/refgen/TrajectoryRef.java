@@ -28,10 +28,10 @@ public class TrajectoryRef extends ReferenceGenerator {
 		// Validate input
 		if(
 				hMLArray.isComplex() || !hMLArray.isDouble() || hMLArray.isEmpty() ||
-				hMLArray.isComplex() || !hMLArray.isDouble() || hMLArray.isEmpty() ||
-				hMLArray.isComplex() || !hMLArray.isDouble() || hMLArray.isEmpty() ||
-				hMLArray.isComplex() || !hMLArray.isDouble() || hMLArray.isEmpty() ||
-				hMLArray.isComplex() || !hMLArray.isDouble() || hMLArray.isEmpty() ||
+				posRefMLArray.isComplex() || !posRefMLArray.isDouble() || posRefMLArray.isEmpty() ||
+				velRefMLArray.isComplex() || !velRefMLArray.isDouble() || velRefMLArray.isEmpty() ||
+				angleRefMLArray.isComplex() || !angleRefMLArray.isDouble() || angleRefMLArray.isEmpty() ||
+				angleVelRefMLArray.isComplex() || !angleVelRefMLArray.isDouble() || angleVelRefMLArray.isEmpty() ||
 				hMLArray.getSize() != 1
 				) {
 			throw new IllegalArgumentException("Invalid .mat file!");
