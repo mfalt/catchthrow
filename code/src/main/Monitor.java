@@ -45,11 +45,6 @@ public class Monitor {
 
 	private boolean resetSequence = false;
 
-	//TODO try to move out the methods getHMillis() and setHMillis(), they
-	// are called each sample which is more traffic here for the monitor
-	// and I think we can easily assume the sample period is not gonna change
-	// that often. Maybe h could be set by Opcom as before with one of the setParameters methods
-
 	/** Constructor*/
 	public Monitor() {
 		mode = OFF; //mode is the state of our program

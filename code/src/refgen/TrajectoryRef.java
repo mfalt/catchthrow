@@ -26,12 +26,12 @@ public class TrajectoryRef extends ReferenceGenerator {
 		MLArray angleVelRefMLArray = matFileReader.getMLArray("angleVelRef");
 		
 		// Validate input
-		/*if(
+		if(
 				hMLArray.isComplex() || !hMLArray.isDouble() || hMLArray.isEmpty() ||
-				hMLArray.isComplex() || !hMLArray.isDouble() || hMLArray.isEmpty() ||
-				hMLArray.isComplex() || !hMLArray.isDouble() || hMLArray.isEmpty() ||
-				hMLArray.isComplex() || !hMLArray.isDouble() || hMLArray.isEmpty() ||
-				hMLArray.isComplex() || !hMLArray.isDouble() || hMLArray.isEmpty() ||
+				posRefMLArray.isComplex() || !posRefMLArray.isDouble() || posRefMLArray.isEmpty() ||
+				velRefMLArray.isComplex() || !velRefMLArray.isDouble() || velRefMLArray.isEmpty() ||
+				angleRefMLArray.isComplex() || !angleRefMLArray.isDouble() || angleRefMLArray.isEmpty() ||
+				angleVelRefMLArray.isComplex() || !angleVelRefMLArray.isDouble() || angleVelRefMLArray.isEmpty() ||
 				hMLArray.getSize() != 1
 				) {
 			throw new IllegalArgumentException("Invalid .mat file!");
@@ -43,7 +43,7 @@ public class TrajectoryRef extends ReferenceGenerator {
 		velRef = (MLDouble) velRefMLArray;
 		angleRef = (MLDouble) angleRefMLArray;
 		angleVelRef = (MLDouble) angleVelRefMLArray;
-*/	}
+	}
 	
 	//@Override
 	public double[] getRef() {
@@ -51,12 +51,12 @@ public class TrajectoryRef extends ReferenceGenerator {
 		return ref;
 	}
 
-	/*private void updateReferences() {
+	private void updateReferences() {
 		currentArrayIdx = Math.min((int) Math.floor(getTimeSeconds() / h), N-1);
 		ref[0] = posRef.get(currentArrayIdx);
 		ref[1] = velRef.get(currentArrayIdx);
 		ref[2] = angleRef.get(currentArrayIdx);
 		ref[3] = angleVelRef.get(currentArrayIdx);
 	}
-*/
+
 }
