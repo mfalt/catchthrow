@@ -16,7 +16,7 @@ public class TimeInvLQG extends Regul {
 	private double K[][]; // Nx2
 	
 	// Signals
-	private double u;
+	private double u; // 1x1
 	private double y[]; // 2x1
 	private double xhat[]; // Nx1
 	
@@ -36,6 +36,8 @@ public class TimeInvLQG extends Regul {
 //		L[] = ; // For all elements
 //		K[] = ; // For all elements
 //		xhat[] = ; // For all elements
+		
+		
 	}
 	
 	/**
@@ -79,6 +81,10 @@ public class TimeInvLQG extends Regul {
 				xhat[i] += K[i][j]*epsilon[j];
 			}
 		}
+	}
+	
+	public void reset(double xhat[]) {
+		this.xhat = xhat.clone();
 	}
 
 }
