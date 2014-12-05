@@ -46,7 +46,7 @@ public class SwitchThread extends Thread {
 	public void run() {
 
 		while (shouldRun) {
-
+			System.out.println("Sequence mode ready to go.");
 			//The whole loop has to be synchronized, in case someone chooses sequence mode
 			//between loop evaluation and call to wait().
 			synchronized(mon) {
@@ -61,7 +61,7 @@ public class SwitchThread extends Thread {
 				}
 				mon.clearResetSequence(); //clear reset flag to enable function calls
 			}
-
+			System.out.println("Starting sequence!");
 			synchronized (mon) {
 				// set the reference value of the beam angle to 0
 				mon.setBeamRegul();

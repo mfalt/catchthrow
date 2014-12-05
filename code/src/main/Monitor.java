@@ -216,6 +216,7 @@ public class Monitor {
 		mode = OFF;
 		currentRegul = null; //update currentRegul
 		resetSequence = true;
+		notifyAll();
 	}
 
 	/** called by Opcom*/
@@ -225,6 +226,7 @@ public class Monitor {
 		currentRegul = beamRegul; //update currentRegul
 		currentRefGen = refGenGUIAngle; //ifall man var i sequence mode innan?
 		resetSequence = true;
+		notifyAll();
 	}
 
 	/** called by Opcom*/
@@ -234,11 +236,13 @@ public class Monitor {
 		currentRegul = beamBallRegul; //update currentRegul
 		currentRefGen = refGenGUIPos;
 		resetSequence = true;
+		notifyAll();
 	}
 
 	/** called by Opcom*/
 	public synchronized void setSequenceMode(){
-		mode = SEQUENCE; //resetSequence NOT set on purpose
+		mode = SEQUENCE; 
+		//resetSequence NOT set on purpose
 		notifyAll();
 	}
 
