@@ -221,7 +221,7 @@ public class Monitor {
 	/** called by Opcom*/
 	public synchronized void setBeamMode(){
 		mode = BEAM;
-		beamRegul.reset();
+		beamRegul.reset(y);
 		currentRegul = beamRegul; //update currentRegul
 		currentRefGen = refGenGUIAngle; //ifall man var i sequence mode innan?
 		resetSequence = true;
@@ -230,7 +230,7 @@ public class Monitor {
 	/** called by Opcom*/
 	public synchronized void setBallMode(){
 		mode = BALL;
-		beamBallRegul.reset();
+		beamBallRegul.reset(y);
 		currentRegul = beamBallRegul; //update currentRegul
 		currentRefGen = refGenGUIPos;
 		resetSequence = true;
@@ -245,7 +245,7 @@ public class Monitor {
 	/** called by SwitchThread*/
 	public synchronized void setBeamRegul(){
 		if(!resetSequence){
-			beamRegul.reset();
+			beamRegul.reset(y);
 			currentRegul = beamRegul;
 		}
 	}
@@ -253,7 +253,7 @@ public class Monitor {
 	/** called by SwitchThread*/
 	public synchronized void setBallRegul(){
 		if(!resetSequence){
-			beamBallRegul.reset();
+			beamBallRegul.reset(y);
 			currentRegul = beamBallRegul;
 		}
 	}

@@ -78,11 +78,11 @@ public class BeamBallRegul extends Regul {
 		return p;
 	}
 	
-	public void reset(){
-		inner.reset();
+	public void reset(double[] measurement){
+		inner.reset(measurement);
 		I = 0;
 		D = 0;
-		
+		posOld = measurement[1];
 	}
 	
 }

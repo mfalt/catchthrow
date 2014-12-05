@@ -7,8 +7,6 @@ public abstract class Regul{
 	
 	public abstract void updateState(double h);
 	
-	
-	
 }
 	/*Main main;
 	long t0;

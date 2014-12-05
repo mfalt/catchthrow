@@ -90,9 +90,10 @@ public class BeamRegul extends Regul {
 		return p;
 	}
 
-	public void reset(){
+	public void reset(double[] measurement){
 		I = 0;
 		D = 0;
+		angleOld = measurement[0];
 	}
 }
 	
