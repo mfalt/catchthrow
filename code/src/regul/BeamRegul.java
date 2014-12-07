@@ -90,10 +90,10 @@ public class BeamRegul extends Regul {
 		return p;
 	}
 
-	public void reset(double[] measurement){
+	public void reset(double[] states){
 		I = 0;
 		D = 0;
-		angleOld = measurement[0];
+		angleOld = states[ReferenceGenerator.ANGLE];
 	}
 }
 	

@@ -244,7 +244,7 @@ public class Monitor {
 	/** called by SwitchThread*/
 	public synchronized void setBeamRegul(){
 		if(!resetSequence){
-			beamRegul.reset(y);
+			beamRegul.reset(statesFromMeasurements());
 			currentRegul = beamRegul;
 		}
 	}
@@ -252,9 +252,17 @@ public class Monitor {
 	/** called by SwitchThread*/
 	public synchronized void setBallRegul(){
 		if(!resetSequence){
-			beamBallRegul.reset(y);
+			beamBallRegul.reset(statesFromMeasurements());
 			currentRegul = beamBallRegul;
 		}
+	}
+	
+	/** called only internally?*/
+	public synchronized double[] statesFromMeasurements() {
+		double[] states = new double[ReferenceGenerator.nbrStates];
+		states[ReferenceGenerator.ANGLE] = y[0];
+		states[ReferenceGenerator.POS] = y[1];
+		return states;
 	}
 
 	/** called by SwitchThread and Opcom*/

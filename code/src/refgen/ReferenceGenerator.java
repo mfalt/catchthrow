@@ -2,8 +2,9 @@ package refgen;
 
 public abstract class ReferenceGenerator {
 
-	public static final int POS=0, VEL=1, ANGLE=2, ANGLEVEL=3; 
-	protected double ref[] = new double[4];
+	public static final int POS=0, VEL=1, ANGLE=2, ANGLEVEL=3;
+	public static final int nbrStates = 4;
+	protected double ref[] = new double[nbrStates];
 	private long t0 = -1;
 
 	public abstract double[] getRef();
