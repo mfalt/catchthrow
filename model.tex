@@ -24,9 +24,9 @@ J_{B}\ddot{\phi}=k_{u}u+mgx\cos(\phi)+k_b\phi
 Let $x_{1}=x,\, x_{2}=\dot{x},\, x_{3}=\phi,\, x_{4}=\dot{\phi}$,
 we can then write ball equation as 
 \begin{eqnarray*}
-m(x_{2}-x_{1}x_{4}^{2}) & = & -mg\sin(x_{1})-\frac{2}{5}m\dot{x}_{2}\\
+m(\dot x_{2}-x_{1}x_{4}^{2}) & = & -mg\sin(x_{3})-\frac{2}{5}m\dot{x}_{2}\\
  & \Leftrightarrow\\
-\dot{x}_{2} & = & \frac{5}{7}\left(-g\sin(x_{3})+\frac{1}{m}x_{1}x_{4}^{2}\right)
+\dot{x}_{2} & = & \frac{5}{7}\left(-g\sin(x_{3})+x_{1}x_{4}^{2}\right)
 \end{eqnarray*}
 
 
@@ -44,7 +44,7 @@ We thus have then nonlinear first order system equations
 \dot{x}_{3}\\
 \dot{x}_{4}
 \end{pmatrix}=\begin{pmatrix}x_{2}\\
-\frac{5}{7}\left(-g\sin(x_{3})+\frac{1}{m}x_{1}x_{4}^{2}\right)\\
+\frac{5}{7}\left(-g\sin(x_{3})+x_{1}x_{4}^{2}\right)\\
 x_{4}\\
 \frac{1}{J}mgx_{1}\cos(x_3)+k_bx_3
 \end{pmatrix}+\begin{pmatrix}0\\
@@ -53,6 +53,36 @@ x_{4}\\
 \frac{k_{u}}{J}
 \end{pmatrix}u.
 \]
+
+\subsection{Linearization}
+
+Introducing the state $x_{5}=m$ and linearizing the system around
+steady state $\bar{x}=(\bar{x}_{1},0,0,0,\bar{m})$ gives the pertubation
+equations for $\tilde{x}=x-\bar{x}$: 
+\begin{eqnarray*}
+\dot{\tilde{x}} & \approx & \begin{pmatrix}0 & 1 & 0 & 0 & 0\\
+\frac{5}{7}\bar{x}_{4}^{2} & 0 & -\frac{5g}{7}\cos(\bar{x}_{3}) & 2\bar{x}_{1}\bar{x}_{4} & 0\\
+0 & 0 & 0 & 1 & 0\\
+\bar{m}\frac{g}{J}\cos(\bar{x}_{3}) & 0 & -\bar{m}\frac{g}{J}\bar{x}_{1}\sin(\bar{x}_{3})+k_{b} & 0 & \frac{g}{J}\bar{x}_{1}\cos(\bar{x}_{3})\\
+0 & 0 & 0 & 0 & 0
+\end{pmatrix}\tilde{x}+\begin{pmatrix}0\\
+0\\
+0\\
+\frac{k_{u}}{J}\\
+0
+\end{pmatrix}u=\\
+ & = & \begin{pmatrix}0 & 1 & 0 & 0 & 0\\
+0 & 0 & -\frac{5g}{7} & 0 & 0\\
+0 & 0 & 0 & 1 & 0\\
+\bar{m}\frac{g}{J} & 0 & k_{b} & 0 & \frac{g}{J}\bar{x}_{1}\\
+0 & 0 & 0 & 0 & 0
+\end{pmatrix}\tilde{x}+\begin{pmatrix}0\\
+0\\
+0\\
+\frac{k_{u}}{J}\\
+0
+\end{pmatrix}u
+\end{eqnarray*}
 
 
 
