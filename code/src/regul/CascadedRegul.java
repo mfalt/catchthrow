@@ -33,7 +33,7 @@ public class CascadedRegul extends Regul {
 	}
 
 	/**
-	 * RESET HAS TO BE FIXED! LET ALL CONTROLLERS GET AL STATES AS INPUTS TO THE RESET METHOD.
+	 * RESET HAS TO BE FIXED! LET ALL CONTROLLERS GET ALL STATES AS INPUTS TO THE RESET METHOD.
 	 */
 	@Override
 	public void reset(double[] states) {
