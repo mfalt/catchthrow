@@ -57,10 +57,10 @@ x_{4}\\
 \subsection{Linearization}
 
 Introducing the state $x_{5}=m$ and linearizing the system around
-steady state $\bar{x}=(\bar{x}_{1},0,0,0,\bar{m})$ gives the pertubation
-equations for $\tilde{x}=x-\bar{x}$: 
+steady state $\bar{x}=(\bar{x}_{1},0,0,0,\bar{m},\bar{u})$ gives
+the pertubation equations for $\tilde{x}=x-\bar{x}$, $\tilde{u}=u-\bar{u}$:
 \begin{eqnarray*}
-\dot{\tilde{x}} & \approx & \begin{pmatrix}0 & 1 & 0 & 0 & 0\\
+\dot{\tilde{x}} & = & \begin{pmatrix}0 & 1 & 0 & 0 & 0\\
 \frac{5}{7}\bar{x}_{4}^{2} & 0 & -\frac{5g}{7}\cos(\bar{x}_{3}) & 2\bar{x}_{1}\bar{x}_{4} & 0\\
 0 & 0 & 0 & 1 & 0\\
 \bar{m}\frac{g}{J}\cos(\bar{x}_{3}) & 0 & -\bar{m}\frac{g}{J}\bar{x}_{1}\sin(\bar{x}_{3})+k_{b} & 0 & \frac{g}{J}\bar{x}_{1}\cos(\bar{x}_{3})\\
@@ -70,7 +70,7 @@ equations for $\tilde{x}=x-\bar{x}$:
 0\\
 \frac{k_{u}}{J}\\
 0
-\end{pmatrix}u=\\
+\end{pmatrix}\tilde{u}\\
  & = & \begin{pmatrix}0 & 1 & 0 & 0 & 0\\
 0 & 0 & -\frac{5g}{7} & 0 & 0\\
 0 & 0 & 0 & 1 & 0\\
@@ -81,9 +81,62 @@ equations for $\tilde{x}=x-\bar{x}$:
 0\\
 \frac{k_{u}}{J}\\
 0
-\end{pmatrix}u
+\end{pmatrix}\tilde{u}.
 \end{eqnarray*}
 
+
+We introduce the integral of the deviation of the position of the
+ball $(\tilde{x}_{6}=\int_{0}^{t}\tilde{x}_{1}dt)$ as a state. We
+will then be able to introduce integral action for that error. The
+resulting model is (with introduced white noice $v$ and $w$)
+
+\begin{eqnarray*}
+\dot{\tilde{x}} & = & \begin{pmatrix}0 & 1 & 0 & 0 & 0 & 0\\
+0 & 0 & -\frac{5g}{7} & 0 & 0 & 0\\
+0 & 0 & 0 & 1 & 0 & 0\\
+\bar{m}\frac{g}{J} & 0 & k_{b} & 0 & \frac{g}{J}\bar{x}_{1} & 0\\
+0 & 0 & 0 & 0 & 0 & 0\\
+1 & 0 & 0 & 0 & 0 & 0
+\end{pmatrix}\tilde{x}+\begin{pmatrix}0\\
+0\\
+0\\
+\frac{k_{u}}{J}\\
+0\\
+0
+\end{pmatrix}\tilde{u}+v\\
+ & = & A\tilde{x}+B\tilde{u}\\
+\tilde{y} & = & \begin{pmatrix}1 & 0 & 0 & 0 & 0 & 0\\
+0 & 0 & 1 & 0 & 0 & 0
+\end{pmatrix}\tilde{x}+w=C\tilde{x}+w
+\end{eqnarray*}
+
+
+Where $v$ and $w$ has intensity matrices $V$ and $W$. We now define
+the cost function $J=E\left[\int_{0}^{\infty}\tilde{x}^{T}Q\tilde{x}^{T}+u^{T}\frac{1}{r^{2}}u\, dt\right]$,
+with $Q=\text{diag}\left(\frac{1}{q_{1}^{2}},\frac{1}{q_{2}^{2}},\frac{1}{q_{3}^{2}},\frac{1}{q_{4}^{2}},\frac{1}{q_{5}^{2}}\right)$
+and let the controller be
+
+\begin{eqnarray*}
+\dot{\hat{x}} & = & A\hat{x}+B\tilde{u}+K(y-C\hat{x})\\
+\tilde{u} & = & -L\hat{x}.
+\end{eqnarray*}
+
+
+The optimal $K$ and $L$ is then given by the symmetric positive
+definite solutions $P$ and $S$ to 
+\begin{eqnarray*}
+0 & = & AP+PA^{T}-PCW^{-1}CP+V\\
+0 & = & A^{T}S+SA-SBR^{-1}B^{T}S+Q
+\end{eqnarray*}
+
+
+as $K=PC^{T}W^{-1}$ and $L=R^{-1}B^{T}S$.
+
+An initial guess for the matrices $Q$ and $R$ could be given by
+giving similar penalty for deviations $(3cm,1cm/s,2^{\circ},0.5^{\circ}/s,-,20cm\cdot s)$
+and $(1V)??$. Thus
+
+$Q=\text{diag}(1111,10000,816,13131,0,25)$, $R=1.$
 
 
 \subsection{Throw Equations}
