@@ -111,7 +111,7 @@ resulting model is (with introduced white noice $v$ and $w$)
 \end{eqnarray*}
 
 
-Where $v$ and $w$ has intensity matrices $V$ and $W$. We now define
+where $v$ and $w$ has intensity matrices $V$ and $W$. We now define
 the cost function $J=E\left[\int_{0}^{\infty}\tilde{x}^{T}Q\tilde{x}^{T}+u^{T}\frac{1}{r^{2}}u\, dt\right]$,
 with $Q=\text{diag}\left(\frac{1}{q_{1}^{2}},\frac{1}{q_{2}^{2}},\frac{1}{q_{3}^{2}},\frac{1}{q_{4}^{2}},\frac{1}{q_{5}^{2}}\right)$
 and let the controller be
@@ -125,7 +125,7 @@ and let the controller be
 The optimal $K$ and $L$ is then given by the symmetric positive
 definite solutions $P$ and $S$ to 
 \begin{eqnarray*}
-0 & = & AP+PA^{T}-PCW^{-1}CP+V\\
+0 & = & AP+PA^{T}-PC^TW^{-1}CP+V\\
 0 & = & A^{T}S+SA-SBR^{-1}B^{T}S+Q
 \end{eqnarray*}
 
