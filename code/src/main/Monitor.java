@@ -12,6 +12,10 @@ public class Monitor {
 	/** Controllers */
 	private BeamRegul beamRegul;
 	private BeamBallRegul beamBallRegul;
+//	private BallPIDRegul ballPIDRegul; // to replace beamBallRegul
+//	private CascadedRegul beamBallPIDRegul; // to replace beamBallRegul
+	private TimeInvLQG ballLQGRegul;
+	private CascadedRegul beamBallLQGPIDRegul;
 	//	private BeamBallRegul beamBallThrowSmall;
 	//	private BeamBallRegul beamBallThrowMedium;
 	//	private BeamBallRegul beamBallThrowLarge;
@@ -50,6 +54,10 @@ public class Monitor {
 		mode = OFF; //mode is the state of our program
 		beamRegul = new BeamRegul();
 		beamBallRegul = new BeamBallRegul(beamRegul);
+//		ballPIDRegul = new BallPIDRegul(...); // to replace beamBallRegul
+//		beamBallPIDRegul = new CascadedRegul(beamRegul, ballPIDRegul, ReferenceGenerator.ANGLE); // to replace beamBallRegul
+		ballLQGRegul = new TimeInvLQG(file);
+		beamBallLQGPIDRegul = new CascadedRegul(beamRegul, ballLQGRegul, ReferenceGenerator.ANGLE);
 
 		constantPosRef = new ConstantRef(ReferenceGenerator.POS);
 		constantAngleRef = new ConstantRef(ReferenceGenerator.ANGLE);
@@ -254,6 +262,14 @@ public class Monitor {
 		if(!resetSequence){
 			beamBallRegul.reset(statesFromMeasurements());
 			currentRegul = beamBallRegul;
+		}
+	}
+	
+	/** called by SwitchThread*/
+	public synchronized void setBeamBallLQGPIDRegul(){
+		if(!resetSequence){
+			beamBallLQGPIDRegul.reset(statesFromMeasurements());
+			currentRegul = beamBallLQGPIDRegul;
 		}
 	}
 	
