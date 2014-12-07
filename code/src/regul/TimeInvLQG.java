@@ -12,13 +12,16 @@ import com.jmatio.types.MLDouble;
  */
 public class TimeInvLQG extends Regul {
 	private int N; // Number of states
-	private MLDouble Phi; // NxN
-	private MLDouble Gamma; // Nx1 (one input)
-	private MLDouble C; // MxN
-	private MLDouble D; // Mx1
+	private int M; // Number of outputs (measurements)
+	private int uDim = 1; // Number of inputs, hard coded
 	
-	private MLDouble L; // 1xN
-	private MLDouble K; // NxM
+	private MLDouble Phi; // N x N
+	private MLDouble Gamma; // N x uDim (one input)
+	private MLDouble C; // M x N
+	private MLDouble D; // M x uDim
+	
+	private MLDouble L; // uDim x N
+	private MLDouble K; // N x M
 	
 	private MLDouble x0; // Linearization point
 	
@@ -32,9 +35,6 @@ public class TimeInvLQG extends Regul {
 	 * @param linPoint
 	 */
 	public TimeInvLQG(String file) throws FileNotFoundException, IOException {
-		int M = 2; // Number of measurements, hard coded
-		int uDim = 1; // Number of inputs, hard coded
-		
 		MatFileReader matFileReader = new MatFileReader(file);
 //		MLArray hMLArray = matFileReader.getMLArray("h");
 		MLArray PhiMLArray = matFileReader.getMLArray("Phi");
@@ -46,6 +46,7 @@ public class TimeInvLQG extends Regul {
 		MLArray x0MLArray = matFileReader.getMLArray("x0");
 		
 		N = x0MLArray.getSize();
+		M = CMLArray.getM();
 		
 		// Validate input
 		if(
@@ -87,10 +88,12 @@ public class TimeInvLQG extends Regul {
 	 */
 	public void updateState(double h) {
 		// Compute residuals
+		// epsilon =  y - C*x - D*u
 		double epsilon[] = y.clone(); // Clone necessary?
 		for(int i = 0; i < N; ++i) {
-			epsilon[0] -= C.get(0, i)*xtildehat[i]; // Residual of first measurement 
-			epsilon[1] -= C.get(1, i)*xtildehat[i]; // Residual of second measurement
+			for(int j = 0; j < M; ++j) {
+				epsilon[j] -= (C.get(j, i)*xtildehat[i] + D.get(j, 0)*u); // Residual of first measurement 
+			}
 		}
 		
 		// Update states
@@ -109,7 +112,7 @@ public class TimeInvLQG extends Regul {
 			xtildehat[i] += Gamma.get(i)*u;
 			
 			// Third term, K*epsilon
-			for(int j = 0; j < 2; ++j) { // two outputs
+			for(int j = 0; j < M; ++j) { // two outputs
 				xtildehat[i] += K.get(i, j)*epsilon[j];
 			}
 		}
