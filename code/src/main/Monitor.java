@@ -148,9 +148,8 @@ public class Monitor {
 	/** called from SwitchThread */
 	public synchronized void setRefGenRampToPos(double speed, double finalPos){
 		if(!resetSequence){
-			rampToPosRef.setRef(speed, finalPos);
-			//rampAngleRef.resetTime();
-			rampToPosRef.setInitialRef(currentRefGen.getRef()[ReferenceGenerator.POS]);
+			rampToPosRef.setRef(currentRefGen.getRef()[ReferenceGenerator.POS], speed, finalPos);
+//			rampToPosRef.setInitialRef(currentRefGen.getRef()[ReferenceGenerator.POS]);
 			currentRefGen = rampToPosRef;
 		}
 	}
@@ -158,9 +157,8 @@ public class Monitor {
 	/** called from SwitchThread */
 	public synchronized void setRefGenRampToAngle(double speed, double finalAngle){
 		if(!resetSequence){
-			rampToAngleRef.setRef(speed, finalAngle);
-			//rampAngleRef.resetTime();
-			rampToAngleRef.setInitialRef(currentRefGen.getRef()[ReferenceGenerator.ANGLE]);
+			rampToAngleRef.setRef(currentRefGen.getRef()[ReferenceGenerator.ANGLE], speed, finalAngle);
+//			rampToAngleRef.setInitialRef(currentRefGen.getRef()[ReferenceGenerator.ANGLE]);
 			currentRefGen = rampToAngleRef;
 		}
 	}
