@@ -28,7 +28,7 @@ public class RampToRef extends ReferenceGenerator {
 	}
 
 	public void setRef(double speed, double finalRef) {
-		this.speed = speed;
+		this.speed = Math.abs(speed);
 		this.finalRef = finalRef;
 		slopeSign = Math.signum(finalRef - ref[actualState]);
 		tBefore = System.currentTimeMillis();
