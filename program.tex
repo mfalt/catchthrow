@@ -32,39 +32,73 @@ The method \texttt{check(double[])} receives our measured values and returns a b
 %just nu använder vi inte den här, men det finns förändringar vi kan göra för att den ska funka
 
 \subsubsection{ConstBallChecker.java}
-
 This subclass checks if a ball has been around a specified point on the beam for a sufficient number of samples in a row. It provides the method \texttt{setValue(double)} for choosing the wanted stationary point.
 
 \subsubsection{ConstBeamChecker.java}
-
 Exactly the same as \texttt{ConstBallChecker}, except for the angle of the beam.
 
 \subsubsection{LEDChecker.java}
-
 Checks if the beam is in the pickup position - in other words if the LED is on. This is done by actually reading the digital in channel.
 
 \subsubsection{Null checker}
-
-Though not a class, the monitor has the ability to set the "null checker", which is roughly the equivalent to turning off the checker. This is not needed, since calling a checker when SwitchThread is not waiting or ready to run does nothing except waste time, but it can avoid unneccesary processor load somewhat.
+Though not a class, the monitor has the ability to set the "null checker", which is roughly equivalent to turning off checking. This is not needed, since calling a checker when SwitchThread is not waiting or ready to run does nothing except waste time, but it can avoid unneccesary processor load to some extent.
 
 \subsection{Regulator classes}
+Regulator classes determine how the control signal should be calculated, given measured states and reference values. They are found in the \texttt{regul} package.
+
+\subsubsection{Regul.java}
+This is the abstract superclass of all regulators. It has the abstract methods \texttt{calculateOutput}, \texttt{updateState} and \texttt{reset}.
+
+\texttt{double calculateOutput(double[] measurement, double[] ref, double h)} takes the measured values, the reference values, and the period $h$ and calculates a desired control signal depending on the implementation in subclasses.
+
+\texttt{void updateState(double h)} updates all the values that need updating before the next sample, but aren't needed to calculate the control signal for the current sample. This method is called after sending the control signal to the process, to minimize the delay between input and output.
+
+The method \texttt{void reset(double[] states)} is used to reset the regulator after it has been activated, so it has relevant internal values that fit the current state of the system.
+
+\subsubsection{BeamRegul.java}
+\texttt{BeamRegul} is a PID regulator for controlling the angle of the beam. In addition to the implementations of the abstract methods, it also has a getter and a setter for the parameters (described by a \texttt{PIDParameters} object).
+
+\subsubsection{BeamBallRegul.java}
+This subclass is a cascaded PID regulator for controlling the position of the ball. It is like \texttt{BeamRegul}, except it also has a reference to a \texttt{BeamRegul} object inside itself. In this way, we get a simple way of describing a cascaded PID regulator. When calculating the control signal, this class calls the \texttt{calculateOutput} of its inner regulator. The same goes for updating and resetting.
+
+%Vet inte vilka andra regulatorer som faktiskt används... Tror det bara är de där två ^
+
 
 \subsection{Reference generator classes}
-
-Reference generators are classes that determine where the reference values for the process should be at a particular point in time. Whenever the regulator thread needs a reference value, it requests it from the currently chosen reference generator  (through a call to a monitor method).
+Reference generators are classes that determine where the reference values for the process should be at a particular point in time. Whenever the regulator thread needs a reference value, it requests it from the currently chosen reference generator  (through a call to a monitor method). These classes are found in the \texttt{refgen} package.
  
 \subsubsection{ReferenceGenerator.java}
-
-This is the abstract superclass of the reference generators, and offers the methods \texttt{double[] getRef()}, \texttt{void resetTime()} and \texttt{double getTimeSeconds()}.
+This is the abstract superclass of the reference generators, and has the methods \texttt{double[] getRef()}, \texttt{void resetTime()} and \texttt{double getTimeSeconds()}.
 
 \texttt{getRef()} must be implemented in subclasses, and is meant to return the current reference value.
 
-\texttt{resetTime()} sets the starting time of the reference generator to the current time, essentially "resetting" it. Called whenever a reference generator is selected, but not relevant for time invariant subclasses.
 
+\texttt{resetTime()} sets the starting time of the reference generator to the current time, essentially "resetting" it. Called whenever a reference generator is selected, but not relevant for time invariant subclasses.
+%Inte säker på om denna metod används längre (av någon anledning), så isåfall bör den tas bort.
 \texttt{getTimeSeconds()} gives the time in seconds since \texttt{resetTime()} was last called. Again not relevant for time invariant generators.
 
 \subsubsection{ConstantRef.java}
-This subclass gives a constant reference value. 
+This subclass gives a constant reference value chosen by calling \texttt{setRef(double)}. Which state the reference in an instance of this class refers to is given by the private variable \texttt{actualState} which is sent to the constructor at the creation of the object.
+
+\subsubsection{ConstantVectorRef.java}
+%Används denna?
+This class works the same as \texttt{ConstantRef}, but gives references to all states of the system.
+
+\subsubsection{ConstPosRampAngleRef.java}
+%används denna?
+
+\subsubsection{RampRef.java}
+\texttt{RampRef} gives a reference that changes linearly over time, and includes methods to set the slope and initial reference. Like in \texttt{ConstantRef}, a variable is used to determine which state the reference value in the current instance of the class refers to.
+
+\subsubsection{RampToRef.java}
+This subclass works almost like \texttt{RampRef}, except it stops when a chosen reference value has been reached. This gives a smoother reference change.
+
+\subsubsection{RefGenGUI.java}
+This is a slightly modified version of the \texttt{ReferenceGenerator} found in Lab 1, and was used for testing.
+
+\subsubsection{TrajectoryRef}
+%används denna?
+This subclass gives a reference that follows a curve loaded from a matlab file.
 
 \subsection{Miscellaneous classes} 	%Beskrivning av klasser som inte passar in under andra rubriker, tex Main och OpCom
 %tror även Monitor bör få en snabb beskrivning här, men de flesta metoder i monitorn bör förklaras i beskrivningen av de klasser som faktiskt använder dem.

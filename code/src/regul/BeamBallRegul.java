@@ -49,7 +49,6 @@ public class BeamBallRegul extends Regul {
 		angleRef = P + I + D + angleFF;
 		angleRefs[ReferenceGenerator.ANGLE] = angleRef;
 		u = inner.calculateOutput(measurement, angleRefs, h);
-		inner.updateState(h);
 //		System.out.println(I);
 		return u;
 	}
@@ -58,6 +57,7 @@ public class BeamBallRegul extends Regul {
 	 *  uses tracking-based anti-windup
 	 */
 	public void updateState(double h) {
+		inner.updateState(h);
 		if(p.integratorOn) {
 			bi = p.K*h/p.Ti;
 			I = I + bi*(posRef - pos);
