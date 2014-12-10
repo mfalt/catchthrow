@@ -1,47 +1,41 @@
 %Vad blir en bra ordning på rubrikerna? Är rubrikerna bra? lekte lite med ordningen på rubrikerna så att klasserna som beskrivs i varje rubrik har nämnts i texten/rubriken innan, vet inte om det är bra
+%bytte plats så att trådarna beskrivs sist, för det är inte förrän där vi beskriver var varje klass faktiskt används. Då är det bra att ha sett vilka sorts klasser det finns. -E
 %hur ska vi göra med klasser vi inte skrivit?
 
 From a realtime point of view the code structure consists of two threads involved in the control, called RegulThread and SwitchThread, and one monitor class for the synchronization of their work. RegulThread has the task of calculating a control signal each sample by calling the calculateOutput method in the monitor which in turn calls the method of the currently active controller, and SwitchThread has the task of switching between controllers and reference generators, see figure \ref{overall_fig}. The monitor handles the synchronization needed when a switch is made but also some scheduling in the sense that it puts the SwitchThread to sleep and wakes it up when it is needed again. The monitor is one of the central parts of the code and offers synchronization for other tasks too which will be described bellow in the context of each class using it. 
 \begin{figure}
 \centering
 \includegraphics[width=0.8\textwidth]{figures/Overall.png}
-\caption{Abstracted UML of the code structure only showing the two threads involved in control and the  monitor. The name of the methods are not the same as in the actual code. The helper classes they use in doing their
-task are for readability reasons not shown but are described in detail in the subsections of this chapter.}
+\caption{Abstracted UML of the code structure only showing the two threads involved in control and the monitor. The name of the methods are not the same as in the actual code. The helper classes they use in doing their task are for readability reasons not shown but are described in detail in the subsections of this chapter.}
 \label{overall_fig}
 \end{figure}
+
+A few classes are not described below, as they are help classes that don't do much on their own. %kanske bara nämna vilka när vi vet vad vi faktiskt skrivit om... Tror det är PIDParameters och PlotData (och kanske OutSignal, men den kanske inte används alls)
+
+
+%--------------------MISC CLASSES-----------------
+
+
+
+\subsection{Miscellaneous classes} 	%Beskrivning av klasser som inte passar in under andra rubriker, tex Main och OpCom
+%tror även Monitor bör få en snabb beskrivning här, men de flesta metoder i monitorn bör förklaras i beskrivningen av de klasser som faktiskt använder dem.
 
 \subsubsection{Main.java}
 %behöver nog inte beskrivas så ingående
 
-\subsection{Threads}
+\subsubsection{Monitor.java}
+%behöver nog inte heller beskrivas så ingående här, bättre att skriva om den utifrån hur trådarna använder den.
 
-\subsubsection{RegulThread.java}
+\subsubsection{OpCom.java}
+%inte så ingående heller. Vi skrev den inte, och hur den funkar beskrivs nog bättre i Operator communication.
 
-\subsubsection{SwitchThread.java}
 
-\subsection{Checker classes}
-Checker classes provide a method to determine if a state is "OK" in some way. We use this to find out when we should continue to the next part of the catch-throw sequence. These classes are found in the \texttt{checker} package.
-\subsubsection{StateChecker.java}
-\texttt{StateChecker} is the abstract superclass of all the checkers. It has two methods.
 
-The method \texttt{check(double[])} receives our measured values and returns a boolean describing if the state of the system fulfills some condition, depending on the implementation in subclasses.
 
-\texttt{reset()} is used when activating a checker to reset their internal states, so any previous usage of the object won't  affect the current workings. This method will be empty in subclasses that have no internal state.
+%--------------------REGULATORS-----------------
 
-%\subsubsection{BallOnBeamChecker.java}
-%just nu använder vi inte den här, men det finns förändringar vi kan göra för att den ska funka
 
-\subsubsection{ConstBallChecker.java}
-This subclass checks if a ball has been around a specified point on the beam for a sufficient number of samples in a row. It provides the method \texttt{setValue(double)} for choosing the wanted stationary point.
 
-\subsubsection{ConstBeamChecker.java}
-Exactly the same as \texttt{ConstBallChecker}, except for the angle of the beam.
-
-\subsubsection{LEDChecker.java}
-Checks if the beam is in the pickup position - in other words if the LED is on. This is done by actually reading the digital in channel.
-
-\subsubsection{Null checker}
-Though not a class, the monitor has the ability to set the "null checker", which is roughly equivalent to turning off checking. This is not needed, since calling a checker when SwitchThread is not waiting or ready to run does nothing except waste time, but it can avoid unneccesary processor load to some extent.
 
 \subsection{Regulator classes}
 Regulator classes determine how the control signal should be calculated, given measured states and reference values. They are found in the \texttt{regul} package.
@@ -59,13 +53,19 @@ The method \texttt{void reset(double[] states)} is used to reset the regulator a
 \texttt{BeamRegul} is a PID regulator for controlling the angle of the beam. In addition to the implementations of the abstract methods, it also has a getter and a setter for the parameters (described by a \texttt{PIDParameters} object).
 
 \subsubsection{BeamBallRegul.java}
-This subclass is a cascaded PID regulator for controlling the position of the ball. It is like \texttt{BeamRegul}, except it also has a reference to a \texttt{BeamRegul} object inside itself. In this way, we get a simple way of describing a cascaded PID regulator. When calculating the control signal, this class calls the \texttt{calculateOutput} of its inner regulator. The same goes for updating and resetting.
+This subclass is a cascaded PID regulator for controlling the position of the ball. It is like \texttt{BeamRegul}, except it also has a reference to a \texttt{BeamRegul} object inside itself. In this way, we get a simple way of describing a cascaded PID regulator. When calculating the control signal, this class calls the \texttt{calculateOutput} of its inner regulator. The same goes for updating and reseting.
 
 %Vet inte vilka andra regulatorer som faktiskt används... Tror det bara är de där två ^
 
 
+
+%--------------------REFERENCE GENERATORS-----------------
+
+
+
+
 \subsection{Reference generator classes}
-Reference generators are classes that determine where the reference values for the process should be at a particular point in time. Whenever the regulator thread needs a reference value, it requests it from the currently chosen reference generator  (through a call to a monitor method). These classes are found in the \texttt{refgen} package.
+Reference generators are classes that determine where the reference values for the process should be at a particular point in time. Whenever a reference value is needed, it is requested from the currently chosen reference generator  (through a call to a monitor method). These classes are found in the \texttt{refgen} package.
  
 \subsubsection{ReferenceGenerator.java}
 This is the abstract superclass of the reference generators, and has the methods \texttt{double[] getRef()}, \texttt{void resetTime()} and \texttt{double getTimeSeconds()}.
@@ -80,12 +80,12 @@ This is the abstract superclass of the reference generators, and has the methods
 \subsubsection{ConstantRef.java}
 This subclass gives a constant reference value chosen by calling \texttt{setRef(double)}. Which state the reference in an instance of this class refers to is given by the private variable \texttt{actualState} which is sent to the constructor at the creation of the object.
 
-\subsubsection{ConstantVectorRef.java}
-%Används denna?
-This class works the same as \texttt{ConstantRef}, but gives references to all states of the system.
-
-\subsubsection{ConstPosRampAngleRef.java}
-%används denna?
+%\subsubsection{ConstantVectorRef.java}
+%%Används denna?
+%This class works the same as \texttt{ConstantRef}, but gives references to all states of the system.
+%
+%\subsubsection{ConstPosRampAngleRef.java}
+%%används denna?
 
 \subsubsection{RampRef.java}
 \texttt{RampRef} gives a reference that changes linearly over time, and includes methods to set the slope and initial reference. Like in \texttt{ConstantRef}, a variable is used to determine which state the reference value in the current instance of the class refers to.
@@ -96,13 +96,88 @@ This subclass works almost like \texttt{RampRef}, except it stops when a chosen 
 \subsubsection{RefGenGUI.java}
 This is a slightly modified version of the \texttt{ReferenceGenerator} found in Lab 1, and was used for testing.
 
-\subsubsection{TrajectoryRef}
-%används denna?
-This subclass gives a reference that follows a curve loaded from a matlab file.
-
-\subsection{Miscellaneous classes} 	%Beskrivning av klasser som inte passar in under andra rubriker, tex Main och OpCom
-%tror även Monitor bör få en snabb beskrivning här, men de flesta metoder i monitorn bör förklaras i beskrivningen av de klasser som faktiskt använder dem.
+%\subsubsection{TrajectoryRef}
+%%används denna?
+%This subclass gives a reference that follows a curve loaded from a Matlab file.
 
 
 
+%--------------------CHECKERS-----------------
 
+
+
+
+\subsection{Checker classes}\label{Checkers}
+Checker classes provide a method to determine if a state is "OK" in some way. We use this to find out when we should continue to the next part of the catch-throw sequence. These classes are found in the \texttt{checker} package.
+\subsubsection{StateChecker.java}
+\texttt{StateChecker} is the abstract superclass of all the checkers. It has two methods.
+
+The method \texttt{boolean check(double[] measurement)} receives our measured values and returns a boolean describing if the state of the system fulfills some condition, depending on the implementation in subclasses.
+
+\texttt{void reset()} is used when activating a checker to reset their internal states, so any previous usage of the object won't  affect the current workings. This method will be empty in subclasses that have no internal state.
+
+%\subsubsection{BallOnBeamChecker.java}
+%just nu använder vi inte den här, men det finns förändringar vi kan göra för att den ska funka
+
+\subsubsection{ConstBallChecker.java}
+This subclass checks if a ball has been around a specified point on the beam for a sufficient number of samples in a row. It provides the method \texttt{setValue(double y)} for choosing the wanted stationary point.
+
+\subsubsection{ConstBeamChecker.java}
+Exactly the same as \texttt{ConstBallChecker}, except for the angle of the beam.
+
+\subsubsection{LEDChecker.java}
+Checks if the beam is in the pickup position - in other words if the LED is on. This is done by actually reading the digital in channel.
+
+\subsubsection{Null checker}
+Though not a class, the monitor has the ability to set the "null checker", which is roughly equivalent to turning off checking. This is not needed, since calling a checker when SwitchThread is not waiting or ready to run does nothing except waste time, but it can avoid unneccesary processor load to some extent.
+
+
+
+
+%--------------------THREADS-----------------
+
+
+
+
+\subsection{Threads}
+
+\subsubsection{RegulThread.java}
+This is the main regulator loop. Every loop iteration, this thread does the following things (in order):
+\begin{itemize}
+\item reads input from process
+\item calculates output
+\item sends output to process
+\item sends data to the GUI
+\item updates the state of the regulator
+\item checks the state of the system
+\end{itemize}
+
+Except for reading and sending, these things are done by calling methods in \texttt{Monitor}. As such, their exact functionalities depend on which settings have been chosen in the monitor. This thread runs oblivious of changes to the settings, and has no need to know of them; the basic structure of the loop remains the same.
+
+When the thread calls the synchronized method \texttt{double calcOutput(double[] measurement)}, the result is calculated using \texttt{currentRegul} in the monitor. Depending on monitor calls from other threads (namely \texttt{SwitchThread} and \texttt{OpCom}), the actual object \texttt{currentRegul} points to will be different. In the same way, the reference values needed to do the output calculations are received from \texttt{currentRefGen}, which also points to different objects depending on the wanted functionality.
+
+"Checking" the state of the system means to evaluate if the system fulfils certain criteria. The actual criteria, again, depend on settings given to the monitor. If the state is deemed "ok", waiting threads (in our case, \texttt{SwitchThread}) are awoken. Otherwise, nothing happens. More details in sections \ref{SwitchThread} and \ref{Checkers}.
+
+
+
+\subsubsection{SwitchThread.java}\label{SwitchThread}
+\texttt{SwitchThread} is the thread that handles our sequence mode.
+
+It uses monitor calls to change regulators and reference generators to modify the behaviour of the process. It also uses checker classes to wait for certain events to happen, or \texttt{Thread.sleep()} in case a certain amount of time needs to pass.
+
+When the thread calls the synchronized methods \texttt{void set*Check}, where \texttt{*} and arguments depend on the particular checker wanted, the monitor's \texttt{stateChecker} is set to an instance of the wanted checker, and the thread calls \texttt{wait()}. The responsibility of waking this thread up now falls to \texttt{RegulThread}, which polls the currently selected checker every iteration. If the polled checker returns \texttt{true}, it wakes all waiting threads up, allowing \texttt{SwitchThread} to continue executing. In this way, this thread knows the state of the system is satisfactory to continue with the sequence once it wakes up.
+
+The thread can also wake up if sequence mode is turned off, in which case the thread will go back to the starting position and wait to be turned on again.
+
+This thread also handles the digital output, shooting out a ball when it is ready to receive it.
+
+The general structure of a segment is
+\begin{itemize}
+\item set a regulator,
+\item set a reference generator,
+\item set a checker and wait to wake up
+\end{itemize}
+
+Of course, the different parts need to go together: if you set the regulator to regulating the beam, the reference generator should also give a reference for the beam, and the checker needs to wait for a state that will actually be achieved.
+
+After the ball has been weighed, the checkers are no longer used, and instead beam angle changes in combination with sleeps handle the throwing.

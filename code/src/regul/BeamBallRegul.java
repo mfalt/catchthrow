@@ -49,7 +49,7 @@ public class BeamBallRegul extends Regul {
 		angleRef = P + I + D + angleFF;
 		angleRefs[ReferenceGenerator.ANGLE] = angleRef;
 		u = inner.calculateOutput(measurement, angleRefs, h);
-//		System.out.println(I);
+
 		return u;
 	}
 
