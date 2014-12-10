@@ -10,9 +10,6 @@ public class Monitor {
 	/** Controllers */
 	private BeamRegul beamRegul;
 	private BeamBallRegul beamBallRegul;
-	//	private BeamBallRegul beamBallThrowSmall;
-	//	private BeamBallRegul beamBallThrowMedium;
-	//	private BeamBallRegul beamBallThrowLarge;
 	private Regul currentRegul;
 
 	/** Reference generators */
@@ -21,7 +18,6 @@ public class Monitor {
 	private ConstantRef constantPosRef;
 	private ConstantRef constantAngleRef;
 	private ConstantVectorRef constantVectorRef;
-	private ConstPosRampAngleRef constPosRampAngleRef;
 	private RampRef rampPosRef;
 	private RampRef rampAngleRef;
 	private RampToRef rampToPosRef;
@@ -51,7 +47,6 @@ public class Monitor {
 		constantPosRef = new ConstantRef(ReferenceGenerator.POS);
 		constantAngleRef = new ConstantRef(ReferenceGenerator.ANGLE);
 		constantVectorRef = new ConstantVectorRef();
-		constPosRampAngleRef = new ConstPosRampAngleRef();
 		rampPosRef = new RampRef(ReferenceGenerator.POS);
 		rampAngleRef = new RampRef(ReferenceGenerator.ANGLE);
 		rampToPosRef = new RampToRef(ReferenceGenerator.POS);
@@ -98,15 +93,6 @@ public class Monitor {
 			constantVectorRef.setPosRef(posRef);
 			constantVectorRef.setAngleRef(angleRef);
 			currentRefGen = constantVectorRef;
-		}
-	}
-
-	/** called from SwitchThread */
-	public synchronized void setRefGenConstPosRampAngle(double posRef, double angleRampSlope){
-		if(!resetSequence){
-			constPosRampAngleRef.setRef(posRef, angleRampSlope);
-			constPosRampAngleRef.setInitialAngleRef(currentRefGen.getRef()[ReferenceGenerator.ANGLE]);
-			currentRefGen = constPosRampAngleRef;
 		}
 	}
 
