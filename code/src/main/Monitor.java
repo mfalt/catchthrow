@@ -1,7 +1,5 @@
 package main;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import refgen.*;
 import regul.*;
 import checker.*;
@@ -28,9 +26,6 @@ public class Monitor {
 	private RampRef rampAngleRef;
 	private RampToRef rampToPosRef;
 	private RampToRef rampToAngleRef;
-	private TrajectoryRef throwRefSmall;
-	private TrajectoryRef throwRefMedium;
-	private TrajectoryRef throwRefLarge;
 	private ReferenceGenerator currentRefGen;
 
 	private StateChecker stateCheck;
@@ -66,16 +61,6 @@ public class Monitor {
 		constBallCheck = new ConstBallChecker();
 		ballOnBeamCheck = new BallOnBeamChecker();
 		ledCheck = new LEDChecker();
-
-		try {
-			throwRefSmall = new TrajectoryRef("../simulink_test/throwPath.mat");
-			throwRefMedium = new TrajectoryRef("../simulink_test/throwPath.mat");
-			throwRefLarge = new TrajectoryRef("../simulink_test/throwPath.mat");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	/** Called from RegulThread */
@@ -162,30 +147,6 @@ public class Monitor {
 			currentRefGen = rampToAngleRef;
 		}
 	}
-
-	/** called from SwitchThread */
-	/*public synchronized void setRefGenTrajectorySmall(){
-		if(!resetSequence){
-			throwRefSmall.resetTime();
-			currentRefGen = throwRefSmall;
-		}
-	}*/
-
-	/** called from SwitchThread */
-	/*public synchronized void setRefGenTrajectoryMedium(){
-		if(!resetSequence){
-			throwRefMedium.resetTime();
-			currentRefGen = throwRefMedium;
-		}
-	}*/
-
-	/** called from SwitchThread */
-	/*public synchronized void setRefGenTrajectoryLarge(){
-		if(!resetSequence){
-			throwRefLarge.resetTime();
-			currentRefGen = throwRefLarge;
-		}
-	}*/
 
 	/** called by RegulThread*/
 	public synchronized double calcOutput(double[] measurement) {
