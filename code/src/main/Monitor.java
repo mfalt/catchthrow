@@ -26,6 +26,8 @@ public class Monitor {
 	private ConstPosRampAngleRef constPosRampAngleRef;
 	private RampRef rampPosRef;
 	private RampRef rampAngleRef;
+	private RampToRef rampToPosRef;
+	private RampToRef rampToAngleRef;
 	private TrajectoryRef throwRefSmall;
 	private TrajectoryRef throwRefMedium;
 	private TrajectoryRef throwRefLarge;
@@ -57,6 +59,8 @@ public class Monitor {
 		constPosRampAngleRef = new ConstPosRampAngleRef();
 		rampPosRef = new RampRef(ReferenceGenerator.POS);
 		rampAngleRef = new RampRef(ReferenceGenerator.ANGLE);
+		rampToPosRef = new RampToRef(ReferenceGenerator.POS);
+		rampToAngleRef = new RampToRef(ReferenceGenerator.ANGLE);
 
 		constBeamCheck = new ConstBeamChecker();
 		constBallCheck = new ConstBallChecker();
@@ -138,6 +142,26 @@ public class Monitor {
 			//rampAngleRef.resetTime();
 			rampAngleRef.setInitialRef(currentRefGen.getRef()[ReferenceGenerator.ANGLE]);
 			currentRefGen = rampAngleRef;
+		}
+	}
+
+	/** called from SwitchThread */
+	public synchronized void setRefGenRampToPos(double speed, double finalPos){
+		if(!resetSequence){
+			rampToPosRef.setRef(speed, finalPos);
+			//rampAngleRef.resetTime();
+			rampToPosRef.setInitialRef(currentRefGen.getRef()[ReferenceGenerator.POS]);
+			currentRefGen = rampToPosRef;
+		}
+	}
+
+	/** called from SwitchThread */
+	public synchronized void setRefGenRampToAngle(double speed, double finalAngle){
+		if(!resetSequence){
+			rampToAngleRef.setRef(speed, finalAngle);
+			//rampAngleRef.resetTime();
+			rampToAngleRef.setInitialRef(currentRefGen.getRef()[ReferenceGenerator.ANGLE]);
+			currentRefGen = rampToAngleRef;
 		}
 	}
 
