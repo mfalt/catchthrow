@@ -43,9 +43,28 @@ Exactly the same as \texttt{ConstBallChecker}, except for the angle of the beam.
 
 Checks if the beam is in the pickup position - in other words if the LED is on. This is done by actually reading the digital in channel.
 
+\subsubsection{Null checker}
+
+Though not a class, the monitor has the ability to set the "null checker", which is roughly the equivalent to turning off the checker. This is not needed, since calling a checker when SwitchThread is not waiting or ready to run does nothing except waste time, but it can avoid unneccesary processor load somewhat.
+
 \subsection{Regulator classes}
 
 \subsection{Reference generator classes}
+
+Reference generators are classes that determine where the reference values for the process should be at a particular point in time. Whenever the regulator thread needs a reference value, it requests it from the currently chosen reference generator  (through a call to a monitor method).
+ 
+\subsubsection{ReferenceGenerator.java}
+
+This is the abstract superclass of the reference generators, and offers the methods \texttt{double[] getRef()}, \texttt{void resetTime()} and \texttt{double getTimeSeconds()}.
+
+\texttt{getRef()} must be implemented in subclasses, and is meant to return the current reference value.
+
+\texttt{resetTime()} sets the starting time of the reference generator to the current time, essentially "resetting" it. Called whenever a reference generator is selected, but not relevant for time invariant subclasses.
+
+\texttt{getTimeSeconds()} gives the time in seconds since \texttt{resetTime()} was last called. Again not relevant for time invariant generators.
+
+\subsubsection{ConstantRef.java}
+This subclass gives a constant reference value. 
 
 \subsection{Miscellaneous classes} 	%Beskrivning av klasser som inte passar in under andra rubriker, tex Main och OpCom
 %tror även Monitor bör få en snabb beskrivning här, men de flesta metoder i monitorn bör förklaras i beskrivningen av de klasser som faktiskt använder dem.
