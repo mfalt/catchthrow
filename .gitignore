@@ -1,5 +1,7 @@
 *.aux
 *.log
+*.dvi
+*.toc
 *.pdf
 *.class
 *.sage-*

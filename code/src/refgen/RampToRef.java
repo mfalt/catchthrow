@@ -17,7 +17,6 @@ public class RampToRef extends ReferenceGenerator {
 	public double[] getRef() {
 		tNow = System.currentTimeMillis();
 		ref[actualState] = ref[actualState] + slopeSign*speed*(tNow - tBefore) * 0.001;
-		
 		if(slopeSign > 0)
 			ref[actualState] = Math.min(ref[actualState], finalRef);
 		else
@@ -27,16 +26,17 @@ public class RampToRef extends ReferenceGenerator {
 		return ref;
 	}
 
-	public void setRef(double speed, double finalRef) {
+	public void setRef(double initRef, double speed, double finalRef) {
 		this.speed = Math.abs(speed);
 		this.finalRef = finalRef;
-		slopeSign = Math.signum(finalRef - ref[actualState]);
+		slopeSign = Math.signum(finalRef - initRef);
+		ref[actualState] = initRef;
 		tBefore = System.currentTimeMillis();
 	}
-
-	public void setInitialRef(double initRef) {
-		ref[actualState] = initRef;
-	}
+//
+//	public void setInitialRef(double initRef) {
+//		System.out.println("initref " + initRef + " == " + ref[actualState]);
+//	}
 	
 }
 
