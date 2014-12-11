@@ -1,10 +1,3 @@
-We initially intended on solving the control part of this project by generating trajectories for the ball and beam.
-We would then use a time-varying LQG controller to stabilize the system around this predefined trajectory.
-We generated the trajectories by iteratively improving the control signal using a gradient based optimization method.
-We needed a model of the entire system for this to be possible, and although we did not end up using this method for controlling the system, we decided to include the model for completeness.
-The main reason for not using this approach was that we knew that it should be possible to achieve satisfactory results uising a cascaded PID controller.
-We thus chose the safer and possibly easier solotion.
-
 \subsection{System Equations}
 
 
