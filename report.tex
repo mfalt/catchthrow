@@ -24,7 +24,7 @@ Iulia Stoica -- mariajstoica@gmail.com
 \tableofcontents
 \newpage
 
-\section{Introduction}
+\section{Introduction // Mattias}
 % Should state the problem to be solved
 The goal of this project is to control a "ball and beam" process (depicted in figure \ref{process_fig}) in a predetermined sequence of tasks:
 \begin{itemize}
@@ -43,11 +43,11 @@ The goal of this project is to control a "ball and beam" process (depicted in fi
 \caption{The "ball and beam" process to control.}\label{process_fig}
 \end{figure}
 
-\section{Process model}
+\section{Process model //Mattias}
 % Section not necessary as stated on the course homepage
 \input{model}
 
-\section{Controller structure}
+\section{Controller structure // Lucas}
 % Should describe the control design aspects of the project.
 When controlling the beam angle without any ball on the beam, we are using a simple PID controller. When controlling the ball position along the beam, we are instead using a cascaded PID controller setup (see figure \ref{cascaded_pid_fig}). An additional beam angle reference is also supplied as a feed forward signal at certain times.
 \begin{figure}
@@ -67,18 +67,20 @@ As mentioned in the introduction, we have a sequence of tasks to be performed, a
 \subsection{Ball delivery}
 
 
-\section{Program structure}
+\section{Program structure //Erik}
 % Should describe the main program structure, both from a class and and a real-time perspective. If possible illustrate this with some type of figure.
 \input{program}
 
 
-\section{Operator communication}\label{OpCom}
+\section{Operator communication //Iulia}\label{OpCom}
 % Should describe the user interface in the project including a short HowTo description on how to start and operate the program.
 
-\section{Results}
+\section{Results //Erik}
 % A section containing the results. In case the project is a control-oriented project this should include plots of measurement signals, reference signal, and control signal. If the project is more of a real-time nature then this section could contain measurement results of different type.
+STEGSVAR BOM/BOLLREGULATOR, KOMMENTAR \\
+PLOTTAR FÖR SEQUENCE, FÖRKLARA NÄR VAD HÄNDER \\
 
-\section{Conclusions}
+\section{Conclusions //Lucas}
 
 
 \newpage
