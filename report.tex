@@ -24,7 +24,7 @@ Iulia Stoica -- mariajstoica@gmail.com
 \tableofcontents
 \newpage
 
-\section{Introduction}
+\section{Introduction // Mattias}
 % Should state the problem to be solved
 The goal of this project is to control a "ball and beam" process (depicted in figure \ref{process_fig}) in a predetermined sequence of tasks:
 \begin{itemize}
@@ -43,11 +43,11 @@ The goal of this project is to control a "ball and beam" process (depicted in fi
 \caption{The "ball and beam" process to control.}\label{process_fig}
 \end{figure}
 
-\section{Process model}
+\section{Process model //Mattias}
 % Section not necessary as stated on the course homepage
 \input{model}
 
-\section{Controller structure}
+\section{Controller structure // Lucas}
 % Should describe the control design aspects of the project.
 When controlling the beam angle without any ball on the beam, we are using a simple PID controller. When controlling the ball position along the beam, we are instead using a cascaded PID controller setup (see figure \ref{cascaded_pid_fig}). Our implementation also alows for an additional beam angle reference to be supplied as a feed forward signal if desired, but in our final setup we do note make use of this.
 \begin{figure}
@@ -67,12 +67,12 @@ As mentioned in the introduction, we have a sequence of tasks to be performed, a
 \subsection{Ball delivery}
 
 
-\section{Program structure}
+\section{Program structure //Erik}
 % Should describe the main program structure, both from a class and and a real-time perspective. If possible illustrate this with some type of figure.
 \input{program}
 
 
-\section{Operator communication}\label{OpCom}
+\section{Operator communication //Iulia}\label{OpCom}
 % Should describe the user interface in the project including a short HowTo description on how to start and operate the program.
 The program is started by running the \texttt{Main} class which can be found in the \texttt{main} package and the user interface should pop up shortly.
 
@@ -85,10 +85,12 @@ The user interface consists of a main window called "Ball and beam GUI" which co
 \end{itemize}
 
 The user interface also contains two smaller windows called "Angle RefGen" and "Position RefGen" where the user can change the reference values of the beam's angle and the ball's position when the program is running in one of the manual modes, i.e BEAM or BALL mode.
-\section{Results}
+\section{Results //Erik}
 % A section containing the results. In case the project is a control-oriented project this should include plots of measurement signals, reference signal, and control signal. If the project is more of a real-time nature then this section could contain measurement results of different type.
+STEGSVAR BOM/BOLLREGULATOR, KOMMENTAR \\
+PLOTTAR FÖR SEQUENCE, FÖRKLARA NÄR VAD HÄNDER \\
 
-\section{Conclusions}
+\section{Conclusions //Lucas}
 PERFORMANCE OF PID \\
 COMMENTING ON NUMERICAL TRAJECTORY SEARCH, AND LQG? \\
 COMMENTS ON STEP RESPONSES, REF TO FIG \\

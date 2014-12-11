@@ -1,7 +1,5 @@
 package main;
 
-import java.io.IOException;
-
 import se.lth.control.realtime.DigitalOut;
 import se.lth.control.realtime.IOChannelException;
 import se.lth.control.realtime.Semaphore;
@@ -11,6 +9,8 @@ public class SwitchThread extends Thread {
 	private Monitor mon;
 	private boolean shouldRun = true;
 	private DigitalOut digitalOut;
+	
+	private OpCom opCom;
 
 	private final boolean heuristicApproach = true; // Use this boolean instead of heuristic branch
 
@@ -29,10 +29,11 @@ public class SwitchThread extends Thread {
 	private final double ballThrowPosition = -0.15;
 
 	/** Constructor */
-	public SwitchThread(Monitor monitor, Semaphore sem, int prio) {
+	public SwitchThread(Monitor monitor, OpCom opCom, int prio) {
 		mon = monitor;
 		setPriority(prio);
 		mon.setRefGenConstantAngle(-0.1); //TODO experiment with this value
+		this.opCom = opCom;
 		try {
 			digitalOut = new DigitalOut(0);
 			digitalOut.set(true); // Do not drop ball
@@ -49,6 +50,7 @@ public class SwitchThread extends Thread {
 
 		while (shouldRun) {
 			mon.setNullCheck();
+			opCom.changeBallLabel("Unknown ball");
 			System.out.println("Sequence mode ready to go.");
 			//The whole loop has to be synchronized, in case someone chooses sequence mode
 			//between loop evaluation and call to wait().
@@ -137,6 +139,8 @@ public class SwitchThread extends Thread {
 			System.out.println("WEIGHT: "+weight+" Value: "+averageControlSignal / currentBallPos);
 			switch(weight) {
 			case SMALL:
+				opCom.changeBallLabel("Small ball");
+
 				//Wait until increased precision
 				mon.setConstBallCheck(ballWeighPosition,0.03);
 				long smallFirstRampTime = 350;//ms
@@ -161,6 +165,7 @@ public class SwitchThread extends Thread {
 				}
 				break;
 			case MEDIUM:
+				opCom.changeBallLabel("Medium ball");
 				double firstAngleRampTime = 110;//ms
 				double secondAngleRampTime = 100;//ms
 				long throwSleepTime =  500;
@@ -203,6 +208,7 @@ public class SwitchThread extends Thread {
 				}
 				break;
 			case LARGE:
+				opCom.changeBallLabel("Large ball");
 				synchronized(mon) {
 					mon.setBeamRegul();
 					mon.setRefGenConstantAngle(-0.03); //TODO experiment with this value
