@@ -17,8 +17,22 @@ Since the sensor measuring the beam angle is not very reliable, we make use of a
 Starting at some underestimated angle near the dispatcher, the search for the correct beam angle is done by slowly increasing the beam angle until the optical sensor triggers. A small beam angle bias is then corrected for dispatching a ball.
 
 \subsection{Ball weighing}\label{sec:ball_weighing}
+When the ball rolls onto the beam (from the left), we want to determine its weight by measuring how much control signal\footnote{The control signal is essentially corresponding to a motor torque applied on the beam.} is necessary for keeping the ball near a certain weighing position.
+We choose the weighing position to be to the right on the beam, and when controlling the ball to this position we are careful to avoid the ball rolling off the beam.
+This is achieved by setting the ball position reference signal to a slowly increasing ramp, ending up at the weighing position.
 
-HIGH TOLERANCE HERE \\
+The torque on the beam caused by a ball's gravity force $mg$ is\footnote{We are ignoring that the rotational center of the beam not exactly at the mass centre of the ball when $x=0$, but actually slightly above.}
+\[
+\tau_{ball} = mgx
+\]
+where $x$ is the ball position. Letting $u$ denote the control signal, and assuming that $k_u u = \tau_{ball}$\footnote{The mass of the beam actually introduces an additional torque, since the beam is not rotating around its center of mass.
+This can however be ignored for small beam angles, which is the case when balancing the ball at a certain position.} for some constant $k_u$, $mg/k_u$ can now be derived from $u$ and $x$.
+Since $mg/k_u$ will always be the same for a particular ball, this measured quantity can now be used to indicate which ball is currently on the beam.
+
+As the control signal $u$ can be very noisy, we apply lowpass filtering before deciding the ball size.
+We are not as picky regarding the ball position however.
+As $mg/k_u$ can be measured for any $x$, we do not need to wait for the controller to keep the ball entirely still at the weighing position before making the ball size decision.
+This is implemented by having a high tolerance for the ball position, and reduces the running time of the weighing a lot.
 
 \subsection{Ball delivery}\label{sec:ball_delivery}
 Depending on the detected ball size, we now do different things, explained in more detail in the following sections.
