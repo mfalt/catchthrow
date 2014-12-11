@@ -49,7 +49,7 @@ The goal of this project is to control a "ball and beam" process (depicted in fi
 
 \section{Controller structure // Lucas}
 % Should describe the control design aspects of the project.
-When controlling the beam angle without any ball on the beam, we are using a simple PID controller. When controlling the ball position along the beam, we are instead using a cascaded PID controller setup (see figure \ref{cascaded_pid_fig}). An additional beam angle reference is also supplied as a feed forward signal at certain times.
+When controlling the beam angle without any ball on the beam, we are using a simple PID controller. When controlling the ball position along the beam, we are instead using a cascaded PID controller setup (see figure \ref{cascaded_pid_fig}). Our implementation also alows for an additional beam angle reference to be supplied as a feed forward signal if desired, but in our final setup we do note make use of this.
 \begin{figure}
 \centering
 \includegraphics[width=0.7\textwidth]{figures/process_fig.jpg}
