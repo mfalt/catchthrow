@@ -128,7 +128,7 @@ public class SwitchThread extends Thread {
 			System.out.println("Go to weigh position");
 			double rampSlope1 = (ballCatchPosition-ballWeighPosition)/((double)6000/1000);
 			mon.setRefGenRampToPos(rampSlope1,ballWeighPosition);
-			mon.setConstBallCheck(ballWeighPosition);
+			mon.setConstBallCheck(ballWeighPosition,0.15);
 
 
 			mon.setNullCheck();
@@ -140,6 +140,9 @@ public class SwitchThread extends Thread {
 			switch(weight) {
 			case SMALL:
 				opCom.changeBallLabel("Small ball");
+
+				//Wait until increased precision
+				mon.setConstBallCheck(ballWeighPosition,0.03);
 				long smallFirstRampTime = 350;//ms
 				long smallSecondRampTime = 200;//ms
 				long smallWaitTime = 250;
@@ -182,7 +185,7 @@ public class SwitchThread extends Thread {
 					synchronized(mon) {
 						double rampSpeed = 0.03;
 						mon.setRefGenRampToPos(rampSpeed,ballThrowPosition-0.25);
-						mon.setConstBallCheck(ballThrowPosition-0.25);
+						mon.setConstBallCheck(ballThrowPosition-0.25, 0.05);
 					}
 					synchronized(mon) {
 
