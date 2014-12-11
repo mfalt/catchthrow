@@ -50,7 +50,7 @@ public class SwitchThread extends Thread {
 
 		while (shouldRun) {
 			mon.setNullCheck();
-			opCom.changeBallLabel("Unknown ball");
+			opCom.changeSequencelLabel("Sequence mode ready");
 			System.out.println("Sequence mode ready to go.");
 			//The whole loop has to be synchronized, in case someone chooses sequence mode
 			//between loop evaluation and call to wait().
@@ -72,7 +72,7 @@ public class SwitchThread extends Thread {
 				mon.setBeamRegul();
 				mon.setRefGenConstantAngle(pickupStartAngle);
 			}
-
+			opCom.changeSequencelLabel("Ball catching");
 			System.out.println("Waiting for constant initial pickup angle");
 
 			// wait until the beam angle has become 0, this method calls wait()
@@ -103,7 +103,7 @@ public class SwitchThread extends Thread {
 			fire(false); // Push ball on beam
 
 			System.out.println("FIRE! Sleeping until ball on beam (short time)");
-
+			opCom.changeSequencelLabel("Ball weighing");
 			try {//Wait for ball on beam!!
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -139,7 +139,7 @@ public class SwitchThread extends Thread {
 			System.out.println("WEIGHT: "+weight+" Value: "+averageControlSignal / currentBallPos);
 			switch(weight) {
 			case SMALL:
-				opCom.changeBallLabel("Small ball");
+				opCom.changeSequencelLabel("Delivering ball: Small");
 
 				//Wait until increased precision
 				mon.setConstBallCheck(ballWeighPosition,0.03);
@@ -165,7 +165,7 @@ public class SwitchThread extends Thread {
 				}
 				break;
 			case MEDIUM:
-				opCom.changeBallLabel("Medium ball");
+				opCom.changeSequencelLabel("Delivering ball: Medium");
 				double firstAngleRampTime = 110;//ms
 				double secondAngleRampTime = 100;//ms
 				long throwSleepTime =  500;
@@ -208,7 +208,7 @@ public class SwitchThread extends Thread {
 				}
 				break;
 			case LARGE:
-				opCom.changeBallLabel("Large ball");
+				opCom.changeSequencelLabel("Delivering ball: Large");
 				synchronized(mon) {
 					mon.setBeamRegul();
 					mon.setRefGenConstantAngle(-0.03); //TODO experiment with this value
