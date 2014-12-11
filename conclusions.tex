@@ -1,12 +1,20 @@
 
 \subsection{Controller performance}
 As seen in the step response in figure \ref{fig:stepresponsebeam}, the beam control works well but is quite aggressive.
-The controller being aggressive is mainly due to heavy integral action, which is a deliberate choice of ours, in order to manage balancing even the largest ball with acceptable performance.
+The controller being aggressive is mainly due to heavy integral action.
+This is a deliberate choice of ours, in order to manage balancing even the largest ball with acceptable performance.
 
-COMMENTS ON STEP RESPONSES, REF TO FIG \\
+For the ball, the step response (see figure \ref{fig:stepresponseball}) takes much more time to settle.
+These differences in behaviour are to be expected, since the ball balancing problem is much harder.
+Ball balancing being harder is partly because the ball dynamics are unstable, and partly because we are actually dealing with one control problem on top of another.
+The quite large overshoot in the ball step response could possibly have been reduced, but probably at the price of problems with stationary errors (induced mainly by small "wells" on the beam, in which the ball can get stuck).
 
-\subsection{}
+The control signal being noisy (as seen in for instance the ball step response in figure \ref{fig:stepresponseball}, seem to be caused by noisy measurement signals together with derivative action in the PID-controllers.
+For both of these the derivative is lowpass-filtered, and we have been experimenting with the level of smoothing. If the derivative is smoothed too much however, the controller gets a slower response to ball/beam accelerations.
+The spurious behaviour of the control signal being noisy or not is harder to explain.
+One possibility is that the measurements are sometimes more and sometimes less reliable.
+For the ball, we have noticed that at som instants it does not get detected, resulting in a slowly decreasing measurement signal.
 
-
+\subsection{Evaluation of selected approach}
 PERFORMANCE OF PID \\
 COMMENTING ON NUMERICAL TRAJECTORY SEARCH, AND LQG? \\
