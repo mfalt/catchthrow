@@ -156,10 +156,11 @@ This method will be empty in subclasses that have no internal state.
 
 \subsubsection{ConstBallChecker.java}
 This subclass checks if a ball has been around a specified point on the beam for a sufficient number of samples in a row. 
-It provides the method \texttt{setValue(double y)} for choosing the wanted stationary point.
+It provides the method \texttt{void setValue(double y, double tol)} for choosing the wanted stationary point and needed precision.
 
 \subsubsection{ConstBeamChecker.java}
-Exactly the same as \texttt{ConstBallChecker}, except for the angle of the beam.
+Almost exactly the same as \texttt{ConstBallChecker}, except for the angle of the beam. 
+It does, however, not have the ability to change the tolerance. 
 
 \subsubsection{LEDChecker.java}
 Checks if the beam is in the pickup position - in other words if the LED is on. 
@@ -215,7 +216,7 @@ Changing of regulators is done through the \texttt{set*Regul()} monitor methods,
 In the reference generator case, the arguments are different depending on the reference generator. 
 Changing of regulators and reference generators is generally done within a single synchronized block.
 
-When the thread calls the synchronized methods \texttt{void set*Check}, where \texttt{*} and arguments depend on the particular checker wanted, the monitor's \texttt{stateChecker} is set to an instance of the wanted checker, and the thread calls \texttt{wait()}. 
+When the thread calls the synchronized methods \texttt{void set*Check}, where \texttt{*} and arguments depend on the particular checker wanted, the monitor's \texttt{stateChecker} is set to an instance of the wanted checker, the relevant settings in the chosen checker are set, and the thread calls \texttt{wait()}. 
 The responsibility of waking this thread up now falls to \texttt{RegulThread}, which polls the currently selected checker every iteration. 
 If the polled checker returns \texttt{true}, it wakes all waiting threads up, allowing \texttt{SwitchThread} to continue executing. 
 In this way, this thread knows the state of the system is satisfactory to continue with the sequence once it wakes up.
