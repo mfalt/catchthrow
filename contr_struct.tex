@@ -35,17 +35,19 @@ As $mg/k_u$ can be measured for any $x$, we do not need to wait for the controll
 This is implemented by having a high tolerance for the ball position, and reduces the running time of the weighing a lot.
 
 \subsection{Ball delivery}\label{sec:ball_delivery}
-Depending on the detected ball size, we now do different things, explained in more detail in the following sections.
+Depending on the detected ball size, we now do different things according to the problem formulation in section \ref{sec:introduction}, explained in more detail in the following sections.
 
 \subsubsection{Small ball}\label{sec:small_ball_delivery}
 For the small ball to be rolled into the cup to the upper left from the beam, the ball is first stabilized at the weighing position in order to make the following actions more deterministic.
 When stabilizing the ball, the tolerance is now much less as compared to when weighing.
 
-
+After the ball is stabilized a heuristically pre-tuned angle reference trajectory (see figure \ref{fig:weighandthrowsmallball}) is applied, making the ball roll into the cup.
+No ball position feedback is used.
 
 \subsubsection{Medium ball}\label{sec:medium_ball_delivery}
 POSITIONEN TILL VÄNSTER KALLAS THROWING POSITION \\
 
 \subsubsection{Large ball}\label{sec:large_ball_delivery}
+
 
 
