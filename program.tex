@@ -20,16 +20,21 @@ A few classes are not described below, as they are help classes that don't do mu
 
 \subsection{Miscellaneous classes} 	%Beskrivning av klasser som inte passar in under andra rubriker, tex Main och OpCom
 %tror även Monitor bör få en snabb beskrivning här, men de flesta metoder i monitorn bör förklaras i beskrivningen av de klasser som faktiskt använder dem.
+These classes don't fit under any other topic. They are found in the \texttt{main} package.
 
 \subsubsection{Main.java}
 %behöver nog inte beskrivas så ingående
+This is the entry point of the program. All necessary objects are created, including the \texttt{Monitor}, the GUI, and all the threads. Once everything is set up, the threads are also started. 
 
 \subsubsection{Monitor.java}
 %behöver nog inte heller beskrivas så ingående här, bättre att skriva om den utifrån hur trådarna använder den.
+This class provides sychronization between threads. Most calls to regulators and similar are done through the monitor. As such, the actual methods of the monitor are not very interesting in the context of this class, but rather in the context of the threads that invoke them. They will therefore be covered in section \ref{Threads} where the threads are described.
+
+The monitor also has a lot of getters and setters, for variables that need synchronization across threads.
 
 \subsubsection{OpCom.java}
 %inte så ingående heller. Vi skrev den inte, och hur den funkar beskrivs nog bättre i Operator communication.
-
+This is a slightly modified version of \texttt{OpCom} from Lab 1. The actual functionality will be described in section \ref{OpCom}. It communicates with the monitor, mostly through the \texttt{void set*Mode()} synchronized methods.
 
 
 
@@ -140,7 +145,7 @@ Though not a class, the monitor has the ability to set the "null checker", which
 
 
 
-\subsection{Threads}
+\subsection{Threads}\label{Threads}
 
 \subsubsection{RegulThread.java}
 This is the main regulator loop. Every loop iteration, this thread does the following things (in order):
@@ -165,6 +170,8 @@ When the thread calls the synchronized method \texttt{double calcOutput(double[]
 \texttt{SwitchThread} is the thread that handles our sequence mode.
 
 It uses monitor calls to change regulators and reference generators to modify the behaviour of the process. It also uses checker classes to wait for certain events to happen, or \texttt{Thread.sleep()} in case a certain amount of time needs to pass.
+
+Changing of regulators is done through the \texttt{set*Regul()} monitor methods, while reference generators are set through the \texttt{setRefGen*()} methods. In the reference generator case, the arguments are different depending on the reference generator. Changing of regulators and reference generators is generally done within a single synchronized block.
 
 When the thread calls the synchronized methods \texttt{void set*Check}, where \texttt{*} and arguments depend on the particular checker wanted, the monitor's \texttt{stateChecker} is set to an instance of the wanted checker, and the thread calls \texttt{wait()}. The responsibility of waking this thread up now falls to \texttt{RegulThread}, which polls the currently selected checker every iteration. If the polled checker returns \texttt{true}, it wakes all waiting threads up, allowing \texttt{SwitchThread} to continue executing. In this way, this thread knows the state of the system is satisfactory to continue with the sequence once it wakes up.
 
