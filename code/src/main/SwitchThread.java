@@ -48,6 +48,7 @@ public class SwitchThread extends Thread {
 	public void run() {
 
 		while (shouldRun) {
+			mon.setNullCheck();
 			System.out.println("Sequence mode ready to go.");
 			//The whole loop has to be synchronized, in case someone chooses sequence mode
 			//between loop evaluation and call to wait().
