@@ -136,11 +136,11 @@ public class SwitchThread extends Thread {
 			System.out.println("WEIGHT: "+weight+" Value: "+averageControlSignal / currentBallPos);
 			switch(weight) {
 			case SMALL:
-				long smallFirstRampTime = 400;//ms
-				long smallSecondRampTime = 300;//ms
-				long smallWaitTime = 150;
-				double smallFirstAngle = 0.6;
-				double smallSecondAngle = -0.25;
+				long smallFirstRampTime = 350;//ms
+				long smallSecondRampTime = 200;//ms
+				long smallWaitTime = 250;
+				double smallFirstAngle = 0.55;
+				double smallSecondAngle = -0.18;
 				synchronized(mon) {
 					mon.setBeamRegul();
 					double rampSlope = smallFirstAngle/((double)smallFirstRampTime/1000);
@@ -160,9 +160,9 @@ public class SwitchThread extends Thread {
 			case MEDIUM:
 				double firstAngleRampTime = 110;//ms
 				double secondAngleRampTime = 100;//ms
-				long throwSleepTime =  450;
+				long throwSleepTime =  500;
 				double throwFirstAngle = -0.60;
-				double throwSecondAngle = 0.1;
+				double throwSecondAngle = 0.2;
 				if(heuristicApproach) {
 					long rampMoveTime = 6000;//ms
 					synchronized(mon) {
