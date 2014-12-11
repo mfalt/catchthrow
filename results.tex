@@ -9,8 +9,9 @@ The middle graph shows the same values for the position of the ball.
 Reference values are shown in black, while measured values are red. 
 The bottom plot shows the control signal.
 
-STEGSVAR BOM/BOLLREGULATOR, KOMMENTAR \\
 Figures \ref{fig:stepresponsebeam} and \ref{fig:stepresponseball} show the step responses for the beam angle and the ball position, respectively. 
+The beam step response shows a large overshoot but a quick settling.
+The ball step response also shows a quite large overshoot, while also being quite slow.
 As the plots show, the control signal has a tendency to be noisy.
 
 Figures \ref{fig:topickupposition}-\ref{fig:weighbandthrowlargeball} show plots for different parts of the sequence described in section \ref{sec:controller_structure}.
@@ -19,7 +20,7 @@ As can be seen in for example figure \ref{fig:weighmediumball}, no great precisi
 \begin{figure}[h]
 \centering
 \includegraphics[width=0.7\textwidth]{figures/stepresponsebeam-crop.png}
-\caption{Step response for the beam angle. The large overshoot is a result of making the regulator able to handle beam regulation even when the large ball is on the beam. AGGRESSIV PGA ATT ORKA BALANSERA ÄVEN TUNGA KULOR}
+\caption{Step response for the beam angle.}
 \label{fig:stepresponsebeam}
 \end{figure}
 
