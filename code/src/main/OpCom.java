@@ -59,7 +59,7 @@ public class OpCom {
 	private JRadioButton sequenceModeButton;
 	private JButton stopButton;
 	
-	private JLabel ballLabel;
+	private JLabel sequenceLabel;
 
 	private boolean hChanged = false;
 	private boolean isInitialized = false;
@@ -398,8 +398,8 @@ public class OpCom {
 		somePanel.add(buttonPanel, BorderLayout.SOUTH);
 
 		//label for displaying ball weight
-		ballLabel = new JLabel("Unknown");
-		somePanel.add(ballLabel,BorderLayout.NORTH);
+		sequenceLabel = new JLabel("Unknown");
+		somePanel.add(sequenceLabel,BorderLayout.NORTH);
 		
 		
 		// Select initial mode.
@@ -492,7 +492,7 @@ public class OpCom {
 		//System.out.println(message);
 	}
 	
-	public void changeBallLabel(String s){
-		ballLabel.setText(s);
+	public void changeSequencelLabel(String s){
+		sequenceLabel.setText(s);
 	}
 }
