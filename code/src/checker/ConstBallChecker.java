@@ -5,7 +5,7 @@ public class ConstBallChecker implements StateChecker {
 	public static final double DEFAULT_TOL = 0.03;
 	int count = 0;
 	double tol = DEFAULT_TOL; // Stiction makes small tolerances hard, currently set to 1 dm
-	final int SAMPLES = 400;
+	final int SAMPLES = 100;
 
 	// y = beamangle,ballpos
 	// @Override
