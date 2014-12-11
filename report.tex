@@ -74,7 +74,17 @@ As mentioned in the introduction, we have a sequence of tasks to be performed, a
 
 \section{Operator communication}\label{OpCom}
 % Should describe the user interface in the project including a short HowTo description on how to start and operate the program.
+The program is started by running the \texttt{Main} class which can be found in the \texttt{main} package and the user interface should pop up shortly.
 
+The user interface consists of a main window called "Ball and beam GUI" which contains three realtime graphs where the upper one and the middle one are plotting the reference values (in black) and measurements (in red) for the beam and the ball respectively and the last one is plotting the control signal. The window also contains two fields where one can change the parameters of the controller for the beam's angle and the ball's position online and also a set of buttons which can change the running mode of the program:
+\begin{itemize}
+\item mode OFF: the controllers are off
+\item mode BEAM: the program is running control of the beam's angle only and the user can change the reference value manually
+\item mode BALL: the program is running control of both the beam's angle and the ball's position and the user can change the reference values manually
+\item mode Sequence: the program is running sequence until stopped, i.e catch a ball, weigh the ball, throw the ball and get ready for another sequence
+\end{itemize}
+
+The user interface also contains two smaller windows called "Angle RefGen" and "Position RefGen" where the user can change the reference values of the beam's angle and the ball's position when the program is running in one of the manual modes, i.e BEAM or BALL mode.
 \section{Results}
 % A section containing the results. In case the project is a control-oriented project this should include plots of measurement signals, reference signal, and control signal. If the project is more of a real-time nature then this section could contain measurement results of different type.
 
@@ -100,11 +110,11 @@ As mentioned in the introduction, we have a sequence of tasks to be performed, a
 %We will use the model from the lab in the course, but modify it to account for the extra integrator. We will then estimate the model parameters through simple experiments on the model.
 %
 %\section{Regulator structure}\label{regstruc}
-%We are planning to use different regulator structures for the different parts of the execution. The idea is that we will use a simple PID controller to move the beam to the pick-up position and then an LQG controller for the other parts.
+%We are planning to use different regulator structures for the different parts of the execution. Thehttps://github.com/JaUg3/catchthrow.git idhttps://github.com/JaUg3/catchthrow.gitea is that we will use a simple PID controller to move the beam to the pick-up position and then an LQG controller for the other parts.
 %\subsection{Step 1, Beam control}
 %We will use a simple PID controller for the position of the beam in this part. A gradually increasing reference will be given for the beam until indication is given by the sensor, that the beam is in the pick-up position. The reference will then stay constant for some time until the ball has rolled onto the beam, and the next controller is started. The controller for this part is governed by the BeamRegul class.
 %\subsection{Step 2, Ball balancing}\label{step2}
-%This part will be regulated by a time-invariant LQG regulator. The model will be linearized around a desired position for weighing it. As the model will depend on the mass of the ball, there is a risk of this approach not being robust enough (for all weights of the balls). Hence, if needed we will introduce the ball weight as a state in the model, which can be estimated by the Kalman-filter. We might switch to a cascaded PID controller if this method is too hard to implement or is taking too much time.
+%This part will be regulated by a time-ihttps://github.com/JaUg3/catchthrow.gitnvariant LQG regulator. The model will be linearized around a desired position for weighing it. As the model will depend on the mass of the ball, there is a risk of this approach not being robust enough (for all weights of the balls). Hence, if needed we will introduce the ball weight as a state in the model, which can be estimated by the Kalman-filter. We might switch to a cascaded PID controller if this method is too hard to implement or is taking too much time.
 %\subsection{Step 3, Ball delivery}
 %Depending on the mass of the ball, different actions will be done. We will have the same structure for all controllers in this part, but different reference values. The idea for all of them is to first find a nominal solution of the control signal $u$ and state $\mathbf{x}$ trajectories to the nonlinear equations, and then control the system using time-varying LQG regulators. It might be beneficial to have an intermediate regulator that moves the system to a state different from the weighing state, before we execute these controllers, to get a better initial state for the optimization method described below.
 %\subsubsection{Finding a solution}
