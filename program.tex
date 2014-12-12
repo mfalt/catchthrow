@@ -2,16 +2,18 @@
 %bytte plats så att trådarna beskrivs sist, för det är inte förrän där vi beskriver var varje klass faktiskt används. Då är det bra att ha sett vilka sorts klasser det finns. -E
 %hur ska vi göra med klasser vi inte skrivit?
 
-From a realtime point of view the code structure consists of two threads involved in the control, called RegulThread and SwitchThread, and one monitor class for the synchronization of their work. 
-RegulThread has the task of calculating a control signal each sample by calling the calculateOutput method in the monitor which in turn calls the method of the currently active controller, and SwitchThread has the task of switching between controllers and reference generators, see figure \ref{overall_fig}. 
-The monitor handles the synchronization needed when a switch is made but also some scheduling in the sense that it puts the SwitchThread to sleep and wakes it up when it is needed again.
+
+
+The program consists of two threads involved in the control, called \texttt{RegulThread} and \texttt{SwitchThread}, and one \texttt{Monitor} class for the synchronization of their work. 
+\texttt{SwitchThread} has the task of switching between controller, reference generator and checker objects in the monitor. By setting these objects the thread gives the command to the \texttt{RegulThread} to perform control with the help of the current controller and reference generator until some desired state specified by the checker object is achieved. The switching thread is going to sleep and it is woken up when the conditions are fullfilled to give new commands.
+\texttt{RegulThread} has then the task of calculating a control signal each sample, send it to the process and check if the desired state is achieved, see figure \ref{overall_fig}. How these tasks are performed is described in more detail in this chapter.
+
+As mentioned before the synchronization needed when a switch is made is handled by the monitor and the monitor also handles some scheduling in the sense that it puts the \texttt{SwitchThread} to sleep and wakes it up when it is needed again.
 The monitor is one of the central parts of the code and offers synchronization for other tasks too which will be described bellow in the context of each class using it. 
 \begin{figure}
 \centering
-\includegraphics[width=0.8\textwidth]{figures/Overall.png}
-\caption{Abstracted UML of the code structure only showing the two threads involved in control and the monitor. 
-The name of the methods are not the same as in the actual code. 
-The helper classes they use in doing their task are for readability reasons not shown but are described in detail in the subsections of this chapter.}
+\includegraphics[width=\textwidth]{figures/UML.png}
+\caption{UML of the code structure showing the classes and threads. For readability reasons superclasses are shown but not their subclasses. Some of the method names are fictive for example the method \texttt{setCurrentRegul} is referring to all the methods in the actual code that set a value to the current controller, one for each controller type}
 \label{overall_fig}
 \end{figure}
 
