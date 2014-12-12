@@ -14,9 +14,9 @@ This approximation turned out to be quite good, especially for small angles.
 The last part of this model is the force applied to the beam by the ball.
 The differential equation is given as
 \begin{equation}
-J_{B}\ddot{\phi}=k_{u}u+mgx\cos(\phi)+k_b\phi,
+J_{B}\ddot{\phi}=k_{u}u+mgx\cos(\phi)+k_B\phi,
 \end{equation}
-where $J_{B}$ is the moment of inertia of the beam, $k_u$ us the torque to control signal ratio and $k_b$ the estiated torque per radian from the displacement of the beam.\\
+where $J_{B}$ is the moment of inertia of the beam, $k_u$ is the torque to control signal ratio and $k_B$ the estimated torque per radian from the displacement of the beam.\\
 \\
 Letting $x_{1}=x,\, x_{2}=\dot{x},\, x_{3}=\phi,\, x_{4}=\dot{\phi}$,
 we can then write the system as a set of first order nonlinear differential equations
@@ -30,7 +30,7 @@ we can then write the system as a set of first order nonlinear differential equa
 %
 %and beam equation as
 %\[
-%\dot{x}_{4}=\frac{1}{J}\left(k_{u}u+mgx_{1}\cos(x_3)+k_bx_3\right).
+%\dot{x}_{4}=\frac{1}{J_B}\left(k_{u}u+mgx_{1}\cos(x_3)+k_Bx_3\right).
 %\]
 %
 %
@@ -44,11 +44,11 @@ we can then write the system as a set of first order nonlinear differential equa
 \end{pmatrix}=\begin{pmatrix}x_{2}\\
 \frac{5}{7}\left(-g\sin(x_{3})+x_{1}x_{4}^{2}\right)\\
 x_{4}\\
-\frac{1}{J}mgx_{1}\cos(x_3)+\frac{k_b}{J}x_3
+\frac{1}{J_B}mgx_{1}\cos(x_3)+\frac{k_B}{J_B}x_3
 \end{pmatrix}+\begin{pmatrix}0\\
 0\\
 0\\
-\frac{k_{u}}{J}
+\frac{k_{u}}{J_B}
 \end{pmatrix}u.
 \]
 
@@ -57,29 +57,29 @@ x_{4}\\
 We introduced the mass of the ball as a state $x_{5}=m$ in the system. The advantage of this is that it would then be possible to start estimating the weight of the ball earlier in the sequence.
 It would also allow feed forward to the control signal based on the mass and position of the ball, this could have greatly reduced the oscillations of the beam control since we would not require integral action to account for this entire force.
 We lastly introduced the integral of the deviation of the position of the
-ball $(\tilde{x}_{6}=\int_{0}^{t}\tilde{x}_{1}dt)$ as a state and linearized the system around a the steady state $\bar{x}=(\bar{x}_{1},0,0,0,\bar{m},\bar{u})$.
-This results in the linear pertubation equations
+ball $(\tilde{x}_{6}=\int_{0}^{t}\tilde{x}_{1}dt)$ as a state and linearized the system around the steady state $\bar{x}=(\bar{x}_{1},0,0,0,\bar{m},\bar{u})$.
+This results in the linear perturbation equations
 %\begin{eqnarray*}
 %\dot{\tilde{x}} & = & \begin{pmatrix}0 & 1 & 0 & 0 & 0\\
 %\frac{5}{7}\bar{x}_{4}^{2} & 0 & -\frac{5g}{7}\cos(\bar{x}_{3}) & 2\bar{x}_{1}\bar{x}_{4} & 0\\
 %0 & 0 & 0 & 1 & 0\\
-%\bar{m}\frac{g}{J}\cos(\bar{x}_{3}) & 0 & -\bar{m}\frac{g}{J}\bar{x}_{1}\sin(\bar{x}_{3})+\frac{k_b}{J} & 0 & \frac{g}{J}\bar{x}_{1}\cos(\bar{x}_{3})\\
+%\bar{m}\frac{g}{J_B}\cos(\bar{x}_{3}) & 0 & -\bar{m}\frac{g}{J_B}\bar{x}_{1}\sin(\bar{x}_{3})+\frac{k_B}{J_B} & 0 & \frac{g}{J_B}\bar{x}_{1}\cos(\bar{x}_{3})\\
 %0 & 0 & 0 & 0 & 0
 %\end{pmatrix}\tilde{x}+\begin{pmatrix}0\\
 %0\\
 %0\\
-%\frac{k_{u}}{J}\\
+%\frac{k_{u}}{J_B}\\
 %0
 %\end{pmatrix}\tilde{u}\\
 % & = & \begin{pmatrix}0 & 1 & 0 & 0 & 0\\
 %0 & 0 & -\frac{5g}{7} & 0 & 0\\
 %0 & 0 & 0 & 1 & 0\\
-%\bar{m}\frac{g}{J} & 0 & \frac{k_b}{J} & 0 & \frac{g}{J}\bar{x}_{1}\\
+%\bar{m}\frac{g}{J_B} & 0 & \frac{k_B}{J_B} & 0 & \frac{g}{J}\bar{x}_{1}\\
 %0 & 0 & 0 & 0 & 0
 %\end{pmatrix}\tilde{x}+\begin{pmatrix}0\\
 %0\\
 %0\\
-%\frac{k_{u}}{J}\\
+%\frac{k_{u}}{J_B}\\
 %0
 %\end{pmatrix}\tilde{u}.
 %\end{eqnarray*}
@@ -88,13 +88,13 @@ This results in the linear pertubation equations
 \dot{\tilde{x}} & = & \begin{pmatrix}0 & 1 & 0 & 0 & 0 & 0\\
 0 & 0 & -\frac{5g}{7} & 0 & 0 & 0\\
 0 & 0 & 0 & 1 & 0 & 0\\
-\bar{m}\frac{g}{J} & 0 & \frac{k_b}{J} & 0 & \frac{g}{J}\bar{x}_{1} & 0\\
+\bar{m}\frac{g}{J_B} & 0 & \frac{k_B}{J_B} & 0 & \frac{g}{J_B}\bar{x}_{1} & 0\\
 0 & 0 & 0 & 0 & 0 & 0\\
 1 & 0 & 0 & 0 & 0 & 0
 \end{pmatrix}\tilde{x}+\begin{pmatrix}0\\
 0\\
 0\\
-\frac{k_{u}}{J}\\
+\frac{k_{u}}{J_B}\\
 0\\
 0
 \end{pmatrix}\tilde{u}\\
@@ -188,7 +188,7 @@ where $d_{y}(t), d_{x}(t)$ are the distances traveled after time $t$ as given in
 \begin{figure}[\textwidth]
 \centering
 \input{throwImage.tex}
-\caption{Illustation of the ball and its calculated trajectory as it is leaving the beam.}
+\caption{Illustration of the ball and its calculated trajectory as it is leaving the beam.}
 \label{fig:throw}
 \end{figure}
 %
@@ -225,13 +225,13 @@ To be able to find a satisfactory terminal state we made the assumption of zero 
 \dot{x}=\left(d_{x}-l\cos(\phi)\right)\frac{\sqrt{g}}{\sqrt{2\cos(\phi)\left(d_{y}\cos(\phi)+d_{x}\sin(\phi)\right)}}.
 \]
 
-Given a fix $d_x,d_y$ it is now possible to find a pair of $\dot x,\phi$ to which we could genetate a trajectory using the iterative gradient based method described in \cite{NR}, chapter 21.1.1.
+Given a fix $d_x,d_y$ it is now possible to find a pair of $\dot x,\phi$ to which we could generate a trajectory using the iterative gradient based method described in \cite{NR}, chapter 21.1.1.
 
 One example of a generated trajectory for the process using this framework can be seen in Figure \ref{fig:matlabtrajectory}.
 
 \begin{figure}[\textwidth]
 \centering
 \includegraphics[width=\textwidth]{ballbeammatlab}
-\caption{Example of trajectory generated using the gradient based iterative optimization. The states are plotted as deviations from the desired terminal condition. The second derivateive of the angular velocity of the beam is used as control signal in this example, that that could easly be recalculated to the force required by the controller using the model.}
+\caption{Example of trajectory generated using the gradient based iterative optimization. The states are plotted as deviations from the desired terminal condition. The second derivative of the angular velocity of the beam is used as control signal in this example, that that could easily be recalculated to the force required by the controller using the model.}
 \label{fig:matlabtrajectory}
 \end{figure}
