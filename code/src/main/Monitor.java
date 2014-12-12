@@ -100,7 +100,6 @@ public class Monitor {
 	public synchronized void setRefGenRampPos(double rampSlope){
 		if(!resetSequence){
 			rampPosRef.setRef(rampSlope);
-			//rampAngleRef.resetTime();
 			rampPosRef.setInitialRef(currentRefGen.getRef()[ReferenceGenerator.POS]);
 			currentRefGen = rampPosRef;
 		}
@@ -110,7 +109,6 @@ public class Monitor {
 	public synchronized void setRefGenRampAngle(double rampSlope){
 		if(!resetSequence){
 			rampAngleRef.setRef(rampSlope);
-			//rampAngleRef.resetTime();
 			rampAngleRef.setInitialRef(currentRefGen.getRef()[ReferenceGenerator.ANGLE]);
 			currentRefGen = rampAngleRef;
 		}
