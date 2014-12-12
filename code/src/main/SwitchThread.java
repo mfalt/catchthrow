@@ -1,7 +1,5 @@
 package main;
 
-import java.io.IOException;
-
 import se.lth.control.realtime.DigitalOut;
 import se.lth.control.realtime.IOChannelException;
 import se.lth.control.realtime.Semaphore;
@@ -11,6 +9,8 @@ public class SwitchThread extends Thread {
 	private Monitor mon;
 	private boolean shouldRun = true;
 	private DigitalOut digitalOut;
+	
+	private OpCom opCom;
 
 	private final boolean heuristicApproach = true; // Use this boolean instead of heuristic branch
 
@@ -29,10 +29,11 @@ public class SwitchThread extends Thread {
 	private final double ballThrowPosition = -0.15;
 
 	/** Constructor */
-	public SwitchThread(Monitor monitor, Semaphore sem, int prio) {
+	public SwitchThread(Monitor monitor, OpCom opCom, int prio) {
 		mon = monitor;
 		setPriority(prio);
 		mon.setRefGenConstantAngle(-0.1); //TODO experiment with this value
+		this.opCom = opCom;
 		try {
 			digitalOut = new DigitalOut(0);
 			digitalOut.set(true); // Do not drop ball
@@ -48,6 +49,8 @@ public class SwitchThread extends Thread {
 	public void run() {
 
 		while (shouldRun) {
+			mon.setNullCheck();
+			opCom.changeSequencelLabel("Sequence mode ready");
 			System.out.println("Sequence mode ready to go.");
 			//The whole loop has to be synchronized, in case someone chooses sequence mode
 			//between loop evaluation and call to wait().
@@ -69,7 +72,7 @@ public class SwitchThread extends Thread {
 				mon.setBeamRegul();
 				mon.setRefGenConstantAngle(pickupStartAngle);
 			}
-
+			opCom.changeSequencelLabel("Ball catching");
 			System.out.println("Waiting for constant initial pickup angle");
 
 			// wait until the beam angle has become 0, this method calls wait()
@@ -100,7 +103,7 @@ public class SwitchThread extends Thread {
 			fire(false); // Push ball on beam
 
 			System.out.println("FIRE! Sleeping until ball on beam (short time)");
-
+			opCom.changeSequencelLabel("Ball weighing");
 			try {//Wait for ball on beam!!
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -125,7 +128,7 @@ public class SwitchThread extends Thread {
 			System.out.println("Go to weigh position");
 			double rampSlope1 = (ballCatchPosition-ballWeighPosition)/((double)6000/1000);
 			mon.setRefGenRampToPos(rampSlope1,ballWeighPosition);
-			mon.setConstBallCheck(ballWeighPosition);
+			mon.setConstBallCheck(ballWeighPosition,0.15);
 
 
 			mon.setNullCheck();
@@ -136,11 +139,15 @@ public class SwitchThread extends Thread {
 			System.out.println("WEIGHT: "+weight+" Value: "+averageControlSignal / currentBallPos);
 			switch(weight) {
 			case SMALL:
-				long smallFirstRampTime = 400;//ms
-				long smallSecondRampTime = 300;//ms
-				long smallWaitTime = 150;
-				double smallFirstAngle = 0.6;
-				double smallSecondAngle = -0.25;
+				opCom.changeSequencelLabel("Delivering ball: Small");
+
+				//Wait until increased precision
+				mon.setConstBallCheck(ballWeighPosition,0.03);
+				long smallFirstRampTime = 350;//ms
+				long smallSecondRampTime = 200;//ms
+				long smallWaitTime = 250;
+				double smallFirstAngle = 0.55;
+				double smallSecondAngle = -0.18;
 				synchronized(mon) {
 					mon.setBeamRegul();
 					double rampSlope = smallFirstAngle/((double)smallFirstRampTime/1000);
@@ -158,11 +165,12 @@ public class SwitchThread extends Thread {
 				}
 				break;
 			case MEDIUM:
+				opCom.changeSequencelLabel("Delivering ball: Medium");
 				double firstAngleRampTime = 110;//ms
 				double secondAngleRampTime = 100;//ms
-				long throwSleepTime =  450;
+				long throwSleepTime =  500;
 				double throwFirstAngle = -0.60;
-				double throwSecondAngle = 0.1;
+				double throwSecondAngle = 0.2;
 				if(heuristicApproach) {
 					long rampMoveTime = 6000;//ms
 					synchronized(mon) {
@@ -177,7 +185,7 @@ public class SwitchThread extends Thread {
 					synchronized(mon) {
 						double rampSpeed = 0.03;
 						mon.setRefGenRampToPos(rampSpeed,ballThrowPosition-0.25);
-						mon.setConstBallCheck(ballThrowPosition-0.25);
+						mon.setConstBallCheck(ballThrowPosition-0.25, 0.05);
 					}
 					synchronized(mon) {
 
@@ -200,6 +208,7 @@ public class SwitchThread extends Thread {
 				}
 				break;
 			case LARGE:
+				opCom.changeSequencelLabel("Delivering ball: Large");
 				synchronized(mon) {
 					mon.setBeamRegul();
 					mon.setRefGenConstantAngle(-0.03); //TODO experiment with this value

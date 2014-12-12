@@ -284,10 +284,14 @@ public class Monitor {
 
 	//Called by SwitchThread
 	public synchronized void setConstBallCheck(double y) {
+		setConstBallCheck(y, ConstBallChecker.DEFAULT_TOL);
+	}
+	
+	public synchronized void setConstBallCheck(double y, double tolerance) {
 		if(!resetSequence){
 			stateCheck = constBallCheck;
 			constBallCheck.reset();
-			constBallCheck.setValue(y);
+			constBallCheck.setValue(y, tolerance);
 			try {
 				wait();
 			} catch (InterruptedException e) {

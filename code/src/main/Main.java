@@ -18,10 +18,10 @@ public class Main {
 		RefGenGUI refGenPos = new RefGenGUI(refGenPriority, ReferenceGenerator.POS, "Position RefGen");
 		RefGenGUI refGenAngle = new RefGenGUI(refGenPriority, ReferenceGenerator.ANGLE, "Angle RefGen");
 		Monitor mon = new Monitor();
-		Semaphore switchThreadSem = new Semaphore(1);
-		final OpCom opcom = new OpCom(plotterPriority, mon,switchThreadSem);
+		//Semaphore switchThreadSem = new Semaphore(1);
+		final OpCom opcom = new OpCom(plotterPriority, mon);
 		RegulThread regThread= new RegulThread(mon, regulPriority);
-		SwitchThread switchThread = new SwitchThread(mon, switchThreadSem, switchPriority);
+		SwitchThread switchThread = new SwitchThread(mon, opcom, switchPriority);
 		
 		regThread.setOpCom(opcom);
 		mon.initRefGenGUI(refGenPos, refGenAngle);
