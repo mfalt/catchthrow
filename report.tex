@@ -5,6 +5,7 @@
 \usepackage{amsmath}
 \usepackage{tikz}
 \usepackage[utf8]{inputenc} % For åäö
+\usepackage{afterpage}
 
 \title{"Catch and Throw" ball and beam process\\FRTN01 -- Real-Time Systems}
 \author{
@@ -15,6 +16,9 @@ Lucas Jimbergsson -- lucas@jimbergsson.se
 Erik Nossborn -- eki.nossborn@gmail.com
 \and
 Iulia Stoica -- mariajstoica@gmail.com
+\and
+\and
+Supervisor -- Karl-Erik Årz\'{e}n
 }
 
 \setcounter{tocdepth}{2}
@@ -26,10 +30,10 @@ Iulia Stoica -- mariajstoica@gmail.com
 \tableofcontents
 \newpage
 
-\section{Introduction // Mattias}
+\section{Introduction}
 \label{sec:introduction}
 % Should state the problem to be solved
-The goal of this project is to control a "ball and beam" process (depicted in figure \ref{fig:process}) in a predetermined sequence of tasks:
+The goal of this project is to control a "ball and beam" process (depicted in Figure \ref{fig:process}) in a predetermined sequence of tasks:
 \begin{itemize}
 \item Dispatch a ball from a ball magazine and let the beam catch it.
 \item Determine the weight of the ball (comparing with three predefined possible weights).
@@ -46,38 +50,48 @@ The goal of this project is to control a "ball and beam" process (depicted in fi
 \caption{The "ball and beam" process to control.}\label{fig:process}
 \end{figure}
 
-\section{Overall approach //Mattias}
+\section{Overall approach}
 \input{approach}
 
-\section{Controller structure // Lucas} \label{sec:controller_structure}
+\section{Controller structure} \label{sec:controller_structure}
 % Should describe the control design aspects of the project.
 \input{contr_struct}
 
-\section{Program structure //Erik}
+\section{Program structure}
 % Should describe the main program structure, both from a class and and a real-time perspective. If possible illustrate this with some type of figure.
 \input{program}
 
 
-\section{Operator communication //Iulia}\label{OpCom}
+\section{Operator communication}\label{OpCom}
 % Should describe the user interface in the project including a short HowTo description on how to start and operate the program.
 The program is started by running the \texttt{Main} class which can be found in the \texttt{main} package and the user interface should pop up shortly.
 
-The user interface consists of a main window called "Ball and beam GUI" which contains three realtime graphs where the upper one and the middle one are plotting the reference values (in black) and measurements (in red) for the beam and the ball respectively and the last one is plotting the control signal. The window also contains two fields where one can change the parameters of the controller for the beam's angle and the ball's position online and also a set of buttons which can change the running mode of the program:
+The user interface consists of a main window called "Ball and beam GUI" which contains three realtime graphs where the upper one and the middle one are plotting the reference values (in black) and measurements (in red) for the beam and the ball respectively and the last one is plotting the control signal. The window also contains two panels where the user can change the controller parameters online, and also a set of buttons which can change the running mode of the program:
 \begin{itemize}
 \item mode OFF: the controllers are off
 \item mode BEAM: the program is running control of the beam's angle only and the user can change the reference value manually
 \item mode BALL: the program is running control of both the beam's angle and the ball's position and the user can change the reference values manually
-\item mode Sequence: the program is running sequence until stopped, i.e catch a ball, weigh the ball, throw the ball and get ready for another sequence
+\item mode Sequence: the program is running sequence until stopped, i.e catch a ball, weigh the ball, deliver the ball and get ready for another sequence according to Section \ref{sec:controller_structure}.
 \end{itemize}
 
 The user interface also contains two smaller windows called "Angle RefGen" and "Position RefGen" where the user can change the reference values of the beam's angle and the ball's position when the program is running in one of the manual modes, i.e BEAM or BALL mode.
-\section{Results //Erik}
+\section{Results}
 \input{results}
 
-\section{Conclusions //Lucas}
+\afterpage{\clearpage}
+
+\section{Conclusions}
 \input{conclusions}
 
-\clearpage
+\afterpage{\clearpage}
+
+\appendix
+
+\section{Process model}\label{sec:model}
+\input{model}
+
+\afterpage{\clearpage}
+
 \begin{thebibliography}{9}
 \bibitem{NR}
   Thomas Bewley,
@@ -86,13 +100,6 @@ The user interface also contains two smaller windows called "Angle RefGen" and "
   http://numerical-renaissance.com/NR.pdf
 
 \end{thebibliography}
-
-\newpage
-\appendix
-
-\section{Process model //Mattias}\label{sec:model}
-\input{model}
-
 
 \end{document}
 

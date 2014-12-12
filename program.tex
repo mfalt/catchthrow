@@ -5,11 +5,11 @@
 
 
 The program consists of two threads involved in the control, called \texttt{RegulThread} and \texttt{SwitchThread}, and one \texttt{Monitor} class for the synchronization of their work. 
-\texttt{SwitchThread} has the task of switching between controller, reference generator and checker objects in the monitor. By setting these objects the thread gives the command to the \texttt{RegulThread} to perform control with the help of the current controller and reference generator until some desired state specified by the checker object is achieved. The switching thread is going to sleep and it is woken up when the conditions are fullfilled to give new commands.
-\texttt{RegulThread} has then the task of calculating a control signal each sample, send it to the process and check if the desired state is achieved, see figure \ref{overall_fig}. How these tasks are performed is described in more detail in this chapter.
+\texttt{SwitchThread} has the task of switching between controllers, reference generators and checker objects in the monitor. By setting these objects the thread gives the command to the \texttt{RegulThread} to perform control with the help of the current controller and reference generator until some desired state specified by the checker object is achieved. The switching thread is going to sleep and is woken up when the conditions are fulfilled to give new commands.
+\texttt{RegulThread} then has the task of calculating a control signal each sample, sending it to the process and checking if the desired state has been achieved, see Figure \ref{overall_fig}. How these tasks are performed is described in more detail in this section.
 
-As mentioned before the synchronization needed when a switch is made is handled by the monitor and the monitor also handles some scheduling in the sense that it puts the \texttt{SwitchThread} to sleep and wakes it up when it is needed again.
-The monitor is one of the central parts of the code and offers synchronization for other tasks too which will be described bellow in the context of each class using it. 
+As mentioned before the synchronization needed when a switch is made is handled by the monitor, which also handles some scheduling, in the sense that it puts the \texttt{SwitchThread} to sleep and wakes it up when it is needed again.
+The monitor is one of the central parts of the code and offers synchronization for other tasks too, which will be described below in the context of each class using it. 
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{figures/UML.png}
@@ -39,15 +39,15 @@ Once everything is set up, the threads are also started.
 %behöver nog inte heller beskrivas så ingående här, bättre att skriva om den utifrån hur trådarna använder den.
 This class provides sychronization between threads. Most calls to regulators and similar are done through the monitor. 
 As such, the actual methods of the monitor are not very interesting in the context of this class, but rather in the context of the threads that invoke them. 
-They will therefore be covered in section \ref{Threads} where the threads are described.
+They will therefore be covered in Section \ref{Threads} where the threads are described.
 
 The monitor also has a lot of getters and setters, for variables that need synchronization across threads.
 
 \subsubsection{OpCom.java}
 %inte så ingående heller. Vi skrev den inte, och hur den funkar beskrivs nog bättre i Operator communication.
 This is a slightly modified version of \texttt{OpCom} from Lab 1. 
-The actual functionality will be described in section \ref{OpCom}. 
-It communicates with the monitor, mostly through the \texttt{void set*Mode()} synchronized methods.
+The actual functionality will be described in Section \ref{OpCom}. 
+It communicates with the monitor, mostly through the \texttt{void set*Mode()}\footnote{The \texttt{*} is a wildcard, since there are several similar methods named by this form.} synchronized methods.
 
 
 
@@ -97,16 +97,11 @@ Whenever a reference value is needed, it is requested from the currently chosen 
 These classes are found in the \texttt{refgen} package.
  
 \subsubsection{ReferenceGenerator.java}
-This is the abstract superclass of the reference generators, and has the methods \texttt{double[] getRef()}, \texttt{void resetTime()} and \texttt{double getTimeSeconds()}.
+This is the abstract superclass of the reference generators, and has the method \texttt{double[] getRef()}.
+This method must be implemented in subclasses, and is meant to return the current reference value.
 
-\texttt{getRef()} must be implemented in subclasses, and is meant to return the current reference value.
-
-
-\texttt{resetTime()} sets the starting time of the reference generator to the current time, essentially "resetting" it. 
-Called whenever a reference generator is selected, but not relevant for time invariant subclasses.
-%Inte säker på om denna metod används längre (av någon anledning), så isåfall bör den tas bort.
-\texttt{getTimeSeconds()} gives the time in seconds since \texttt{resetTime()} was last called. 
-Again not relevant for time invariant generators.
+The method returns references for all system states, even though the controllers typically make use of only one or two of them.
+This design was chosen in order to ease a possible transition to LQG control, without having to rewrite much code.
 
 \subsubsection{ConstantRef.java}
 This subclass gives a constant reference value chosen by calling \texttt{setRef(double)}. 
@@ -125,7 +120,7 @@ Like in \texttt{ConstantRef}, a variable is used to determine which state the re
 
 \subsubsection{RampToRef.java}
 This subclass works almost like \texttt{RampRef}, except it stops when a chosen reference value has been reached. 
-This gives a smoother reference change.
+This gives a smoother reference change as compared to a step change.
 
 \subsubsection{RefGenGUI.java}
 This is a slightly modified version of the \texttt{ReferenceGenerator} found in Lab 1, and was used for testing.
@@ -204,7 +199,7 @@ In the same way, the reference values needed to do the output calculations are r
 "Checking" the state of the system means to evaluate if the system fulfils certain criteria. 
 The actual criteria, again, depend on settings given to the monitor. 
 If the state is deemed "ok", waiting threads (in our case, \texttt{SwitchThread}) are awoken. 
-Otherwise, nothing happens. More details in sections \ref{SwitchThread} and \ref{Checkers}.
+Otherwise, nothing happens. More details in Sections \ref{SwitchThread} and \ref{Checkers}.
 
 
 
@@ -231,11 +226,11 @@ The general structure of a segment is
 \begin{itemize}
 \item set a regulator,
 \item set a reference generator,
-\item set a checker and wait to wake up
+\item set a checker and wait to wake up.
 \end{itemize}
 
 Of course, the different parts need to go together: if you set the regulator to regulating the beam, 
 the reference generator should also give a reference for the beam, 
 and the checker needs to wait for a state that will actually be achieved.
 
-After the ball has been weighed, the checkers are no longer used, and instead beam angle changes in combination with sleeps handle the throwing.
+At ball delivery, the checkers are no longer used, and instead beam angle changes in combination with sleeps handle the action, as described in Section \ref{sec:ball_delivery}.
