@@ -97,16 +97,9 @@ Whenever a reference value is needed, it is requested from the currently chosen 
 These classes are found in the \texttt{refgen} package.
  
 \subsubsection{ReferenceGenerator.java}
-This is the abstract superclass of the reference generators, and has the methods \texttt{double[] getRef()}, \texttt{void resetTime()} and \texttt{double getTimeSeconds()}.
+This is the abstract superclass of the reference generators, and has the method \texttt{double[] getRef()}.
 
 \texttt{getRef()} must be implemented in subclasses, and is meant to return the current reference value.
-
-
-\texttt{resetTime()} sets the starting time of the reference generator to the current time, essentially "resetting" it. 
-Called whenever a reference generator is selected, but not relevant for time invariant subclasses.
-%Inte säker på om denna metod används längre (av någon anledning), så isåfall bör den tas bort.
-\texttt{getTimeSeconds()} gives the time in seconds since \texttt{resetTime()} was last called. 
-Again not relevant for time invariant generators.
 
 \subsubsection{ConstantRef.java}
 This subclass gives a constant reference value chosen by calling \texttt{setRef(double)}. 
