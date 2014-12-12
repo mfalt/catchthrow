@@ -5,6 +5,7 @@
 \usepackage{amsmath}
 \usepackage{tikz}
 \usepackage[utf8]{inputenc} % For åäö
+\usepackage{afterpage}
 
 \title{"Catch and Throw" ball and beam process\\FRTN01 -- Real-Time Systems}
 \author{
@@ -77,13 +78,14 @@ The user interface also contains two smaller windows called "Angle RefGen" and "
 \section{Conclusions}
 \input{conclusions}
 
-\clearpage
+\afterpage{\clearpage}
 
 \appendix
 
 \section{Process model}\label{sec:model}
 \input{model}
 
+\afterpage{\clearpage}
 
 \begin{thebibliography}{9}
 \bibitem{NR}
