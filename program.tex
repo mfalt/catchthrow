@@ -98,8 +98,10 @@ These classes are found in the \texttt{refgen} package.
  
 \subsubsection{ReferenceGenerator.java}
 This is the abstract superclass of the reference generators, and has the method \texttt{double[] getRef()}.
+This method must be implemented in subclasses, and is meant to return the current reference value.
 
-\texttt{getRef()} must be implemented in subclasses, and is meant to return the current reference value.
+The method returns references for all system states, even though the controllers typically make use of only one or two of them.
+This design was chosen in order to ease a possible transition to LQG control, without having to rewrite much code.
 
 \subsubsection{ConstantRef.java}
 This subclass gives a constant reference value chosen by calling \texttt{setRef(double)}. 
@@ -118,7 +120,7 @@ Like in \texttt{ConstantRef}, a variable is used to determine which state the re
 
 \subsubsection{RampToRef.java}
 This subclass works almost like \texttt{RampRef}, except it stops when a chosen reference value has been reached. 
-This gives a smoother reference change.
+This gives a smoother reference change as compared to a step change.
 
 \subsubsection{RefGenGUI.java}
 This is a slightly modified version of the \texttt{ReferenceGenerator} found in Lab 1, and was used for testing.
@@ -224,11 +226,11 @@ The general structure of a segment is
 \begin{itemize}
 \item set a regulator,
 \item set a reference generator,
-\item set a checker and wait to wake up
+\item set a checker and wait to wake up.
 \end{itemize}
 
 Of course, the different parts need to go together: if you set the regulator to regulating the beam, 
 the reference generator should also give a reference for the beam, 
 and the checker needs to wait for a state that will actually be achieved.
 
-After the ball has been weighed, the checkers are no longer used, and instead beam angle changes in combination with sleeps handle the throwing.
+At ball delivery, the checkers are no longer used, and instead beam angle changes in combination with sleeps handle the action, as described in Section \ref{sec:ball_delivery}.

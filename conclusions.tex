@@ -13,12 +13,13 @@ The control signal being noisy (as seen in the ball step response in Figure \ref
 For both of these the derivative is lowpass-filtered, and we have been experimenting with the level of smoothing. If the derivative is smoothed too much however, the controller gets a slower response to ball/beam accelerations.
 The spurious behaviour of the control signal being noisy or not is harder to explain.
 One possibility is that the measurements are sometimes more and sometimes less reliable.
-For the ball, we have noticed that at som instants it does not get detected, resulting in a slowly decreasing measurement signal.
+However, the noisy control signal might actually decrease the effect of stiction.
+For the ball, we have noticed that at some instants it does not get detected, resulting in a slowly decreasing measurement signal.
 
 \subsection{Evaluation of selected approach}
 The selected approach of PID controllers together with heuristically tuned references works over our expectations, since we did not even see it as an alternative in the beginning. Its simplicity (not having any explicit need of a process model for example) is also very appealing.
 
-Our initial model-based approach of time-invariant LQG with numerically optimized state trajectories would however possibly have been more beautiful in its generality and.
+Our initial model-based approach of time-varying LQG control with numerically optimized state trajectories would however possibly have been more beautiful in its generality and execution.
 
 Worth noting is also that the PID/heuristic approach has a strong coupling (one affecting the other) between changes in PID parameters and changes in references. For the LQG/trajectory approach however, the coupling between the choice of weight matrices and the choice of reference trajectory specifications would not have been as prominent.
 
