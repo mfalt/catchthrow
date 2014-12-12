@@ -5,11 +5,11 @@
 
 
 The program consists of two threads involved in the control, called \texttt{RegulThread} and \texttt{SwitchThread}, and one \texttt{Monitor} class for the synchronization of their work. 
-\texttt{SwitchThread} has the task of switching between controller, reference generator and checker objects in the monitor. By setting these objects the thread gives the command to the \texttt{RegulThread} to perform control with the help of the current controller and reference generator until some desired state specified by the checker object is achieved. The switching thread is going to sleep and it is woken up when the conditions are fullfilled to give new commands.
-\texttt{RegulThread} has then the task of calculating a control signal each sample, send it to the process and check if the desired state is achieved, see Figure \ref{overall_fig}. How these tasks are performed is described in more detail in this chapter.
+\texttt{SwitchThread} has the task of switching between controllers, reference generators and checker objects in the monitor. By setting these objects the thread gives the command to the \texttt{RegulThread} to perform control with the help of the current controller and reference generator until some desired state specified by the checker object is achieved. The switching thread is going to sleep and is woken up when the conditions are fulfilled to give new commands.
+\texttt{RegulThread} then has the task of calculating a control signal each sample, sending it to the process and checking if the desired state has been achieved, see Figure \ref{overall_fig}. How these tasks are performed is described in more detail in this section.
 
-As mentioned before the synchronization needed when a switch is made is handled by the monitor and the monitor also handles some scheduling in the sense that it puts the \texttt{SwitchThread} to sleep and wakes it up when it is needed again.
-The monitor is one of the central parts of the code and offers synchronization for other tasks too which will be described bellow in the context of each class using it. 
+As mentioned before the synchronization needed when a switch is made is handled by the monitor, which also handles some scheduling, in the sense that it puts the \texttt{SwitchThread} to sleep and wakes it up when it is needed again.
+The monitor is one of the central parts of the code and offers synchronization for other tasks too, which will be described below in the context of each class using it. 
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{figures/UML.png}
@@ -47,7 +47,7 @@ The monitor also has a lot of getters and setters, for variables that need synch
 %inte så ingående heller. Vi skrev den inte, och hur den funkar beskrivs nog bättre i Operator communication.
 This is a slightly modified version of \texttt{OpCom} from Lab 1. 
 The actual functionality will be described in Section \ref{OpCom}. 
-It communicates with the monitor, mostly through the \texttt{void set*Mode()} synchronized methods.
+It communicates with the monitor, mostly through the \texttt{void set*Mode()}\footnote{The \texttt{*} is a wildcard, since there are several similar methods named by this form.} synchronized methods.
 
 
 
