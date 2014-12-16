@@ -4,6 +4,19 @@
 compress]
 {beamer}
 
+
+\defbeamertemplate{section page}{mine}[1][]{%
+  \begin{centering}
+    {\usebeamerfont{section name}\usebeamercolor[fg]{section name}#1}
+    \vskip1em\par
+    \begin{beamercolorbox}[sep=12pt,center]{part title}
+      \usebeamerfont{section title}\insertsection\par
+    \end{beamercolorbox}
+  \end{centering}
+}
+\setbeamertemplate{section page}[mine][]
+
+
 \usetheme[authorwidth=.20,titlewidth=.50,datewidth=.30,section=true,subsection=true,]{Lund}
 \setbeamertemplate{navigation symbols}{}
 \usefonttheme[onlymath]{serif}
@@ -30,15 +43,21 @@ compress]
 
 \section*{Outline}
 
+<<<<<<< HEAD
 \frame{\partpage}
+=======
+%\part{Main Talk}
+%\frame{\partpage}
+>>>>>>> 4ec0fd49cd8b27dbbd5894a1b280b2b187a20a08
 
 \frame
 {
   \frametitle{Outline}
-  \tableofcontents[part=1]%,pausesections]%,shadesubsections]
+  \tableofcontents%[part=1]%,pausesections]%,shadesubsections]
 }
 
 \section{Introduction/problem}
+\frame{\sectionpage}
 \begin{frame}
 \frametitle{Problem formulation}
 \begin{itemize}
@@ -53,6 +72,7 @@ compress]
 \end{frame}
 
 \section{Overall approach}
+\frame{\sectionpage}
 \begin{frame}
 \frametitle{Initial idea}
 \begin{itemize}
@@ -101,17 +121,21 @@ x_{4}\\
 \end{frame}
 
 \section{Controller structure}
+\frame{\sectionpage}
 \begin{frame}
 %\frametitle{}
-% Process image
+\centering
+\includegraphics[width=0.8\textwidth]{figures/process_fig.jpg}
 \end{frame}
 
 \begin{frame}
 \frametitle{Catch and weigh ball}
-
+\centering
+\includegraphics[height=0.83\textheight]{figures/weighmediumball-crop.png}
 \end{frame}
 
 \section{Program structure}
+\frame{\sectionpage}
 \begin{frame}
 \frametitle{Class overview}
 
@@ -128,24 +152,35 @@ x_{4}\\
 \end{frame}
 
 \section{Results and conclusions}
+\frame{\sectionpage}
 \begin{frame}
 \frametitle{Step responses}
-
+\centering
+\includegraphics[width=0.45\textwidth]{figures/stepresponsebeam-crop.png}
+\hspace{1em}
+\includegraphics[width=0.45\textwidth]{figures/stepresponseball1-crop.png}
 \end{frame}
 
 \begin{frame}
 \frametitle{Catching and weighing}
-
+\centering
+\includegraphics[width=0.45\textwidth]{figures/topickupposition-crop.png}
+\hspace{1em}
+\includegraphics[width=0.45\textwidth]{figures/weighanddroplargeball-crop.png}
 \end{frame}
 
 \begin{frame}
 \frametitle{Small and medium balls}
-
+\centering
+\includegraphics[width=0.45\textwidth]{figures/weighandthrowsmallball-crop.png}
+\hspace{1em}
+\includegraphics[width=0.45\textwidth]{figures/throwmediumball-crop.png}
 \end{frame}
 
 \begin{frame}
 \frametitle{Numerical optimization approach}
-
+\centering
+\includegraphics[width=0.9\textwidth]{ballbeammatlab.eps}
 \end{frame}
 
 
