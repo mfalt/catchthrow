@@ -5,6 +5,7 @@ compress]
 {beamer}
 
 
+
 \defbeamertemplate{section page}{mine}[1][]{%
   \begin{centering}
     {\usebeamerfont{section name}\usebeamercolor[fg]{section name}#1}
@@ -33,6 +34,8 @@ compress]
 %  pdfsubject={Advanced Mathematics},
 %  pdfkeywords={groups, triangles, algebras}
 }
+
+\usepackage{listings}
 
 \title[Catch and Throw]{Catch and throw\\Ball and Beam}
 \author[]{Mattias Fält, Lucas Jimbergsson,\\Erik Nossborn, Iulia Stoica\\\vspace{1em}Supervisor -- Karl-Erik Årz\'{e}n}
@@ -151,17 +154,36 @@ x_{4}\\
 \frame{\sectionpage}
 \begin{frame}
 \frametitle{Class overview}
-
+\centering
+\includegraphics[height=0.83\textheight]{figures/UML.png}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
 \frametitle{RegulThread}
-
+\begin{lstlisting}[language=java,xleftmargin=3em]
+periodic loop {
+    getInputs();
+    calcOutput();
+    setOutput();
+    updateState();
+    checkState();
+}
+\end{lstlisting}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
 \frametitle{SwitchThread}
-
+\begin{lstlisting}[language=java,xleftmargin=3em]
+...
+synchronized (mon) {
+    mon.setBallRegul();
+    mon.setRefGenRamp(startPos,weighPos);
+}
+//calls wait():
+mon.setConstBallCheck(weighPos,tolerance); 
+switch(checkWeight()){
+...
+\end{lstlisting}
 \end{frame}
 
 \section{Results and conclusions}
