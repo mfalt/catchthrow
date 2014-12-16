@@ -6,7 +6,7 @@ Model {
     NumRootInports	    0
     NumRootOutports	    0
     ParameterArgumentNames  ""
-    ComputedModelVersion    "1.2"
+    ComputedModelVersion    "1.3"
     NumModelReferences	    0
     NumTestPointedSignals   0
   }
@@ -38,9 +38,9 @@ Model {
   ModifiedByFormat	  "%<Auto>"
   LastModifiedBy	  "atp10lbr"
   ModifiedDateFormat	  "%<Auto>"
-  LastModifiedDate	  "Thu Nov 13 12:06:02 2014"
-  RTWModifiedTimeStamp	  337777654
-  ModelVersionFormat	  "1.%<AutoIncrement:2>"
+  LastModifiedDate	  "Tue Dec 16 19:23:48 2014"
+  RTWModifiedTimeStamp	  340657276
+  ModelVersionFormat	  "1.%<AutoIncrement:3>"
   ConfigurationManager	  "None"
   SampleTimeColors	  off
   SampleTimeAnnotations	  off
@@ -78,8 +78,7 @@ Model {
     $ObjectID		    2
     $ClassName		    "Simulink.SimulationData.ModelLoggingInfo"
     model_		    "simulink_test"
-    signals_		    []
-    overrideMode_	    [0U]
+    overrideMode_	    [0.0]
     Array {
       Type		      "Cell"
       Dimension		      1
@@ -743,6 +742,15 @@ Model {
       SampleTime	      "-1"
     }
     Block {
+      BlockType		      Step
+      Time		      "1"
+      Before		      "0"
+      After		      "1"
+      SampleTime	      "-1"
+      VectorParams1D	      on
+      ZeroCross		      on
+    }
+    Block {
       BlockType		      SubSystem
       ShowPortLabels	      "FromPortIcon"
       Permissions	      "ReadWrite"
@@ -797,7 +805,7 @@ Model {
   }
   System {
     Name		    "simulink_test"
-    Location		    [235, 461, 1060, 867]
+    Location		    [370, 463, 1195, 869]
     Open		    on
     ModelBrowserVisibility  off
     ModelBrowserWidth	    200
@@ -811,7 +819,21 @@ Model {
     ShowPageBoundaries	    off
     ZoomFactor		    "100"
     ReportName		    "simulink-default.rpt"
-    SIDHighWatermark	    "25"
+    SIDHighWatermark	    "28"
+    Block {
+      BlockType		      Reference
+      Name		      "Manual Switch"
+      SID		      "26"
+      Ports		      [2, 1]
+      Position		      [205, 102, 235, 138]
+      ZOrder		      -13
+      LibraryVersion	      "1.260"
+      SourceBlock	      "simulink/Signal\nRouting/Manual Switch"
+      SourceType	      "Manual Switch"
+      sw		      "1"
+      action		      "0"
+      varsize		      off
+    }
     Block {
       BlockType		      SubSystem
       Name		      "Process "
@@ -1147,7 +1169,7 @@ Model {
       Name		      "Ramp"
       SID		      "21"
       Ports		      [0, 1]
-      Position		      [85, 105, 115, 135]
+      Position		      [30, 115, 60, 145]
       ZOrder		      -14
       LibraryVersion	      "1.260"
       SourceBlock	      "simulink/Sources/Ramp"
@@ -1158,11 +1180,21 @@ Model {
       VectorParams1D	      on
     }
     Block {
+      BlockType		      Step
+      Name		      "Step"
+      SID		      "27"
+      Position		      [80, 60, 110, 90]
+      ZOrder		      -22
+      Time		      "3"
+      Before		      "-1"
+      SampleTime	      "0"
+    }
+    Block {
       BlockType		      Sum
       Name		      "Sum"
       SID		      "19"
       Ports		      [2, 1]
-      Position		      [155, 110, 175, 130]
+      Position		      [100, 120, 120, 140]
       ZOrder		      -18
       ShowName		      off
       IconShape		      "round"
@@ -1203,7 +1235,7 @@ Model {
       Position		      [475, 89, 505, 121]
       ZOrder		      -3
       Floating		      off
-      Location		      [794, 210, 1132, 470]
+      Location		      [785, 202, 1123, 462]
       Open		      off
       NumInputPorts	      "1"
       List {
@@ -1235,7 +1267,7 @@ Model {
       Position		      [475, 34, 505, 66]
       ZOrder		      -3
       Floating		      off
-      Location		      [430, 207, 781, 493]
+      Location		      [421, 199, 772, 485]
       Open		      off
       NumInputPorts	      "1"
       List {
@@ -1271,7 +1303,7 @@ Model {
       SrcPort		      1
       Points		      [45, 0]
       Branch {
-	Points			[0, 90; -250, 0]
+	Points			[0, 100; -305, 0]
 	DstBlock		"Sum"
 	DstPort			2
       }
@@ -1289,25 +1321,38 @@ Model {
       }
     }
     Line {
-      SrcBlock		      "Sum"
+      SrcBlock		      "Manual Switch"
       SrcPort		      1
-      Points		      [50, 0]
+      Points		      [10, 0]
       Branch {
 	DstBlock		"Process "
 	DstPort			1
       }
       Branch {
-	Points			[0, -70; 215, 0]
+	Points			[0, -70; 180, 0]
 	Branch {
 	  DstBlock		  "u"
 	  DstPort		  1
 	}
 	Branch {
-	  Points		  [0, -40; 135, 0]
+	  Points		  [0, -30; 150, 0]
 	  DstBlock		  "To Workspace"
 	  DstPort		  1
 	}
       }
+    }
+    Line {
+      SrcBlock		      "Sum"
+      SrcPort		      1
+      DstBlock		      "Manual Switch"
+      DstPort		      2
+    }
+    Line {
+      SrcBlock		      "Step"
+      SrcPort		      1
+      Points		      [35, 0; 0, 35]
+      DstBlock		      "Manual Switch"
+      DstPort		      1
     }
   }
 }
