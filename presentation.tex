@@ -1,0 +1,250 @@
+\documentclass[
+%handout,
+%draft,
+compress]
+{beamer}
+
+
+
+\defbeamertemplate{section page}{mine}[1][]{%
+  \begin{centering}
+    {\usebeamerfont{section name}\usebeamercolor[fg]{section name}#1}
+    \vskip1em\par
+    \begin{beamercolorbox}[sep=12pt,center]{part title}
+      \usebeamerfont{section title}\insertsection\par
+    \end{beamercolorbox}
+  \end{centering}
+}
+\setbeamertemplate{section page}[mine][]
+
+
+\usetheme[authorwidth=.20,titlewidth=.50,datewidth=.30,section=true,subsection=true,]{Lund}
+\setbeamertemplate{navigation symbols}{}
+\usefonttheme[onlymath]{serif}
+% automatic table of contents at every section
+%\AtBeginSection[]{\frame{\tableofcontents[currentsection]}}
+%\usepackage{pdfsync}
+\usepackage[utf8x]{inputenc}
+\usepackage{tikz}
+\SetUnicodeOption{mathletters}
+\usepackage{verbatim}
+\hypersetup{ % information in the PDF file.
+  pdftitle={Catch and throw\\Ball and Beam},%
+  pdfauthor={Mattias Fält, Lucas Jimbergsson,\\Erik Nossborn, Iulia Stoica},
+%  pdfsubject={Advanced Mathematics},
+%  pdfkeywords={groups, triangles, algebras}
+}
+
+\usepackage{listings}
+
+\title[Catch and Throw]{Catch and Throw\\Ball and Beam}
+\author[]{Mattias Fält, Lucas Jimbergsson,\\Erik Nossborn, Iulia Stoica\\\vspace{1em}Supervisor -- Karl-Erik Årz\'{e}n}
+
+%\date{2013-09-01}
+\begin{document}
+\frame{\titlepage}
+
+\section*{Outline}
+
+\frame
+{
+  \frametitle{Outline}
+  \tableofcontents%[part=1]%,pausesections]%,shadesubsections]
+}
+
+\section{Introduction}
+\frame{\sectionpage}
+\begin{frame}
+\frametitle{Problem Formulation}
+\begin{columns}
+\column{180pt}
+\begin{itemize}
+\item Dispatch a ball
+\item Determine the weight
+\item Choose the correct action:
+\begin{itemize}
+\item Small ball: Roll it into upper left cup
+\item Medium ball: Throw into bucket
+\item Large ball: Drop on the floor
+\end{itemize}
+\end{itemize}
+
+\column{150pt}
+\centering
+\includegraphics[width=0.8\textwidth]{figures/process_fig.jpg}
+\end{columns}
+\end{frame}
+
+
+
+%\begin{frame}
+%\frametitle{Difficulties}
+%\begin{itemize}
+%\item Controlling force on beam, not angle
+%\item Friction and bumps in beam
+%\item Temperature dependence
+%\end{itemize}
+%\end{frame}
+
+\section{Overall Approach}
+\frame{\sectionpage}
+\begin{frame}
+\frametitle{Initial Idea}
+\begin{itemize}
+\item Model the system
+\item Find throw equations
+\item Calculate trajectories
+\item Stabilize with PID/LQG
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Initial Idea}
+
+\begin{equation*}
+\begin{pmatrix}
+\dot{x}_{1}\\
+\dot{x}_{2}\\
+\dot{x}_{3}\\
+\dot{x}_{4}
+\end{pmatrix}=\begin{pmatrix}x_{2}\\
+\frac{5}{7}\left(-g\sin(x_{3})+x_{1}x_{4}^{2}\right)\\
+x_{4}\\
+\frac{1}{J_B}(mgx_{1}\cos(x_3)+k_Bx_3+k_{u}u)
+\end{pmatrix}
+\end{equation*}
+\begin{figure}
+\centering
+\scalebox{0.7}{\input{throwImage.tex}}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Initial Idea}
+\[
+\dot{x}=\left(d_{x}-l\cos(\phi)\right)\frac{\sqrt{g}}{\sqrt{2\cos(\phi)\left(d_{y}\cos(\phi)+d_{x}\sin(\phi)\right)}}.
+\]
+\begin{figure}
+\includegraphics[width=0.7\textwidth]{ballbeammatlab}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Final Solution -- Heuristic Approach}
+\begin{itemize}
+\item Stabilize with cascaded PID
+\item Use step/ramp references to move ball/beam
+\item Throw using well timed angle references
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Difficulties}
+\begin{itemize}
+\item Controlling force on beam, not angle
+\begin{itemize}
+\item Use a lot of integral action in inner loop
+\end{itemize}
+\item Friction and bumps in beam
+\begin{itemize}
+\item Use a lot of integral action in outer loop
+\end{itemize}
+\item Temperature dependence
+\begin{itemize}
+\item Select robust and slow references
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\section{Controller Structure}
+\frame{\sectionpage}
+\begin{frame}
+%\frametitle{}
+\centering
+\includegraphics[width=0.8\textwidth]{figures/process_fig.jpg}
+\end{frame}
+
+\begin{frame}
+\frametitle{Catch and Weigh Ball}
+\centering
+\includegraphics[height=0.83\textheight]{figures/weighmediumball-crop.png}
+\end{frame}
+
+\section{Program Structure}
+\frame{\sectionpage}
+\begin{frame}
+\frametitle{Class Overview}
+\centering
+\includegraphics[height=0.83\textheight]{figures/UML.png}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{RegulThread}
+\begin{lstlisting}[language=java,xleftmargin=3em]
+periodic loop {
+    getInputs();
+    calcOutput();
+    setOutput();
+    updateState();
+    checkState();
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{SwitchThread}
+\begin{lstlisting}[language=java,xleftmargin=3em]
+...
+synchronized (mon) {
+    mon.setBallRegul();
+    mon.setRefGenRamp(startPos,weighPos);
+}
+//calls wait():
+mon.setConstBallCheck(weighPos,tolerance); 
+switch(checkWeight()){
+...
+\end{lstlisting}
+\end{frame}
+
+\section{Results and Conclusions}
+\frame{\sectionpage}
+\begin{frame}
+\frametitle{Step Responses}
+\centering
+\includegraphics[width=0.45\textwidth]{figures/stepresponsebeam-crop.png}
+\hspace{1em}
+\includegraphics[width=0.45\textwidth]{figures/stepresponseball1-crop.png}
+\end{frame}
+
+\begin{frame}
+\frametitle{Catching and Weighing}
+\centering
+\includegraphics[width=0.45\textwidth]{figures/topickupposition-crop.png}
+\hspace{1em}
+\includegraphics[width=0.45\textwidth]{figures/weighanddroplargeball-crop.png}
+\end{frame}
+
+\begin{frame}
+\frametitle{Small and Medium Balls}
+\centering
+\includegraphics[width=0.45\textwidth]{figures/weighandthrowsmallball-crop.png}
+\hspace{1em}
+\includegraphics[width=0.45\textwidth]{figures/throwmediumball-crop.png}
+\end{frame}
+
+\begin{frame}
+\frametitle{Evaluation of approach}
+\begin{itemize}
+\item Over our expectations
+\item Simple
+\item However:
+\begin{itemize}
+\item Less general
+\item Strong parameter/reference coupling
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\end{document}
+
