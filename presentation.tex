@@ -56,6 +56,8 @@ compress]
 \frame{\sectionpage}
 \begin{frame}
 \frametitle{Problem Formulation}
+\begin{columns}
+\column{180pt}
 \begin{itemize}
 \item Dispatch a ball
 \item Determine the weight
@@ -66,17 +68,23 @@ compress]
 \item Large ball: Drop on the floor
 \end{itemize}
 \end{itemize}
+
+\column{150pt}
+\centering
+\includegraphics[width=0.8\textwidth]{figures/process_fig.jpg}
+\end{columns}
 \end{frame}
 
 
-\begin{frame}
-\frametitle{Difficulties}
-\begin{itemize}
-\item Controlling force on beam, not angle
-\item Friction and bumps in beam
-\item Temperature dependence
-\end{itemize}
-\end{frame}
+
+%\begin{frame}
+%\frametitle{Difficulties}
+%\begin{itemize}
+%\item Controlling force on beam, not angle
+%\item Friction and bumps in beam
+%\item Temperature dependence
+%\end{itemize}
+%\end{frame}
 
 \section{Overall Approach}
 \frame{\sectionpage}
@@ -127,12 +135,12 @@ x_{4}\\
 \begin{itemize}
 \item Stabilize with cascaded PID
 \item Use step/ramp references to move ball/beam
-\item Throw using well times angle references
+\item Throw using well timed angle references
 \end{itemize}
 \end{frame}
 
 \begin{frame}
-\frametitle{Solutions to Difficulties}
+\frametitle{Difficulties}
 \begin{itemize}
 \item Controlling force on beam, not angle
 \begin{itemize}
