@@ -1,0 +1,179 @@
+\documentclass[
+%handout,
+%draft,
+compress]
+{beamer}
+
+\usetheme[authorwidth=.20,titlewidth=.50,datewidth=.30,section=true,subsection=true,]{Lund}
+\setbeamertemplate{navigation symbols}{}
+\usefonttheme[onlymath]{serif}
+% automatic table of contents at every section
+\AtBeginSection[]{\frame{\tableofcontents[currentsection]}}
+%\usepackage{pdfsync}
+\usepackage[utf8x]{inputenc}
+\SetUnicodeOption{mathletters}
+\usepackage{verbatim}
+\hypersetup{ % information in the PDF file.
+  pdftitle={Catch and throw\\Ball and Beam},%
+  pdfauthor={Sven Svensson},
+%  pdfsubject={Advanced Mathematics},
+%  pdfkeywords={groups, triangles, algebras}
+}
+
+\title[Short Title]{Title of that Presentation}
+\author[Short Name]{Sven Svensson}
+
+\date{2013-09-01}
+\begin{document}
+\frame{\titlepage}
+
+\section*{Outline}
+
+\part{Main Talk}
+\frame{\partpage}
+
+\frame
+{
+  \frametitle{Outline}
+  \tableofcontents[part=1,pausesections]%,shadesubsections]
+}
+
+\section{Beamer}
+
+\frame{\tableofcontents[current]}
+
+\subsection{Demo}
+
+\begin{frame}
+\frametitle{Magic!}
+\uncover<2->{One can display and remove objects on the same slide:}
+\begin{overlayarea}{\textwidth}{6cm}
+\begin{itemize}
+\item<3-> \uncover<3->{{\color{structure}Words in disarray.}}
+\only<4-8>{\newline \uncover<8->{That} \uncover<7->{phrase} \uncover<6->{appears} \uncover<5->{backwards} \uncover<4->{!}}
+\item<9-> \uncover<9->{{\color{structure}Words that replace others.}}
+\only<10-12>{\newline \only<10>{Blabla \dots}\only<11>{\dots\ blablabla \dots}\only<12>{\dots\ blablabli, \dots}}
+\item<13-> \uncover<13->{{\color{structure}A Table.}}
+\only<14-19>{
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\uncover<17->{AAA} & \uncover<19->{BBBB} & \uncover<15->{CCC} \\
+\hline
+\uncover<14->{$\mathbb D$} & \uncover<16->{$\mathbb R$} & \uncover<18->{$\mathbb F$}\\
+\hline
+\end{tabular}
+\end{center}
+}
+\item<20-> \uncover<20->{{\color{structure}And many other things!}}
+\begin{itemize}
+\item<21->{several columns;}
+\item<22->{fixed size zones;}
+\item<23->{print or handout versions;}
+% v \item<24->{transitions;}
+\item<24->{hyperlinks;}
+\item<25->{supplementary slides for questions;}
+%\item<27->{works with \texttt{latex} as well as with \texttt{pdflatex}.}
+\end{itemize}
+\end{itemize}
+\end{overlayarea}
+\end{frame}
+
+\begin{frame}
+% Transition pour ce transparent, 
+% la seule utilisÈe dans cette prÈsentation !
+\transsplithorizontalout<1>
+\frametitle{Maths with style}
+Maths formula can also be dynamical!
+
+\uncover<2->{A step by step computation\dots}
+\begin{align*}
+\uncover<3->{\langle d\omega, \sigma \rangle} &
+\uncover<5->{\alert<5>{\ = \int_{\Delta_p} \sigma^\ast d\omega}}
+\uncover<7->{\alert<7>{\ = \int_{\Delta_p} d( \sigma^\ast \omega)}} \\
+ & \uncover<9->{\alert<9>{\ = \int_{\partial \Delta_p} \sigma^\ast \omega}}
+ \uncover<10->{\alert<10>{\ = \sum_{i=0}^p (-1)^i \int_{\Delta_{p-1}} F^{p\ \ast}_i \sigma^\ast \omega}}\\ 
+ & \uncover<10->{\alert<10>{\ =}} \uncover<8->{\ \alert<8>{\sum_{i=0}^p (-1)^i \int_{\Delta_{p-1}} (\sigma \circ F^p_i)^\ast \omega = }}
+ \uncover<6->{\alert<6>{\int_{\Delta_{p-1}} (\partial \sigma )^\ast \omega}} \\
+ & \uncover<4->{= \langle \omega, \partial \sigma \rangle}
+\end{align*}
+\end{frame}
+
+\subsection{Fractional Derivatives}
+
+\begin{frame}{Fractional Derivatives}
+$F$ is the Fourier Transform
+$$F\circ D^n = (i2\pi\xi)^n F$$
+$\alt<2>{\alpha }{n}$
+\begin{equation*}
+D^{\alt<2>{\alpha}{n}} f
+{(i2\pi k)^{\alt<2>{\alpha}{n}}}
+ (i2\pi k)^{\alt<2>{\alpha}{n}} F f
+\end{equation*}
+\uncover<2>{$$(i2\pi k)^{\alpha} =  {|2\pi k|}^{\alpha} \exp\left(i\frac{\pi}{2}\alpha\mathrm{sgn}(k)\right)$$}
+\end{frame}
+
+
+\subsection{Documentation}
+\begin{frame}{Documentation}
+Make sure to read the excellent documentation for beamer:
+
+\url{http://www.ctan.org/tex-archive/macros/latex/contrib/beamer/doc/beameruserguide.pdf}
+\end{frame}
+
+\begin{frame}{Columns}
+You may divide the page in columns and/or blocks as follows:
+\begin{columns}
+\begin{column}{.4\textwidth}
+\begin{block}{Left}
+Left column.
+\end{block}
+\end{column}
+\begin{column}{.4\textwidth}
+\begin{block}{Right}
+Right column.
+\end{block}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Fragile frames}
+If you have some verbatim text in the page \emph{make sure to use the fragile option.}
+\begin{verbatim}
+def some_function(arg):
+  print arg
+\end{verbatim}
+\pause
+(Note that you should use syntax highlighting for the example above.)
+\end{frame}
+
+\begin{frame}[fragile]{Graphic inclusion}
+To include graphics, you should simply use \verb|includegraphics| as usual:
+\begin{center}
+\includegraphics[height=0.7\textheight]{logoonly}
+\end{center}
+\end{frame}
+
+\part{References}
+\frame{\partpage}
+
+\begin{frame}
+\frametitle<presentation>{References}  
+  \begin{thebibliography}{10}
+  \beamertemplatearticlebibitems
+  \bibitem{vonNeumann-self-adjoint}
+    A.~Devinatz and A.~E.~Nussbaum and J.~von~Neumann
+    \newblock On the permutability of self-adjoint operators.
+    \newblock {\em Ann. of Math.} (2) {\bf 62} (1955). 199--203
+    \pause
+  \bibitem{vonNeumann-matrices}
+    H.~H.~Goldstine and J.~von~Neumann
+    \newblock Numerical inverting of matrices of high order.
+    \newblock {\em Proc. Amer. Math. Soc.}, {\bf 2} (1951). 188--202
+\pause
+  \end{thebibliography}
+\end{frame}
+
+
+\end{document}
+
