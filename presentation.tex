@@ -11,6 +11,7 @@ compress]
 %\AtBeginSection[]{\frame{\tableofcontents[currentsection]}}
 %\usepackage{pdfsync}
 \usepackage[utf8x]{inputenc}
+\usepackage{tikz}
 \SetUnicodeOption{mathletters}
 \usepackage{verbatim}
 \hypersetup{ % information in the PDF file.
@@ -29,7 +30,6 @@ compress]
 
 \section*{Outline}
 
-\part{Main Talk}
 \frame{\partpage}
 
 \frame
@@ -41,8 +41,11 @@ compress]
 \section{Introduction/problem}
 \begin{frame}
 \frametitle{Problem formulation}
-
+\begin{itemize}
+\item test
+\end{itemize}
 \end{frame}
+
 
 \begin{frame}
 \frametitle{Difficulties}
@@ -51,8 +54,40 @@ compress]
 
 \section{Overall approach}
 \begin{frame}
-\frametitle{Initial approach}
+\frametitle{Initial idea}
+\begin{itemize}
+\item Model the system
+\item Find throw equations
+\item Calculate trajectories
+\item Stabilize with PID/LQG
+\end{itemize}
+\end{frame}
 
+\begin{frame}
+
+\frametitle{Initial idea}
+\begin{columns}
+\column{150pt}
+\[
+\begin{pmatrix}\dot{x}_{1}\\
+\dot{x}_{2}\\
+\dot{x}_{3}\\
+\dot{x}_{4}
+\end{pmatrix}=\begin{pmatrix}x_{2}\\
+\frac{5}{7}\left(-g\sin(x_{3})+x_{1}x_{4}^{2}\right)\\
+x_{4}\\
+\frac{1}{J_B}(mgx_{1}\cos(x_3)+\frac{x_3}{J_B}+k_{u})
+\end{pmatrix}
+\]
+\begin{figure}
+\centering
+\scalebox{0.5}{\input{throwImage.tex}}
+\end{figure}
+\column{150pt}
+\[
+\dot{x}=\left(d_{x}-l\cos(\phi)\right)\frac{\sqrt{g}}{\sqrt{2\cos(\phi)\left(d_{y}\cos(\phi)+d_{x}\sin(\phi)\right)}}.
+\]
+\end{columns}
 \end{frame}
 
 \begin{frame}
