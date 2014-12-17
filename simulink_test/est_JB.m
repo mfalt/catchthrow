@@ -40,8 +40,22 @@ tu = tu(acc_idx);
 uval = uval(acc_idx);
 phiscacc = phiscacc(acc_idx);
 
+%%
+m_weigh = 0.172;
+g = 9.82;
+x_weigh = 0.55;
+u_weigh = 3;
+
+k_phisc = 40/pi;
+
+ku = m_weigh*g*x_weigh / u_weigh
+kB_JB = 0.24;
+
+%%
 % Do not forget scaling on phi
-JB_samples = 
+inv_JB_samples = phiscacc ./ (k_phisc*ku*uval)  -  kB_JB*phisc ./ (k_phisc*ku*uval);
+JB = 1 / mean(inv_JB_samples)
+kB = kB_JB / JB
 
 
 
