@@ -49,7 +49,7 @@ u_weigh = 3;
 k_phisc = 40/pi;
 
 ku = m_weigh*g*x_weigh / u_weigh
-kB_JB = 0.24;
+kB_JB = 0.24; % !!!!!!!!!!!!!!!!!!!! We do not know kB_JB!!! We now that -kb/ku=0.24 (time or divided by k_phisc)
 
 %%
 % Do not forget scaling on phi
