@@ -30,6 +30,8 @@ public class Monitor {
 	private ConstPosRampAngleRef constPosRampAngleRef;
 	private RampRef rampPosRef;
 	private RampRef rampAngleRef;
+	private RampToRef rampToPosRef;
+	private RampToRef rampToAngleRef;
 	private TrajectoryRef throwRefSmall;
 	private TrajectoryRef throwRefMedium;
 	private TrajectoryRef throwRefLarge;
@@ -65,6 +67,8 @@ public class Monitor {
 		constPosRampAngleRef = new ConstPosRampAngleRef();
 		rampPosRef = new RampRef(ReferenceGenerator.POS);
 		rampAngleRef = new RampRef(ReferenceGenerator.ANGLE);
+		rampToPosRef = new RampToRef(ReferenceGenerator.POS);
+		rampToAngleRef = new RampToRef(ReferenceGenerator.ANGLE);
 
 		constBeamCheck = new ConstBeamChecker();
 		constBallCheck = new ConstBallChecker();
@@ -146,6 +150,24 @@ public class Monitor {
 			//rampAngleRef.resetTime();
 			rampAngleRef.setInitialRef(currentRefGen.getRef()[ReferenceGenerator.ANGLE]);
 			currentRefGen = rampAngleRef;
+		}
+	}
+
+	/** called from SwitchThread */
+	public synchronized void setRefGenRampToPos(double speed, double finalPos){
+		if(!resetSequence){
+			rampToPosRef.setRef(currentRefGen.getRef()[ReferenceGenerator.POS], speed, finalPos);
+//			rampToPosRef.setInitialRef(currentRefGen.getRef()[ReferenceGenerator.POS]);
+			currentRefGen = rampToPosRef;
+		}
+	}
+
+	/** called from SwitchThread */
+	public synchronized void setRefGenRampToAngle(double speed, double finalAngle){
+		if(!resetSequence){
+			rampToAngleRef.setRef(currentRefGen.getRef()[ReferenceGenerator.ANGLE], speed, finalAngle);
+//			rampToAngleRef.setInitialRef(currentRefGen.getRef()[ReferenceGenerator.ANGLE]);
+			currentRefGen = rampToAngleRef;
 		}
 	}
 
@@ -339,10 +361,14 @@ public class Monitor {
 
 	//Called by SwitchThread
 	public synchronized void setConstBallCheck(double y) {
+		setConstBallCheck(y, ConstBallChecker.DEFAULT_TOL);
+	}
+	
+	public synchronized void setConstBallCheck(double y, double tolerance) {
 		if(!resetSequence){
 			stateCheck = constBallCheck;
 			constBallCheck.reset();
-			constBallCheck.setValue(y);
+			constBallCheck.setValue(y, tolerance);
 			try {
 				wait();
 			} catch (InterruptedException e) {

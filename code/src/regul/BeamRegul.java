@@ -19,7 +19,7 @@ public class BeamRegul extends Regul {
 		p.Ti = 0.2;
 		p.Tr = 10.0;
 		p.Td = 0.4;
-		p.N = 20.0;
+		p.N = 10.0;
 		p.Beta = 1.0;
 		p.integratorOn = true;
 		setParameters(p);

@@ -18,14 +18,14 @@ public class BeamBallRegul extends Regul {
 		inner = in;
 		p = new PIDParameters();
 		//inner = new BeamRegul();
-		p.K = -0.08;
+		p.K = -0.1;
 //		p.K = -0.08 * RegulThread.radiansPerVolt / RegulThread.metersPerVolt;
-		p.Ti = 15.0;
-		p.Tr = 10.0;
-		p.Td = 3.0;
-		p.N = 6.0;
-		p.Beta = 1.0;
+		p.Ti = 3.0;
 		p.integratorOn = true;
+		p.Td = 2.0;
+		p.N = 6.0;
+		p.Tr = 10.0;
+		p.Beta = 1.0;
 		setParameters(p);
 		I = 0;
 		D = 0;
@@ -49,8 +49,7 @@ public class BeamBallRegul extends Regul {
 		angleRef = P + I + D + angleFF;
 		angleRefs[ReferenceGenerator.ANGLE] = angleRef;
 		u = inner.calculateOutput(measurement, angleRefs, h);
-		inner.updateState(h);
-//		System.out.println(I);
+
 		return u;
 	}
 
@@ -58,6 +57,7 @@ public class BeamBallRegul extends Regul {
 	 *  uses tracking-based anti-windup
 	 */
 	public void updateState(double h) {
+		inner.updateState(h);
 		if(p.integratorOn) {
 			bi = p.K*h/p.Ti;
 			I = I + bi*(posRef - pos);

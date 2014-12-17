@@ -1,8 +1,10 @@
 package main;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
+
 import se.lth.control.*;
 import se.lth.control.plot.*;
 import se.lth.control.realtime.Semaphore;
@@ -21,13 +23,13 @@ public class OpCom {
 	private int mode;
 	private RegulThread regul;
 	private SwitchThread switchThread;
-	private Semaphore switchThreadSem;
+//	private Semaphore switchThreadSem;
 	private Monitor mon;
 
-	// Declarartion of main frame.
+	// Declaration of main frame.
 	private JFrame frame;
 
-	// Declarartion of panels.
+	// Declaration of panels.
 	private BoxPanel guiPanel, plotterPanel, innerParPanel, outerParPanel, parPanel;
 	private JPanel innerParLabelPanel, innerParFieldPanel, outerParLabelPanel, outerParFieldPanel, buttonPanel, somePanel, leftPanel;
 	private PlotterPanel measPanel, meas2Panel, ctrlPanel;
@@ -56,16 +58,18 @@ public class OpCom {
 	private JRadioButton ballModeButton;
 	private JRadioButton sequenceModeButton;
 	private JButton stopButton;
+	
+	private JLabel sequenceLabel;
 
 	private boolean hChanged = false;
 	private boolean isInitialized = false;
 
 	/** Constructor. */
-	public OpCom(int plotterPriority, Monitor m, Semaphore switchThreadSem) {
+	public OpCom(int plotterPriority, Monitor m) {
 		priority = plotterPriority;
 		mon = m;
-		this.switchThreadSem = switchThreadSem;
-		switchThreadSem.take();
+//		this.switchThreadSem = switchThreadSem;
+//		switchThreadSem.take();
 	}
 	
 	/** Sets up a reference to RegulThread. Called by Main. */
@@ -380,7 +384,7 @@ public class OpCom {
 				System.exit(0);
 			}
 		});
-
+	
 		// Add buttons to button panel.
 		buttonPanel.add(offModeButton, BorderLayout.WEST);
 		buttonPanel.add(beamModeButton, BorderLayout.CENTER);
@@ -393,6 +397,11 @@ public class OpCom {
 		somePanel.add(parPanel, BorderLayout.CENTER);
 		somePanel.add(buttonPanel, BorderLayout.SOUTH);
 
+		//label for displaying ball weight
+		sequenceLabel = new JLabel("Unknown");
+		somePanel.add(sequenceLabel,BorderLayout.NORTH);
+		
+		
 		// Select initial mode.
 		mode = mon.getMode();
 		switch (mode) {
@@ -431,6 +440,10 @@ public class OpCom {
 				System.exit(0);
 			}
 		});
+		
+	
+		
+		
 
 		// Set guiPanel to be content pane of the frame.
 		frame.getContentPane().add(guiPanel, BorderLayout.CENTER);
@@ -477,5 +490,9 @@ public class OpCom {
 	
 	private void DebugPrint(String message) {
 		//System.out.println(message);
+	}
+	
+	public void changeSequencelLabel(String s){
+		sequenceLabel.setText(s);
 	}
 }

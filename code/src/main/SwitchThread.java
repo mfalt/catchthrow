@@ -1,7 +1,5 @@
 package main;
 
-import java.io.IOException;
-
 import se.lth.control.realtime.DigitalOut;
 import se.lth.control.realtime.IOChannelException;
 import se.lth.control.realtime.Semaphore;
@@ -11,11 +9,13 @@ public class SwitchThread extends Thread {
 	private Monitor mon;
 	private boolean shouldRun = true;
 	private DigitalOut digitalOut;
+	
+	private OpCom opCom;
 
 	private final boolean heuristicApproach = true; // Use this boolean instead of heuristic branch
 
 	public final int SMALL = 0, MEDIUM = 1, LARGE = 2;
-	private double gravityForceSmall = 1.95, gravityForceMedium = 2.9, gravityForceLarge = 7.4;//?,3.42,8.31; // These are not in SI units!
+	private double gravityForceSmall = 1.29, gravityForceMedium = 3.11, gravityForceLarge = 7.6;//?,3.42,8.31; // These are not in SI units!
 	private int weight = -1;
 
 	/**
@@ -24,13 +24,16 @@ public class SwitchThread extends Thread {
 	private final double pickupStartAngle = -0.04; // From which angle (radians) the search for ball magazine will start.
 	private final double pickupEndAngleBias = 0.01; // Lower beam a little so that the ball actually slides on.
 	private final double pickupRampSlope = -0.015; // Angular velocity of beam when searching for ball magazine
-	private final double ballWeighPosition = 0.45; // 35 cm
+	private final double ballCatchPosition = 0.2; // Used to stop ball on pickup, not waiting for this to be achieved
+	private final double ballWeighPosition = 0.45;
+	private final double ballThrowPosition = -0.15;
 
 	/** Constructor */
-	public SwitchThread(Monitor monitor, Semaphore sem, int prio) {
+	public SwitchThread(Monitor monitor, OpCom opCom, int prio) {
 		mon = monitor;
 		setPriority(prio);
 		mon.setRefGenConstantAngle(-0.1); //TODO experiment with this value
+		this.opCom = opCom;
 		try {
 			digitalOut = new DigitalOut(0);
 			digitalOut.set(true); // Do not drop ball
@@ -46,6 +49,8 @@ public class SwitchThread extends Thread {
 	public void run() {
 
 		while (shouldRun) {
+			mon.setNullCheck();
+			opCom.changeSequencelLabel("Sequence mode ready");
 			System.out.println("Sequence mode ready to go.");
 			//The whole loop has to be synchronized, in case someone chooses sequence mode
 			//between loop evaluation and call to wait().
@@ -67,7 +72,7 @@ public class SwitchThread extends Thread {
 				mon.setBeamRegul();
 				mon.setRefGenConstantAngle(pickupStartAngle);
 			}
-
+			opCom.changeSequencelLabel("Ball catching");
 			System.out.println("Waiting for constant initial pickup angle");
 
 			// wait until the beam angle has become 0, this method calls wait()
@@ -82,7 +87,6 @@ public class SwitchThread extends Thread {
 			System.out.println("LED noticed");
 			// Move beam a bit down
 			mon.setRefGenConstantAngle(mon.getRef()[ReferenceGenerator.ANGLE] + pickupEndAngleBias); // keep
-
 			System.out.println("Waiting for constant actual pickup angle");
 			mon.setConstBeamCheck(mon.getRef()[ReferenceGenerator.ANGLE]);
 			System.out.println("Reached constant angle, shooting!");
@@ -99,7 +103,7 @@ public class SwitchThread extends Thread {
 			fire(false); // Push ball on beam
 
 			System.out.println("FIRE! Sleeping until ball on beam (short time)");
-
+			opCom.changeSequencelLabel("Ball weighing");
 			try {//Wait for ball on beam!!
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -110,20 +114,21 @@ public class SwitchThread extends Thread {
 			// switch to ball control at safe (left position)
 			synchronized (mon) {
 				mon.setBallRegul();
-				mon.setRefGenConstantPos(-ballWeighPosition);
+				mon.setRefGenConstantPos(ballCatchPosition);
 				mon.setNullCheck();
 			}
-			// Wait for stability
-			try {
-				Thread.sleep(1500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+//			// Wait for stability0
+//			try {
+//				Thread.sleep(5);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
 
 			// Wait for stability
 			System.out.println("Go to weigh position");
-			mon.setRefGenConstantPos(ballWeighPosition);
-			mon.setConstBallCheck(ballWeighPosition);
+			double rampSlope1 = (ballCatchPosition-ballWeighPosition)/((double)6000/1000);
+			mon.setRefGenRampToPos(rampSlope1,ballWeighPosition);
+			mon.setConstBallCheck(ballWeighPosition,0.15);
 
 
 			mon.setNullCheck();
@@ -134,64 +139,87 @@ public class SwitchThread extends Thread {
 			System.out.println("WEIGHT: "+weight+" Value: "+averageControlSignal / currentBallPos);
 			switch(weight) {
 			case SMALL:
+				opCom.changeSequencelLabel("Delivering ball: Small");
+
+				//Wait until increased precision
+				mon.setConstBallCheck(ballWeighPosition,0.03);
+				long smallFirstRampTime = 350;//ms
+				long smallSecondRampTime = 200;//ms
+				long smallWaitTime = 250;
+				double smallFirstAngle = 0.55;
+				double smallSecondAngle = -0.18;
 				synchronized(mon) {
 					mon.setBeamRegul();
-					mon.setRefGenConstantAngle(0.3); //TODO experiment with this value
+					double rampSlope = smallFirstAngle/((double)smallFirstRampTime/1000);
+					mon.setRefGenRampToAngle(rampSlope,smallFirstAngle); //TODO experiment with this value
 				}
-				try {//Wait for ball to fall off
-					Thread.sleep(700);
+				try {
+					Thread.sleep(smallFirstRampTime+smallWaitTime);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 				synchronized(mon) {
 					mon.setBeamRegul();
-					mon.setRefGenConstantAngle(-0.25); //TODO experiment with this value
-				}
-				try {//Wait for ball to fall off
-					Thread.sleep(2000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
+					double rampSlope = (smallSecondAngle-smallFirstAngle)/((double)smallSecondRampTime/1000);
+					mon.setRefGenRampToAngle(rampSlope,smallSecondAngle); //TODO experiment with this value
 				}
 				break;
 			case MEDIUM:
+				opCom.changeSequencelLabel("Delivering ball: Medium");
+				double firstAngleRampTime = 110;//ms
+				double secondAngleRampTime = 100;//ms
+				long throwSleepTime =  500;
+				double throwFirstAngle = -0.60;
+				double throwSecondAngle = 0.2;
 				if(heuristicApproach) {
+					long rampMoveTime = 6000;//ms
 					synchronized(mon) {
-						mon.setRefGenConstantPos(-0.4);
-						mon.setConstBallCheck(-0.4);
+						double rampSpeed = (ballThrowPosition-ballWeighPosition)/((double) rampMoveTime/1000);
+						mon.setRefGenRampToPos(rampSpeed,ballThrowPosition);
 					}
-					synchronized(mon) {
-						mon.setBeamRegul();
-						mon.setRefGenConstantAngle(-0.55); //TODO experiment with this value
-					}
-					try {//Wait for ball to fall off
-						Thread.sleep(600);
+					try {
+						Thread.sleep(rampMoveTime);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 					synchronized(mon) {
-						mon.setBeamRegul();
-						mon.setRefGenConstantAngle(0.1); //TODO experiment with this value
+						double rampSpeed = 0.03;
+						mon.setRefGenRampToPos(rampSpeed,ballThrowPosition-0.25);
+						mon.setConstBallCheck(ballThrowPosition-0.25, 0.05);
 					}
-					try {//Wait for ball to fall off
-						Thread.sleep(2000);
+					synchronized(mon) {
+
+						double rampSpeed = throwFirstAngle/((double) firstAngleRampTime/1000);
+						mon.setBeamRegul();
+						mon.setRefGenRampToAngle(rampSpeed,throwFirstAngle);
+					}
+					try {
+						Thread.sleep((long) (firstAngleRampTime+throwSleepTime));
 					} catch (InterruptedException e) {
 						e.printStackTrace();
+					}
+					synchronized(mon) {
+						double rampSpeed = (throwSecondAngle-throwFirstAngle)/((double) secondAngleRampTime/1000);
+						mon.setBeamRegul();
+						mon.setRefGenRampToAngle(rampSpeed,throwSecondAngle);
 					}
 				} else {
 					// Do something with TrajectoryRef
 				}
 				break;
 			case LARGE:
+				opCom.changeSequencelLabel("Delivering ball: Large");
 				synchronized(mon) {
 					mon.setBeamRegul();
 					mon.setRefGenConstantAngle(-0.03); //TODO experiment with this value
 				}
-				try {//Wait for ball to fall off
-					Thread.sleep(2000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+
 				break;
+			}
+			try {//Wait for ball to be done
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 
 			//} catch(InterruptedException e){

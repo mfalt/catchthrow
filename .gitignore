@@ -1,5 +1,11 @@
+*.nav
+*.out
+*.snm
+*.vrb
 *.aux
 *.log
+*.dvi
+*.toc
 *.pdf
 *.class
 *.sage-*
