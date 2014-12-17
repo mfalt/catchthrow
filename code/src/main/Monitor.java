@@ -14,8 +14,8 @@ public class Monitor {
 	private BeamBallRegul beamBallRegul;
 //	private BallPIDRegul ballPIDRegul; // to replace beamBallRegul
 //	private CascadedRegul beamBallPIDRegul; // to replace beamBallRegul
-	private TimeInvLQG ballLQGRegul;
-	private CascadedRegul beamBallLQGPIDRegul;
+	private TimeInvLQG beamBallLQGRegul;
+//	private CascadedRegul beamBallLQGPIDRegul;
 	//	private BeamBallRegul beamBallThrowSmall;
 	//	private BeamBallRegul beamBallThrowMedium;
 	//	private BeamBallRegul beamBallThrowLarge;
@@ -58,8 +58,16 @@ public class Monitor {
 		beamBallRegul = new BeamBallRegul(beamRegul);
 //		ballPIDRegul = new BallPIDRegul(...); // to replace beamBallRegul
 //		beamBallPIDRegul = new CascadedRegul(beamRegul, ballPIDRegul, ReferenceGenerator.ANGLE); // to replace beamBallRegul
-		ballLQGRegul = new TimeInvLQG(file);
-		beamBallLQGPIDRegul = new CascadedRegul(beamRegul, ballLQGRegul, ReferenceGenerator.ANGLE);
+		try {
+			beamBallLQGRegul = new TimeInvLQG("../simulink_test/timeInvLQG.mat");
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+//		beamBallLQGPIDRegul = new CascadedRegul(beamRegul, ballLQGRegul, ReferenceGenerator.ANGLE);
 
 		constantPosRef = new ConstantRef(ReferenceGenerator.POS);
 		constantAngleRef = new ConstantRef(ReferenceGenerator.ANGLE);
@@ -287,11 +295,19 @@ public class Monitor {
 		}
 	}
 	
+//	/** called by SwitchThread*/
+//	public synchronized void setBeamBallLQGPIDRegul(){
+//		if(!resetSequence){
+//			beamBallLQGPIDRegul.reset(statesFromMeasurements());
+//			currentRegul = beamBallLQGPIDRegul;
+//		}
+//	}
+	
 	/** called by SwitchThread*/
-	public synchronized void setBeamBallLQGPIDRegul(){
+	public synchronized void setBeamBallLQGRegul(){
 		if(!resetSequence){
-			beamBallLQGPIDRegul.reset(statesFromMeasurements());
-			currentRegul = beamBallLQGPIDRegul;
+			beamBallLQGRegul.reset(statesFromMeasurements());
+			currentRegul = beamBallLQGRegul;
 		}
 	}
 	

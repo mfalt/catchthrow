@@ -3,6 +3,8 @@ package regul;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import refgen.ReferenceGenerator;
+
 import com.jmatio.io.MatFileReader;
 import com.jmatio.types.MLArray;
 import com.jmatio.types.MLDouble;
@@ -45,7 +47,7 @@ public class TimeInvLQG extends Regul {
 		MLArray KMLArray = matFileReader.getMLArray("K");
 		MLArray x0MLArray = matFileReader.getMLArray("x0");
 		
-		N = x0MLArray.getSize();
+		N = ReferenceGenerator.nbrStates;
 		M = CMLArray.getM();
 		
 		// Validate input
