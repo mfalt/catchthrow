@@ -55,7 +55,7 @@ kB_JB = 0.24;
 % Do not forget scaling on phi
 inv_JB_samples = phiscacc ./ (k_phisc*ku*uval)  -  kB_JB*phisc ./ (k_phisc*ku*uval);
 JB = 1 / mean(inv_JB_samples)
-kB = kB_JB / JB
+kB = kB_JB * JB
 
 
 
