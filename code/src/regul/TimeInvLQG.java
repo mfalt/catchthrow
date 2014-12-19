@@ -27,9 +27,10 @@ public class TimeInvLQG extends Regul {
 	
 	private MLDouble x0; // Linearization point
 	private double u0;
+	private double[] y0; // Mx1
 	
 	// Signals
-	private double u; // scalar
+	private double utilde; // scalar
 	private double[] y; // Mx1
 	private double[] xtildehat; // Nx1, estimated state. xtildehat = xhat - x0 
 	
@@ -61,7 +62,7 @@ public class TimeInvLQG extends Regul {
 				LMLArray.isEmpty() || LMLArray.getM() != uDim || LMLArray.getN() != N || LMLArray.isComplex() || !LMLArray.isDouble() ||
 				KMLArray.isEmpty() || KMLArray.getM() != N || KMLArray.getN() != M || KMLArray.isComplex() || !KMLArray.isDouble() ||
 				x0MLArray.isEmpty() || x0MLArray.getM() != N || x0MLArray.getN() != 1 || x0MLArray.isComplex() || !x0MLArray.isDouble() ||
-				x0MLArray.isEmpty() || x0MLArray.getM() != 1 || x0MLArray.getN() != 1 || x0MLArray.isComplex() || !x0MLArray.isDouble()
+				u0MLArray.isEmpty() || u0MLArray.getM() != 1 || u0MLArray.getN() != 1 || u0MLArray.isComplex() || !u0MLArray.isDouble()
 				) {
 			throw new IllegalArgumentException("Invalid .mat file!");
 		}
@@ -74,6 +75,17 @@ public class TimeInvLQG extends Regul {
 		K = (MLDouble) KMLArray;
 		x0 = (MLDouble) x0MLArray;
 		u0 = ((MLDouble) u0MLArray).get(0);
+		
+		xtildehat = new double[N];
+		y0 = new double[M];
+		for(int i = 0; i < M; ++i) {
+			for(int j = 0; j < N; ++j) {
+				y0[i] += C.get(i, j)*x0.get(j);
+			}
+//			for(int j = 0; j < N; ++j) {
+//				y0[i] += D.....
+//			}
+		}
 	}
 	
 	/**
@@ -82,11 +94,12 @@ public class TimeInvLQG extends Regul {
 	 */
 	public double calculateOutput(double[] measurement, double[] ref, double h) {
 		this.y = measurement.clone(); // Clone really necessary?
-		u = u0;
+		System.out.println("xtildehat = (" + xtildehat[0] + ", " + xtildehat[1] + ", " + xtildehat[2] + ", " + xtildehat[3] + ", " + xtildehat[4] + ", " + xtildehat[5] + ")");
+		utilde = 0;
 		for(int i = 0; i < N; ++i) {
-			u -= L.get(i)*xtildehat[i];
+			utilde -= L.get(i)*xtildehat[i];
 		}
-		return u;
+		return u0 + utilde;
 	}
 
 	/**
@@ -94,16 +107,19 @@ public class TimeInvLQG extends Regul {
 	 */
 	public void updateState(double h) {
 		// Compute residuals
-		// epsilon =  y - C*x - D*u
-		double epsilon[] = y.clone(); // Clone necessary?
+		// epsilon =  ytilde - C*x - D*u
+		double epsilon[] = new double[M];
+		for(int i = 0; i < M; ++i) {
+			epsilon[i] = y[i] - y0[i];
+		}
 		for(int i = 0; i < N; ++i) {
 			for(int j = 0; j < M; ++j) {
-				epsilon[j] -= (C.get(j, i)*xtildehat[i] + D.get(j, 0)*u); // Residual of first measurement 
+				epsilon[j] -= (C.get(j, i)*xtildehat[i] + D.get(j, 0)*utilde); // Residual of first measurement 
 			}
 		}
 		
 		// Update states
-		// xhat = Phi*oldxhat + Gamma*u + K*epsilon
+		// xhat = Phi*oldxhat + Gamma*utilde + K*epsilon
 		double oldxhat[] = xtildehat.clone(); // Clone necessary?
 		for(int i = 0; i < N; ++i) { // Set xtildehat to 0 before adding other stuff
 			xtildehat[i] = 0.0;
@@ -115,7 +131,7 @@ public class TimeInvLQG extends Regul {
 			}
 			
 			// Second term, Gamma*u
-			xtildehat[i] += Gamma.get(i)*u;
+			xtildehat[i] += Gamma.get(i)*utilde;
 			
 			// Third term, K*epsilon
 			for(int j = 0; j < M; ++j) { // two outputs
@@ -129,9 +145,12 @@ public class TimeInvLQG extends Regul {
 	 * @param xhat desired initial value of states (actual states, xhat != 0 at lin point, but instead xhat == x0) 
 	 */
 	public void reset(double[] xhat) {
-		xtildehat = xhat.clone();
+//		xtildehat = xhat.clone();
+//		for(int i = 0; i < N; ++i) {
+//			xtildehat[i] -= x0.get(i);
+//		}
 		for(int i = 0; i < N; ++i) {
-			xtildehat[i] -= x0.get(i);
+			xtildehat[i] = 0.0;
 		}
 	}
 
