@@ -255,7 +255,7 @@ public class Monitor {
 	/** called by Opcom*/
 	public synchronized void setBeamMode(){
 		mode = BEAM;
-		beamRegul.reset(y);
+		beamRegul.reset(statesFromMeasurements());
 		currentRegul = beamRegul; //update currentRegul
 		currentRefGen = refGenGUIAngle; //ifall man var i sequence mode innan?
 		resetSequence = true;
@@ -265,7 +265,7 @@ public class Monitor {
 	/** called by Opcom*/
 	public synchronized void setBallMode(){
 		mode = BALL;
-		beamBallRegul.reset(y);
+		beamBallRegul.reset(statesFromMeasurements());
 		currentRegul = beamBallRegul; //update currentRegul
 		currentRefGen = refGenGUIPos;
 		resetSequence = true;
