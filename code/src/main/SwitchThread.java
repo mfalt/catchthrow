@@ -47,186 +47,186 @@ public class SwitchThread extends Thread {
 	}
 
 	public void run() {
-
-		while (shouldRun) {
-			mon.setNullCheck();
-			opCom.changeSequencelLabel("Sequence mode ready");
-			System.out.println("Sequence mode ready to go.");
-			//The whole loop has to be synchronized, in case someone chooses sequence mode
-			//between loop evaluation and call to wait().
-			synchronized(mon) {
-				// Wait until sequence mode
-				while (mon.getMode() != Monitor.SEQUENCE) {
-					try {
-						mon.wait();
-						//							Thread.sleep(2000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-				mon.clearResetSequence(); //clear reset flag to enable function calls
-			}
-			System.out.println("Starting sequence!");
-			synchronized (mon) {
-				// set the reference value of the beam angle to 0
-				mon.setBeamRegul();
-				mon.setRefGenConstantAngle(pickupStartAngle);
-			}
-			opCom.changeSequencelLabel("Ball catching");
-			System.out.println("Waiting for constant initial pickup angle");
-
-			// wait until the beam angle has become 0, this method calls wait()
-			mon.setConstBeamCheck(pickupStartAngle);
-			System.out.println("At constant pickup");
-
-			// Move beam towards catch position
-			mon.setRefGenRampAngle(pickupRampSlope);
-			System.out.println("Waiting for LED");
-			// wait until the beam is at the catch position, this method calls wait()
-			mon.setLEDCheck();
-			System.out.println("LED noticed");
-			// Move beam a bit down
-			mon.setRefGenConstantAngle(mon.getRef()[ReferenceGenerator.ANGLE] + pickupEndAngleBias); // keep
-			System.out.println("Waiting for constant actual pickup angle");
-			mon.setConstBeamCheck(mon.getRef()[ReferenceGenerator.ANGLE]);
-			System.out.println("Reached constant angle, shooting!");
-
-
-			fire(true); // Reset the solenoid to let ball take position in front of solenoid
-			try {
-				// Hooooold...
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			// FIRE!
-			fire(false); // Push ball on beam
-
-			System.out.println("FIRE! Sleeping until ball on beam (short time)");
-			opCom.changeSequencelLabel("Ball weighing");
-			try {//Wait for ball on beam!!
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			fire(true); // Reset the solenoid again
-
-			// switch to ball control at safe (left position)
-			synchronized (mon) {
-				mon.setBallRegul();
-				mon.setRefGenConstantPos(ballCatchPosition);
-				mon.setNullCheck();
-			}
-//			// Wait for stability0
+		mon.setBeamBallLQGRegul();
+//		while (shouldRun) {
+//			mon.setNullCheck();
+//			opCom.changeSequencelLabel("Sequence mode ready");
+//			System.out.println("Sequence mode ready to go.");
+//			//The whole loop has to be synchronized, in case someone chooses sequence mode
+//			//between loop evaluation and call to wait().
+//			synchronized(mon) {
+//				// Wait until sequence mode
+//				while (mon.getMode() != Monitor.SEQUENCE) {
+//					try {
+//						mon.wait();
+//						//							Thread.sleep(2000);
+//					} catch (InterruptedException e) {
+//						e.printStackTrace();
+//					}
+//				}
+//				mon.clearResetSequence(); //clear reset flag to enable function calls
+//			}
+//			System.out.println("Starting sequence!");
+//			synchronized (mon) {
+//				// set the reference value of the beam angle to 0
+//				mon.setBeamRegul();
+//				mon.setRefGenConstantAngle(pickupStartAngle);
+//			}
+//			opCom.changeSequencelLabel("Ball catching");
+//			System.out.println("Waiting for constant initial pickup angle");
+//
+//			// wait until the beam angle has become 0, this method calls wait()
+//			mon.setConstBeamCheck(pickupStartAngle);
+//			System.out.println("At constant pickup");
+//
+//			// Move beam towards catch position
+//			mon.setRefGenRampAngle(pickupRampSlope);
+//			System.out.println("Waiting for LED");
+//			// wait until the beam is at the catch position, this method calls wait()
+//			mon.setLEDCheck();
+//			System.out.println("LED noticed");
+//			// Move beam a bit down
+//			mon.setRefGenConstantAngle(mon.getRef()[ReferenceGenerator.ANGLE] + pickupEndAngleBias); // keep
+//			System.out.println("Waiting for constant actual pickup angle");
+//			mon.setConstBeamCheck(mon.getRef()[ReferenceGenerator.ANGLE]);
+//			System.out.println("Reached constant angle, shooting!");
+//
+//
+//			fire(true); // Reset the solenoid to let ball take position in front of solenoid
 //			try {
-//				Thread.sleep(5);
+//				// Hooooold...
+//				Thread.sleep(500);
 //			} catch (InterruptedException e) {
 //				e.printStackTrace();
 //			}
-
-			// Wait for stability
-			System.out.println("Go to weigh position");
-			double rampSlope1 = (ballCatchPosition-ballWeighPosition)/((double)6000/1000);
-			mon.setRefGenRampToPos(rampSlope1,ballWeighPosition);
-			mon.setConstBallCheck(ballWeighPosition,0.15);
-
-
-			mon.setNullCheck();
-
-			double averageControlSignal = mon.getAverageControlSignal();
-			double currentBallPos = mon.getBallPosition();
-			weight = checkWeight(averageControlSignal / currentBallPos);
-			System.out.println("WEIGHT: "+weight+" Value: "+averageControlSignal / currentBallPos);
-			switch(weight) {
-			case SMALL:
-				opCom.changeSequencelLabel("Delivering ball: Small");
-
-				//Wait until increased precision
-				mon.setConstBallCheck(ballWeighPosition,0.03);
-				long smallFirstRampTime = 350;//ms
-				long smallSecondRampTime = 200;//ms
-				long smallWaitTime = 250;
-				double smallFirstAngle = 0.55;
-				double smallSecondAngle = -0.18;
-				synchronized(mon) {
-					mon.setBeamRegul();
-					double rampSlope = smallFirstAngle/((double)smallFirstRampTime/1000);
-					mon.setRefGenRampToAngle(rampSlope,smallFirstAngle); //TODO experiment with this value
-				}
-				try {
-					Thread.sleep(smallFirstRampTime+smallWaitTime);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				synchronized(mon) {
-					mon.setBeamRegul();
-					double rampSlope = (smallSecondAngle-smallFirstAngle)/((double)smallSecondRampTime/1000);
-					mon.setRefGenRampToAngle(rampSlope,smallSecondAngle); //TODO experiment with this value
-				}
-				break;
-			case MEDIUM:
-				opCom.changeSequencelLabel("Delivering ball: Medium");
-				double firstAngleRampTime = 110;//ms
-				double secondAngleRampTime = 100;//ms
-				long throwSleepTime =  500;
-				double throwFirstAngle = -0.60;
-				double throwSecondAngle = 0.2;
-				if(heuristicApproach) {
-					long rampMoveTime = 6000;//ms
-					synchronized(mon) {
-						double rampSpeed = (ballThrowPosition-ballWeighPosition)/((double) rampMoveTime/1000);
-						mon.setRefGenRampToPos(rampSpeed,ballThrowPosition);
-					}
-					try {
-						Thread.sleep(rampMoveTime);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					synchronized(mon) {
-						double rampSpeed = 0.03;
-						mon.setRefGenRampToPos(rampSpeed,ballThrowPosition-0.25);
-						mon.setConstBallCheck(ballThrowPosition-0.25, 0.05);
-					}
-					synchronized(mon) {
-
-						double rampSpeed = throwFirstAngle/((double) firstAngleRampTime/1000);
-						mon.setBeamRegul();
-						mon.setRefGenRampToAngle(rampSpeed,throwFirstAngle);
-					}
-					try {
-						Thread.sleep((long) (firstAngleRampTime+throwSleepTime));
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					synchronized(mon) {
-						double rampSpeed = (throwSecondAngle-throwFirstAngle)/((double) secondAngleRampTime/1000);
-						mon.setBeamRegul();
-						mon.setRefGenRampToAngle(rampSpeed,throwSecondAngle);
-					}
-				} else {
-					// Do something with TrajectoryRef
-				}
-				break;
-			case LARGE:
-				opCom.changeSequencelLabel("Delivering ball: Large");
-				synchronized(mon) {
-					mon.setBeamRegul();
-					mon.setRefGenConstantAngle(-0.03); //TODO experiment with this value
-				}
-
-				break;
-			}
-			try {//Wait for ball to be done
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-			//} catch(InterruptedException e){
-			//Thread.interrupted();
-			//continue;
-			//}
-		}
+//			// FIRE!
+//			fire(false); // Push ball on beam
+//
+//			System.out.println("FIRE! Sleeping until ball on beam (short time)");
+//			opCom.changeSequencelLabel("Ball weighing");
+//			try {//Wait for ball on beam!!
+//				Thread.sleep(1000);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//			fire(true); // Reset the solenoid again
+//
+//			// switch to ball control at safe (left position)
+//			synchronized (mon) {
+//				mon.setBallRegul();
+//				mon.setRefGenConstantPos(ballCatchPosition);
+//				mon.setNullCheck();
+//			}
+////			// Wait for stability0
+////			try {
+////				Thread.sleep(5);
+////			} catch (InterruptedException e) {
+////				e.printStackTrace();
+////			}
+//
+//			// Wait for stability
+//			System.out.println("Go to weigh position");
+//			double rampSlope1 = (ballCatchPosition-ballWeighPosition)/((double)6000/1000);
+//			mon.setRefGenRampToPos(rampSlope1,ballWeighPosition);
+//			mon.setConstBallCheck(ballWeighPosition,0.15);
+//
+//
+//			mon.setNullCheck();
+//
+//			double averageControlSignal = mon.getAverageControlSignal();
+//			double currentBallPos = mon.getBallPosition();
+//			weight = checkWeight(averageControlSignal / currentBallPos);
+//			System.out.println("WEIGHT: "+weight+" Value: "+averageControlSignal / currentBallPos);
+//			switch(weight) {
+//			case SMALL:
+//				opCom.changeSequencelLabel("Delivering ball: Small");
+//
+//				//Wait until increased precision
+//				mon.setConstBallCheck(ballWeighPosition,0.03);
+//				long smallFirstRampTime = 350;//ms
+//				long smallSecondRampTime = 200;//ms
+//				long smallWaitTime = 250;
+//				double smallFirstAngle = 0.55;
+//				double smallSecondAngle = -0.18;
+//				synchronized(mon) {
+//					mon.setBeamRegul();
+//					double rampSlope = smallFirstAngle/((double)smallFirstRampTime/1000);
+//					mon.setRefGenRampToAngle(rampSlope,smallFirstAngle); //TODO experiment with this value
+//				}
+//				try {
+//					Thread.sleep(smallFirstRampTime+smallWaitTime);
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
+//				synchronized(mon) {
+//					mon.setBeamRegul();
+//					double rampSlope = (smallSecondAngle-smallFirstAngle)/((double)smallSecondRampTime/1000);
+//					mon.setRefGenRampToAngle(rampSlope,smallSecondAngle); //TODO experiment with this value
+//				}
+//				break;
+//			case MEDIUM:
+//				opCom.changeSequencelLabel("Delivering ball: Medium");
+//				double firstAngleRampTime = 110;//ms
+//				double secondAngleRampTime = 100;//ms
+//				long throwSleepTime =  500;
+//				double throwFirstAngle = -0.60;
+//				double throwSecondAngle = 0.2;
+//				if(heuristicApproach) {
+//					long rampMoveTime = 6000;//ms
+//					synchronized(mon) {
+//						double rampSpeed = (ballThrowPosition-ballWeighPosition)/((double) rampMoveTime/1000);
+//						mon.setRefGenRampToPos(rampSpeed,ballThrowPosition);
+//					}
+//					try {
+//						Thread.sleep(rampMoveTime);
+//					} catch (InterruptedException e) {
+//						e.printStackTrace();
+//					}
+//					synchronized(mon) {
+//						double rampSpeed = 0.03;
+//						mon.setRefGenRampToPos(rampSpeed,ballThrowPosition-0.25);
+//						mon.setConstBallCheck(ballThrowPosition-0.25, 0.05);
+//					}
+//					synchronized(mon) {
+//
+//						double rampSpeed = throwFirstAngle/((double) firstAngleRampTime/1000);
+//						mon.setBeamRegul();
+//						mon.setRefGenRampToAngle(rampSpeed,throwFirstAngle);
+//					}
+//					try {
+//						Thread.sleep((long) (firstAngleRampTime+throwSleepTime));
+//					} catch (InterruptedException e) {
+//						e.printStackTrace();
+//					}
+//					synchronized(mon) {
+//						double rampSpeed = (throwSecondAngle-throwFirstAngle)/((double) secondAngleRampTime/1000);
+//						mon.setBeamRegul();
+//						mon.setRefGenRampToAngle(rampSpeed,throwSecondAngle);
+//					}
+//				} else {
+//					// Do something with TrajectoryRef
+//				}
+//				break;
+//			case LARGE:
+//				opCom.changeSequencelLabel("Delivering ball: Large");
+//				synchronized(mon) {
+//					mon.setBeamRegul();
+//					mon.setRefGenConstantAngle(-0.03); //TODO experiment with this value
+//				}
+//
+//				break;
+//			}
+//			try {//Wait for ball to be done
+//				Thread.sleep(2000);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//
+//			//} catch(InterruptedException e){
+//			//Thread.interrupted();
+//			//continue;
+//			//}
+//		}
 	}
 
 	private int checkWeight(double value) {

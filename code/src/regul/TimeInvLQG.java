@@ -26,6 +26,7 @@ public class TimeInvLQG extends Regul {
 	private MLDouble K; // N x M
 	
 	private MLDouble x0; // Linearization point
+	private double u0;
 	
 	// Signals
 	private double u; // scalar
@@ -46,6 +47,7 @@ public class TimeInvLQG extends Regul {
 		MLArray LMLArray = matFileReader.getMLArray("L");
 		MLArray KMLArray = matFileReader.getMLArray("K");
 		MLArray x0MLArray = matFileReader.getMLArray("x0");
+		MLArray u0MLArray = matFileReader.getMLArray("u0");
 		
 		N = ReferenceGenerator.nbrStates;
 		M = CMLArray.getM();
@@ -58,7 +60,8 @@ public class TimeInvLQG extends Regul {
 				DMLArray.isEmpty() || DMLArray.getM() != M || DMLArray.getN() != uDim || DMLArray.isComplex() || !DMLArray.isDouble() ||
 				LMLArray.isEmpty() || LMLArray.getM() != uDim || LMLArray.getN() != N || LMLArray.isComplex() || !LMLArray.isDouble() ||
 				KMLArray.isEmpty() || KMLArray.getM() != N || KMLArray.getN() != M || KMLArray.isComplex() || !KMLArray.isDouble() ||
-				x0MLArray.isEmpty() || x0MLArray.getM() != N || x0MLArray.getN() != 1 || x0MLArray.isComplex() || !x0MLArray.isDouble()
+				x0MLArray.isEmpty() || x0MLArray.getM() != N || x0MLArray.getN() != 1 || x0MLArray.isComplex() || !x0MLArray.isDouble() ||
+				x0MLArray.isEmpty() || x0MLArray.getM() != 1 || x0MLArray.getN() != 1 || x0MLArray.isComplex() || !x0MLArray.isDouble()
 				) {
 			throw new IllegalArgumentException("Invalid .mat file!");
 		}
@@ -70,6 +73,7 @@ public class TimeInvLQG extends Regul {
 		L = (MLDouble) LMLArray;
 		K = (MLDouble) KMLArray;
 		x0 = (MLDouble) x0MLArray;
+		u0 = ((MLDouble) u0MLArray).get(0);
 	}
 	
 	/**
@@ -78,7 +82,7 @@ public class TimeInvLQG extends Regul {
 	 */
 	public double calculateOutput(double[] measurement, double[] ref, double h) {
 		this.y = measurement.clone(); // Clone really necessary?
-		u = 0;
+		u = u0;
 		for(int i = 0; i < N; ++i) {
 			u -= L.get(i)*xtildehat[i];
 		}
