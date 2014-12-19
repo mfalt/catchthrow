@@ -51,13 +51,14 @@ Qn =diag([0 1 0 1 1 0]);
 Rn = diag([1 1 1e10 1e10]);
 Nn = zeros(n,length(Rn));
 kalman_artif_sys = ss(discsys.a', discsys.c', zeros(1,n), zeros(1,size(discsys.c,1)), h);
-K = lqr(kalman_artif_sys, Qn, Rn, Nn)'
+K = lqr(kalman_artif_sys, Qn, Rn, Nn)';
 % kalman_artif_sys = ss(discsys.a, [discsys.b eye(n)], discsys.c, [discsys.d zeros(size(discsys.d,1),n)], h);
 % [~,K,~] = kalman(kalman_artif_sys, Qn, Rn, Nn) % Qn state noise var, Rn measurement noise var, Nn cross terms.
 
 %% Remove u2
 L = L(1,:)
 B = B(:,1);
+Gamma = Gamma(:,1);
 D = D(1:2,1);
 C = C(1:2,:);
 K = K(:,1:2)
