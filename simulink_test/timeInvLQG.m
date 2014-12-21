@@ -1,10 +1,10 @@
 %% Initialization
 est_JB;
 
-kB = 0; %Temporarily!!!!!!!
+%kB = 0; %Temporarily!!!!!!!
 
 m = 0.1; % Do not know best mass to linearize around
-x1 = 0; % Ball position
+x1 = 0.3; % Ball position
 x0 = [x1; 0; 0; 0; m; 0]; % Last state linearized around u according to report..?
 n = length(x0);
 h = 0.01;
@@ -31,7 +31,7 @@ C = [1 0 0 0 0 0;
 
 D = zeros(size(C,1), size(B,2));
 
-u0 = -A(4,:)*x0 ./ B(4,1);
+u0 = -(-m*g*x1*cos(0)+kB*0)/ku;
 
 %% Discretize system
 contsys = ss(A, B, C, D);
@@ -40,7 +40,7 @@ Phi = discsys.a;
 Gamma = discsys.b;
 
 %% Solve riccati equations
-Q = diag([1111,10000,816,13131,0,2500]);
+Q = diag([1111,10000,816,13131,0,25]);
 % R = 1;
 % N = zeros(n,1);
 R = diag([1e4 1e10]);
@@ -71,6 +71,5 @@ K = K(:,1:2)
 %% Store system
 save timeInvLQG.mat Phi Gamma C D L K x0 u0;
 
-
 %% Set initial conditions for simulation
-x10 = 0.5; x20 = 0; x30 = 0; x40 = 0;
+x10 = 0.1; x20 = 0; x30 = 0; x40 = 0;
