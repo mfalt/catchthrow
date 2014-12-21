@@ -1,5 +1,4 @@
 %% Initialization
-
 est_JB;
 
 kB = 0; %Temporarily!!!!!!!
@@ -73,5 +72,5 @@ K = K(:,1:2)
 save timeInvLQG.mat Phi Gamma C D L K x0 u0;
 
 
-
-
+%% Set initial conditions for simulation
+x10 = 0.5; x20 = 0; x30 = 0; x40 = 0;
