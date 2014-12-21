@@ -40,7 +40,7 @@ Phi = discsys.a;
 Gamma = discsys.b;
 
 %% Solve riccati equations
-Q = diag([1111,10000,816,13131,0,25]);
+Q = diag([1111,10000,816,13131,0,2500]);
 % R = 1;
 % N = zeros(n,1);
 R = diag([1e4 1e10]);
