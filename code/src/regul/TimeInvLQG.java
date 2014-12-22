@@ -106,28 +106,29 @@ public class TimeInvLQG extends Regul {
 	 * DO NOT FORGET TO ACCOUNT FOR LINEARIZATION POINT! WHAT DOES XHAT==0 CORRESPOND TO?
 	 */
 	public void updateState(double h) {
+		double oldxtildehat[] = xtildehat.clone(); // Clone necessary?
+		
 		// Compute residuals
-		// epsilon =  ytilde - C*x - D*u
+		// epsilon =  ytilde - C*oldxtildehat - D*u
 		double epsilon[] = new double[M];
 		for(int i = 0; i < M; ++i) {
 			epsilon[i] = y[i] - y0[i];
 		}
 		for(int i = 0; i < N; ++i) {
 			for(int j = 0; j < M; ++j) {
-				epsilon[j] -= (C.get(j, i)*xtildehat[i] + D.get(j, 0)*utilde); // Residual of first measurement 
+				epsilon[j] -= (C.get(j, i)*oldxtildehat[i] + D.get(j, 0)*utilde); // Residual of first measurement 
 			}
 		}
 		
 		// Update states
-		// xhat = Phi*oldxhat + Gamma*utilde + K*epsilon
-		double oldxhat[] = xtildehat.clone(); // Clone necessary?
+		// xhat = Phi*oldxtildehat + Gamma*utilde + K*epsilon
 		for(int i = 0; i < N; ++i) { // Set xtildehat to 0 before adding other stuff
 			xtildehat[i] = 0.0;
 		}
 		for(int i = 0; i < N; ++i) { // Loop through the states
 			// First term, Phi*oldxhat
 			for(int j = 0; j < N; ++j) {
-				xtildehat[i] += Phi.get(i, j)*oldxhat[j];
+				xtildehat[i] += Phi.get(i, j)*oldxtildehat[j];
 			}
 			
 			// Second term, Gamma*u
